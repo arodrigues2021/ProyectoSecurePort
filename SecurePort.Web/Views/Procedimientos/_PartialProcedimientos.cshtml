@@ -1,0 +1,229 @@
+﻿@using DocumentFormat.OpenXml.Vml.Spreadsheet
+@using DocumentFormat.OpenXml.Wordprocessing
+@using System.Configuration
+@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model ProcedimientosViewModel
+@{
+	string color = ViewBag.disabled == false ? " #eeeeee;color: black" : "#FFFFFF";
+	string IDOrganismo = this.Model.Id_Organismo.ToString() == "0"? string.Empty: this.Model.Id_Organismo.ToString();
+	DateTime fecha = Model.Fecha == DateTime.MinValue ?  DateTime.Now : this.Model.Fecha;
+	string requerido   = ViewBag.disabled == false ? string.Empty:"symbol required";
+	
+	string valor = "0";
+	if (ViewBag.action == General.AltaGeneral.ToDescription())
+	{
+		valor = "1";
+	}
+
+}
+
+<div class="row">
+	<div class="col-lg-12">
+		
+			<div class="panel-heading">
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>@ViewBag.Mensaje</strong>
+			</div>
+		  
+			<div class="panel-body">                
+					<hr>
+					<form action="#" role="form" id="Procedimientoform" onsubmit="return validacionFomulario()">
+						<ul id="fieldlist">	
+                            <div class="row">
+                                 <div class="col-md-4" style="margin-top: 0%; margin-left: 1%;" itemid ="1">
+                                    <div class="form-group" style="display: none"  >  
+								        @(Html.Kendo().TextBoxFor(model =>  model.Id).Name("ID")
+										.HtmlAttributes(new { id = "ID01", name = "ID01",  @class = "form-control" }))
+							        </div>
+                                </div>
+                            </div>						
+							<div class="row">                                
+								<div class="col-md-6" >
+									<div class="form-group">
+										<label class="control-label" >
+											Procedimiento <span class='@requerido'></span>
+										</label>
+										@(this.Html.Kendo().TextBoxFor(model =>  model.Titulo).Name("Titulo").Enable(ViewBag.disabled)
+										.HtmlAttributes(new { id="Titulo01", name="Titulo01", placeholder = "Inserte Titulo", onChange = "ValidarTitulo()", style = "background-color:" + color, @class="form-control",MaxLength="100" }))
+										<span id="datosTitulo"  style="display:none;color:#b94a48;">Este campo es requerido.</span>
+									</div>
+								</div>                                
+								<div class="col-md-2" >
+									<div class="form-group">
+										<label class="control-label" >
+											Fecha <span class='@requerido'></span>
+										</label>
+										@(Html.Kendo().DatePicker()
+											  .Name("iniciopicker")                                              
+											  .Enable(ViewBag.disabled)
+											  .Culture("es-ES")
+											  .HtmlAttributes(new { id="Fecha01", name="Fecha", placeholder = "Inserte el Fecha", onChange = "ValidarFecha()", style = "width:100%;background-color:" + color })
+											  .Value(fecha)
+											  .Footer("Hoy - #=kendo.toString(data, 'd') #")
+											  )
+										<span id="datosFecha"  style="display:none;color:#b94a48;">Este campo es requerido.</span>
+									</div>
+								</div>
+							                                    
+							</div>
+                            <div class ="row">   
+							    <div class="col-md-6">
+								    <div class="form-group">
+									    <label class="control-label">
+										     Descripción <span class='@requerido'></span>
+									    </label>
+									     @(this.Html.Kendo().TextBoxFor(model =>  model.Descripcion).Name("Descripcion").Enable(ViewBag.disabled)
+									      .HtmlAttributes(new { id="Descripcion01", name="Descripcion01", placeholder = "Inserte la descripción", onChange = "ValidarDescripcion()",style = "background-color:" + color, @class="form-control",  Maxlength = "100" }))
+									    <span id="datosDescripcion"  style="display:none;color:#b94a48;">Este campo es requerido.</span>
+								    </div>
+							    </div>
+                            </div>
+							<div class ="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="control-label">
+											Observaciones <span></span>
+										</label>
+										@(this.Html.Kendo().Editor().Name("editor").HtmlAttributes(new { style = "height:150px;", id = "Observaciones01", name = "Observaciones01" })
+										.Tools(tools => tools.Clear()).Value((string)this.ViewBag.Observaciones).Resizable(false))
+									</div>
+								</div>
+                          </div>  
+                          <div class ="row">  
+						  <div style ="@ViewBag.alta">
+							<div class="col-md-6">
+								<div id="Asignar-Documentos">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="panel panel-default">
+												<div class="panel-heading">
+													<i class="clip-checkbox"></i>
+													Documentos asociados
+												</div>
+												<div class="panel-body" style="height: 310px">
+													<div id="DocumentosRefrescar">
+														@Html.Action("AsociadosEdit", "Procedimientos", new { ToolBar=ViewBag.ToolProcedimiento })
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						   </div> 
+
+							</div>
+							@if (ViewBag.action == General.AltaGeneral.ToDescription() || ViewBag.action == General.EditGeneral.ToDescription())
+							{
+								<div class="row">
+									<div class="col-md-12">
+										<p></p>
+									</div>
+									<div class="col-md-12">
+										<div>
+											<span class="symbol required"></span>Campos requeridos
+											<hr>
+										</div>
+									</div>
+						   
+								</div>
+							}
+							<li id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+								<div Style="@ViewBag.Combo"> 
+								<div class="btn-group btn-group-sm">
+									<button id="RegistroProcedimiento" class="btn btn-primary hidden-xs" type="submit">
+										Guardar
+									</button>
+									<a class="btn btn-default " href="javascript:VolverProcedimientos()">Volver
+									</a>
+								   </div>
+								  
+								</div>
+								 <div Style=@ViewBag.Texto>
+									 <div class="btn-group btn-group-sm">
+										 <a class="btn btn-default " href="javascript:VolverProcedimientos()">Volver
+										</a>
+									 </div>
+								</div>
+							</li>
+							<li class="status"></li>
+						</ul>
+					</form>
+				
+		   </div>
+            <input type="text" id="Validar" name="Validar" style="display: none">
+			<div id="myModalUpload" class="modal fade in" data-width="800" tabindex="-1" aria-hidden="false" style="width: 800px; margin-left: -299px; margin-top: -168px; display: none; height: 45%;">
+				<div class="modal-body">
+					<div class="apply_info">
+					<div id="AsignarDocumentos"></div>
+					</div>
+				</div>
+		   </div>
+   
+		
+   </div> 
+</div>
+
+	<script type="text/javascript">
+		jQuery(document).ready(function () {
+			var bool = '@ViewBag.disabled';
+			if (bool == 'False') {
+				var editor = $('#Observaciones01').data('kendoEditor');
+				editor.body.contentEditable = false;
+				$($('#Observaciones01').data().kendoEditor.body).attr('contenteditable', false);
+				$($('#Observaciones01').data().kendoEditor.body).attr('style', "background-color:#eeeeee");
+			}
+
+		});
+
+	$(function () {
+
+		var validator = $("#Procedimientoform").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$('button#RegistroProcedimiento.btn.btn-primary.hidden-xs').click(function () {		    
+		    validarFormulario();
+		    AltaEditarProcedimiento('@ViewBag.action');
+		});
+
+	});
+
+	function validacionFomulario() {
+	   
+		if (!validarFormulario())
+			return false;
+		else {
+			true;
+		}
+	}
+
+	function validarFormulario()
+	{
+	    var valido = false;
+	   if (!ValidarTexto($('input#Titulo01').val())) {
+			datosTitulo.style.display = "";
+			valido = false;
+		}
+		else
+			datosTitulo.style.display = "none";
+
+		if (!ValidarTexto($('input#Fecha01').val())) {
+		    datosFecha.style.display = "";
+		    valido = false;
+		}
+		else {
+		    datosFecha.style.display = "none";		 
+		}
+
+		if (!ValidarTexto($('input#Descripcion01').val())) {
+			datosDescripcion.style.display = "";
+			valido = false;
+		}
+		else
+			datosDescripcion.style.display = "none";
+
+		
+		return valido;
+	}
+   
+</script>

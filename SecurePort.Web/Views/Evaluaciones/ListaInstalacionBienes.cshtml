@@ -1,0 +1,178 @@
+﻿@using SecurePort.Entities.Models
+@model UsuarioFrontal
+ <div class="panel-heading">
+	<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+		<div id="MostrarMensaje">
+			<strong>			
+				Lista de Bienes/Amenazas		
+			</strong>
+		</div>
+	</div>
+
+<div class="panel-body buttons-widget">
+   @*@(this.Html.Kendo().ToolBar().Name("ToolBar").HtmlAttributes(new {  style = "width: 65%;border: 0;background: rgba(0, 0, 255, 0);"  }).Items(items =>
+			{
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.EVAL_LISTA_IIPP).Id("toggle1");
+			}).Events(e => e.Toggle("onToggleInstalacionBien")).Resizable(false))*@
+
+</div>
+
+<input type="text" id="URL"      name="URL"      style="display: none">
+<div class="col-md-12">
+	<div>
+		<span></span>
+		<hr style="margin-top: 0%;">
+	</div>
+</div>
+<td class="panel-body">
+	<div id="container">
+		<div class="btn-group" style="margin-top: 0%; margin-left: 1%;">
+		</div>
+	</div>
+</td>
+<input type="text" id="IdNombreAmenaza" name="IdNombreAmenaza" style="display: none">
+<input type="text" id="IdValorAmenaza"  name="IdValorAmenaza"  style="display: none">
+<input type="text" id="Origen"  name="Origen" value="@ViewBag.Retorno"  style="display: none">
+<div class="panel-body">
+	<div class="row">
+		<div class="col-md-3">
+			<div id="email01" class="form-group">
+				<label class="control-label">
+					Organismo
+				</label>
+				@(Html.Kendo().TextBox().Name("Organismos").Enable(false) 
+				  .HtmlAttributes(new { id="Organimos01", nombre="Organismos01",placeholder = "Insertar Organismo",  type = "text", style = "background-color:#eeeeee", @class="form-control", value =@ViewBag.Organismo }))
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div id="email01" class="form-group">
+				<label class="control-label">
+					Puerto
+				</label>
+				@(Html.Kendo().TextBox().Name("Puerto").Enable(false) 
+				  .HtmlAttributes(new { id="Puerto01", nombre="Puerto01",placeholder = "Insertar Puerto",  type = "text",style = "background-color:#eeeeee", @class="form-control", value =@ViewBag.Puerto }))
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div id="email01" class="form-group">
+				<label class="control-label">
+					Instalación
+				</label>
+				@(Html.Kendo().TextBox().Name("Puerto").Enable(false) 
+				  .HtmlAttributes(new { id="Nombre01", nombre="Nombre01",placeholder = "Insertar Instalación",  type = "text",style = "background-color:#eeeeee", @class="form-control", value =@ViewBag.Instalacion}))
+			</div>
+		</div>
+
+   </div>
+	
+  
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="table-responsive">
+				@(this.Html.Kendo().Grid<MOV_Detalle_InstalacionViewModel>()
+					  .Name("GridInstalaciones")
+					  .DataSource(dataSource => dataSource.Ajax()
+					  .ServerOperation(true))
+					  .ToolBar(tools => tools.Excel().Text("Exportar")
+					  .HtmlAttributes(new { @class="btn btn-black btn-xs",target="_self",hidefocus="true",style = "margin-left: 90%;outline: none;color: #44C51A;" }))
+					  .Excel(excel => excel.AllPages(true)
+					  .FileName("ListadoInstalaciones.xlsx")
+					  .Filterable(true)
+					  .ProxyURL(this.Url.Action("Excel_Export_Save","Usuarios")))
+					  .Columns(columns =>
+					  {
+						  columns.Bound(o => o.Id_Bien).Hidden(true);
+						  columns.Bound(o => o.Bien).Title("Bien").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.BienPadre).Title("Bien Padre").HtmlAttributes(new { style = "text-align: left;" });                          
+						  columns.Bound(o => o.NumeroAmenazas).ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= NumeroAmenazas !='0'  ? checked='checked': '' # disabled='true' />")
+							.Title("Tiene Amenazas Asignadas").Width(200).Filterable(false)
+							.HtmlAttributes(new { style = "text-align: left;" });                        
+					  })
+					  .HtmlAttributes(new { style = "height: 600px" })
+					  .Events(events => events.DetailExpand("DetailExpand"))
+					  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+					  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(20)
+					  .Model(model => model.Id(p => p.Id))
+					  .Read(read => read.Action("BuscadorInstalacionesBienes","Evaluaciones")))
+					  .Pageable()
+					  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+					  .Filterable()                      
+					  .Scrollable()
+					  .Groupable()
+					  .ClientDetailTemplateId("template")
+					  .Resizable(resize => resize.Columns(true))
+					  .Reorderable(reorder => reorder.Columns(true)))
+					   <script id="template" type="text/kendo-tmpl" >
+							@(this.Html.Kendo().Grid<AmenazasViewModel>().Name("grid_#=Id_Bien#").Columns(columns =>
+							{
+									columns.Bound(e => e.Id).Hidden(true);
+									columns.Bound(e => e.Descripcion).Title("Amenaza").Width(160).HtmlAttributes(new { style = "text-align: left;" });   
+
+							})
+							.DataSource(dataSource => dataSource.Ajax()
+							.ServerOperation(true)
+							.Read(read => read.Action("BuscadorBienAmenazas","Evaluaciones",new { BienId = "#=Id_Bien#" })))
+							.Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+							.Sortable()
+							.Scrollable(scrollable => scrollable.Height("auto"))
+							.ToClientTemplate())
+						</script>
+
+
+			</div>
+		</div>
+	</div>
+	<div class="row">
+	<div class="col-md-8">
+		<p></p>
+	</div>
+			<div id="Opcion02" class="space10" style="margin-left: 40%; display: block">
+			<div class="btn-group btn-group-sm">
+				 <a class="btn btn-default " href="javascript:void(0)" onclick=" VolverEvaluacion(@ViewBag.Retorno) ">Volver</a>   
+				@*<a class="btn btn-default " href="@(this.Url.Action("ListadoInstalaciones","Evaluaciones"))">
+				Volver </a>*@
+			</div>
+		</div>
+													 
+</div>
+
+</div>
+
+<script>
+
+	function Ayuda() {
+		if (window.ventana) {
+			ventana.close();
+			OpenWin();
+		} else {
+			OpenWin();
+		}
+	}
+
+	function closeWin() {
+		if (window.ventana) {
+			ventana.close();
+		}
+	}
+	
+	function onShow(e) {
+	}
+
+	function onHide(e) {
+	}
+
+	$(document).ready(function() {
+		$("#toggle1").kendoTooltip({
+			content: "Visualizar Bien/Amenaza",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+	
+	});
+
+
+</script>

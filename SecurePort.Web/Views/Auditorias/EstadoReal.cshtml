@@ -1,0 +1,34 @@
+﻿<div class="col-md-4">
+    <div class="form-group">
+        <label class="control-label">
+            Inicio Real
+        </label>
+        @(Html.Kendo().DatePicker()
+			      .Name("iniciopicker")                                              
+			      .Enable(this.ViewData["EstadoFechaRealEne"].ToString().Equals("1")? true: false)
+			      .Culture("es-ES")
+			      .HtmlAttributes(new { id="IniReal01", name="Inicio", placeholder = "Inserte el Fecha", onChange = "ValidarFecha()", style = "width:100%;background-color:" + this.ViewData["EstadoFechaRealCol"].ToString() })
+			      .Value(this.ViewData["FechaIniRea"].ToString())
+			      .Footer("Hoy - #=kendo.toString(data, 'd') #")
+	      )
+          <span id="datosIniReal" style="display: none; color: #b94a48;">Este campo es requerido.</span>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="form-group">
+        <label class="control-label">
+            Fin Real
+        </label>
+        @(Html.Kendo().DatePicker()
+				  .Name("Finpicker")                                              
+				  .Enable(this.ViewData["EstadoFechaRealEne"].ToString().Equals("1")? true: false)
+				  .Culture("es-ES")
+				  .HtmlAttributes(new { id="FinReal01", name="Fin_Real01", placeholder = "Inserte el Fecha", onChange = "ValidarFecha()", style = "width:100%;background-color:" + this.ViewData["EstadoFechaRealCol"].ToString() })
+				  .Value(this.ViewData["FechaFinRea"].ToString())
+				  .Footer("Hoy - #=kendo.toString(data, 'd') #")
+         )   
+        <span id="datosFinReal" style="display: none; color: #b94a48;">Este campo es requerido.</span>
+        <span id="datosFinValidaRea"  style="display:none;color:#b94a48;">La fecha fin es menor a la fecha de inicio.</span>
+    </div>
+</div>

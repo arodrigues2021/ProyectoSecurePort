@@ -1,0 +1,112 @@
+﻿@using SecurePort.Entities.Models
+@(this.Html.Kendo().Grid<BienesViewModel>().Name("grid_00").Columns(columns =>
+  {
+	  columns.Bound(e => e.Descripcion).Title("Bien Padre").HtmlAttributes(new { style = "text-align: left;" }).Width(60);
+	  columns.Bound(e => e.Id).Width(10).Hidden(true);
+	  columns.Bound(e => e.sel).Title("Selecciona").HtmlAttributes(new { style = "text-align: left;" })
+			 .ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= activado=='Si' ? checked='checked': '' #  onclick='ClickPadre(this,#=Id#)' />").Width(10);
+  })
+	  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))  
+	  .Sortable()
+	  .Scrollable(scrollable => scrollable.Height("auto"))
+	  .ClientDetailTemplateId("template")
+	  .HtmlAttributes(new { style = "height:800px;width: 111%;" })
+	  .Events(events => events.Change("onChangePadre"))
+	  .DataSource(dataSource => dataSource.Ajax()
+	  .Batch(true)
+	  .ServerOperation(false)
+	  .Read(read => read.Action("HierarchyBinding_BienPadre","Instalaciones"))))
+
+<script id="template" type="text/kendo-tmpl">
+	  @(this.Html.Kendo().Grid<BienesHijosViewModel>()
+			.Name("grid_#=Id#").Columns(columns =>
+			{
+				columns.Bound(o => o.Id).Hidden(true);
+				columns.Bound(o => o.Descripcion).Title("Bien Hijo").HtmlAttributes(new { style = "text-align: left;" }).Width(60);
+				columns.Bound(o => o.sel).Title("Selecciona").HtmlAttributes(new { style = "text-align: left;" })
+					.ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' onclick='ClickHijo(this)'/>").Width(10);
+
+			})
+			.DataSource(dataSource => dataSource.Ajax()
+				.ServerOperation(true)
+				.Read(read => read.Action("HierarchyBinding_BienHijo","Instalaciones",new { BienPadreId = "#=Id#" })))
+			.Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+			.Sortable()
+			.Scrollable(scrollable => scrollable.Height("auto"))
+			.Events(events => events.Change("onChangeHijo"))
+			.ToClientTemplate())
+</script>
+<input type="text" id="BienPadre" name="BienPadre" style="display: none">
+<input type="text" id="QuitarPadre" name="QuitarPadre" style="display: none">
+<input type="text" id="BienHijo" name="BienHijo" style="display: none">
+
+<script type="text/javascript">
+
+	var code = new Object();
+	code.codeHijo  = 0;
+	code.codePadre = 0;
+	AgregarBienPadre = new Array();
+	AgregarBienHijo = new Array();
+	QuitarBienPadre = new Array();
+	QuitarBienHijo = new Array();
+	var y = 0;
+	var x = 0;
+	var h = 0;
+	var j = 0;
+	
+	function onChangePadre() {
+		code.codePadre = this.dataItem(this.select()).Id;
+		console.log("Seleccionado.codePadre==>" + code.codePadre);
+	}
+	
+	function onChangeHijo() {
+		code.codeHijo = this.dataItem(this.select()).Id;
+		console.log("Seleccionado.codeHijo==>" + code.codeHijo);
+	}
+
+	function ClickPadre(e, idPadre) {
+		if (idPadre>0) {
+			if (e.checked) {
+				AgregarBienPadre[y++] = idPadre;
+				for (var i = QuitarBienPadre.length - 1; i >= 0; i--) {
+					if (QuitarBienPadre[i] === idPadre) {
+						QuitarBienPadre.splice(i, 1);
+					}
+				}
+				console.log("AgregandodatosBienPadre==>" + AgregarBienPadre);
+				$('input#QuitarPadre').val(QuitarBienPadre);
+				$('input#BienPadre').val(AgregarBienPadre);
+			    
+			} else {
+				QuitarBienPadre[h++] = idPadre;
+				for (var z = AgregarBienPadre.length - 1; z >= 0; z--) {
+					if (AgregarBienPadre[z] === idPadre) {
+						AgregarBienPadre.splice(z, 1);
+					}
+				}
+				console.log("QuitardatosBienPadre==>" + QuitarBienPadre);
+				$('input#QuitarPadre').val(QuitarBienPadre);
+				$('input#BienPadre').val(AgregarBienPadre);
+			    
+			}
+		}
+		
+	}
+
+	function ClickHijo(d) {
+		//if (code.codeHijo > 0) {
+		//	if (d.checked) {
+		//		AgregarBienHijo[x++] = code.codeHijo;
+		//		code.codeHijo = 0;
+		//		console.log("AgregandodatosBienHijo==>" + AgregarBienHijo);
+		//	} else {
+		//		QuitarBienHijo[j++] = code.codeHijo;
+		//		code.codeHijo = 0;
+		//		console.log("QuitardatosBienHijo==>" + QuitarBienHijo);
+		//	}
+		//} else {
+		//	d.checked = true;
+		//}
+	}
+
+</script>

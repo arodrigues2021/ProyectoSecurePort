@@ -1,0 +1,344 @@
+﻿
+@using SecurePort.Entities.Models
+@model UsuarioFrontal 
+ <div class="panel-heading">
+	<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+		<strong>
+			<div id="MostrarMensaje">
+				@ViewBag.Mensaje
+			</div>
+		</strong>
+	</div>
+
+<div class="panel-body buttons-widget">
+   @(this.Html.Kendo().ToolBar().Name("ToolBar").HtmlAttributes(new {  style = "width: 65%;border: 0;background: rgba(0, 0, 255, 0);"  }).Items(items =>
+			{
+			   items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_ALTA_MANTEN).Id("toggle1");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_MODIF_MANTEN).Id("toggle2");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_BORRA_MANTEN).Id("toggle3");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_CONSULTA_MANTEN).Id("toggle4");
+
+			}).Events(e => e.Toggle("onToggleMantenimiento")).Resizable(false))
+
+
+
+</div>
+<input type="text" id="IdNombre" name="IdNombre" style="display: none">
+<input type="text" id="IdValor" name="IdValor" style="display: none">
+<input type="text" id="URL"      name="URL"      style="display: none">
+<div class="col-md-12">
+	<div>
+		<span></span>
+		<hr style="margin-top: 0%;">
+	</div>
+</div>
+<td class="panel-body">
+	<div id="container">
+		<div class="btn-group" style="margin-top: 0%; margin-left: 1%;">
+		</div>
+	</div>
+</td>
+<div class="panel-body">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="table-responsive">
+				@(this.Html.Kendo().Grid<MantenimientoViewModel>().Name("GridMantenimiento")
+					  .DataSource(dataSource => dataSource.Ajax()
+						  .ServerOperation(true))
+					  .ToolBar(tools => tools.Excel().Text("Exportar").HtmlAttributes(new { @class="btn btn-black btn-xs",target="_self",hidefocus="true",style = "margin-left: 90%;outline: none;color: #44C51A;" }))
+					  .Excel(excel => excel.AllPages(true)
+						  .FileName("Listado Mantenimiento.xlsx")
+						  .Filterable(true)
+						  .ProxyURL(this.Url.Action("Excel_Export_Save","Usuarios")))
+					  .Columns(columns =>
+					  {
+						  columns.Bound(o => o.Id).Hidden(true);
+						  columns.Bound(o => o.Puerto).Title("Puerto").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.IIPP).Title("IIPP").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Descripcion).Title("Mantenimiento").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Fecha).Title("Fecha").ClientTemplate("#= kendo.toString(Fecha, \"dd/MM/yyyy\") #").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Equipo).Title("Equipo").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Realizador).Title("Realizado Por").HtmlAttributes(new { style = "text-align: left;" });                          
+						  @*columns.Bound(o => o.Validador).Title("Revisado Por").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Fecha_Revision).Title("Fecha Próxima Revisión").ClientTemplate("#= kendo.toString(Fecha_Revision, \"dd/MM/yyyy\") #").HtmlAttributes(new { style = "text-align: left;" });*@
+					  })
+					  .HtmlAttributes(new { style = "height: 600px" })
+					  .Events(events => events.Change("onChange"))
+					  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+					  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(20).Model(model => model.Id(p => p.Id))
+					  .Read(read => read.Action("BuscadorMantenimiento","Mantenimiento")))
+					  .Pageable()
+					  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+					  .Filterable()
+					  .Scrollable()
+					  .Groupable()
+					  .Resizable(resize => resize.Columns(true))
+					  .Reorderable(reorder => reorder.Columns(true)))
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	jQuery(document).ready(function () {
+		
+		if (history.forward(1)) {
+			location.replace(history.forward(1));
+		}
+
+		$('#IdGestionUsuarios').attr('style', 'display:none');
+
+		$('#IdSubMenuMaestros').attr('style', 'display:none');
+
+		$('#IdSubMenuMovimientos').attr('style', 'display:none');
+		
+		$('#IdSubMenuArchivos').attr('style', 'display:block');
+
+		$('#IdSubMenuMaestros').removeClass('open');
+
+		$('#IdSubMenuMovimientos').removeClass('open');
+
+		$('#IdSubMenuArchivos').addClass('open');
+
+		$('#Id035').addClass('active open');
+
+		$('a.clip-chevron-right').attr('style', 'display:none');
+
+		$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+
+		$('a.clip-chevron-right').click(function () {
+			$('body').addClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:none');
+			$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+		});
+
+		$('i.clip-chevron-left').click(function () {
+			$('body').removeClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:block;font-size: 25px;');
+			$('i.clip-chevron-left').attr('style', 'display:none');
+		});
+
+	});
+	
+	function Ayuda() {
+		if (window.ventana) {
+			ventana.close();
+			OpenWin();
+		} else {
+			OpenWin();
+		}
+	}
+
+	function OpenWin() {
+		ventana = window.open("@(this.Model.Path1)" + "Ayuda.html#tercero", "_blank", "toolbar=no, scrollbars=yes, resizable=no, top=300, left=500, width=800, height=800");
+	}
+
+	function closeWin() {
+		if (window.ventana) {
+			ventana.close();
+		}
+	}
+	
+	function onChange() {
+		//Seleccionamos el registro
+		var nombre = this.dataItem(this.select()).Descripcion;
+		var id = this.dataItem(this.select()).Id;
+		$('input#IdNombre').val(nombre);
+		$('input#IdValor').val(id);
+	}
+	
+	function onShow(e) {
+	}
+
+	function onHide(e) {
+	}
+
+	$(document).ready(function() {
+		$("#toggle1").kendoTooltip({
+			content: "Alta Mantenimiento",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle2").kendoTooltip({
+			content: "Editar Mantenimiento",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle3").kendoTooltip({
+			content: "Borrar Mantenimiento",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle4").kendoTooltip({
+			content: "Visualizar Mantenimiento",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+	});
+
+	function onToggleMantenimiento(e) {
+		//Aqui controlamos los eventos de la toolbar.
+		if (e.id == "toggle1") {
+			//ALTA MANTENIMIENTO
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Mantenimiento/Create',
+				success: function (data) {
+					if (data) {
+						$('#ListMantenimientos').html(data);
+						hideLoading();
+					}
+				}
+			});			
+		} else if (e.id == "toggle2") {
+			//EDITAR MANTENIMIENTO
+			$('#MostrarMensaje').html("Modificar Mantenimiento");
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				showLoading();
+				$.ajax({			        
+					type: "POST",
+					url: '/Mantenimiento/VisualizarMantenimiento',
+					data: { id: $('input#IdValor').val(), Accion: "Edit" },
+					success: function (data) {
+						if (data) {
+							if (data.result == false) {
+								alert(data.Message, 'Eliminar');
+							} else {
+								hideLoading();
+								$('#ListMantenimientos').html('');
+								$('#ListMantenimientos').html(data);
+							}
+						}
+					}
+				});				
+			}
+		}  else if (e.id == "toggle3") {
+			//BORRAR MANTENIMIENTO
+			showLoading();
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				//Validar Declara Maritima
+				$.ajax({
+					type: "POST",
+					url: '/Mantenimiento/ValidarMantenimiento',
+					data: { id: $('input#IdValor').val() },
+					success: function (data) {
+						if (data) {
+							if (data.result == true) {
+								$('input#URL').val('@(this.ViewBag.UrlDelete)');
+								alert("¿Esta Seguro de Borrar el Mantenimiento " + "\n" + $('input#IdNombre').val() + "?", 'Confirm', $('input#IdValor').val(), 49);
+							} else {
+								showLoading();
+								alert(data.Message, 'Eliminar');
+							}
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle4") {
+			//VIZUALIZAR MANTENIMIENTO
+			$('#MostrarMensaje').html("Modificar Mantenimiento");
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				showLoading();
+				$.ajax({
+					type: "POST",
+					url: '/Mantenimiento/VisualizarMantenimiento',
+					data: { id: $('input#IdValor').val(), Accion: "Ver" },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#ListMantenimientos').html(data);
+							
+						}
+					}
+				});				
+			}
+		}
+		
+		else if (e.id == "toggle5") {
+			//ALTA DOCUMENTO
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Mantenimiento/AsignarDocumentos',
+				success: function (data) {
+					if (data) {
+						hideLoading();
+						$('#AsignarDocumentos').html('');
+						$('#AsignarDocumentos').html(data);
+						$('#myModalUpload').modal('show');
+					}
+				}
+			});
+		} else if (e.id == "toggle6") {
+			//EDITAR DOCUMENTO
+			showLoading();
+			if ($('input#IdDoc').val() == '') {
+				alert('Debe Seleccionar un documento', 'Mensaje');
+			} else {
+				showLoading();
+				$.ajax({
+					url: '/Mantenimiento/EditarDocumento',
+					type: "POST",
+					data: { id: $('input#IdDoc').val() },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#AsignarDocumentos').html('');
+							$('#AsignarDocumentos').html(data);
+							$('#myModalUpload').modal('show');
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle7") {
+			//BORRAR DOCUMENTO
+			showLoading();
+			if ($('input#NombreDocumento').val() == '') {
+				alert('Debe Seleccionar un documento', 'Mensaje');
+			} else {
+				AvisoOKDocMantenimiento("¿Esta Seguro de Borrar el Documento: " + $('input#NombreDocumento').val() + "?", $('input#IdDoc').val());
+			}
+
+		} else if (e.id == "toggle8") {
+			//ViSUALIZAR DOCUMENTO
+			showLoading();
+			if ($('input#IdDoc').val() == '') {
+				alert('Debe Seleccionar un documento', 'Mensaje');
+			} else {
+				showLoading();
+				$.ajax({
+					url: '/Mantenimiento/visualizarDocumento',
+					type: "POST",
+					data: { id: $('input#IdDoc').val() },
+					success: function (data) {
+						if (data) {
+							$("#AvisoLegal").html(data);
+							hideLoading();
+							$("#AvisoLegal").html('');;
+						}
+					}
+				});
+			}
+		}
+
+
+	}
+
+</script>

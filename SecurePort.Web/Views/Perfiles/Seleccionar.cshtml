@@ -1,0 +1,26 @@
+﻿<input type="text" id="IdPermisos"  name="IdPermisos"  style="display: none">
+<input type="text" id="NombPermisos"  name="NombPermisos"  style="display: none">
+<input type="text" id="IdAcciones"  name="IdAcciones"  style="display: none">
+<div class="panel-body">
+	<div class="row">
+		<div class="col-sm-10">
+			@(this.Html.Kendo().Grid<SecurePort.Entities.Models.GestionpermisosViewModel>().Name("GridPermisos")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.Id).Hidden(true);
+					  columns.Bound(o => o.Nombre).Title("Nombre").HtmlAttributes(new { style = "text-align: left;" }).Width(90);
+				  })
+				  .Events(events => events.Change("onChangeIdPermisos"))
+				  .HtmlAttributes(new { style = "height: 600px;width:80%" })
+				  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+				  .DataSource(dataSource => dataSource.Ajax()
+					  .Model(model => model.Id(p => p.Id))
+					  .Read(read => read.Action("Permisos", "Perfiles")))
+				  .Sortable(sortable => sortable.AllowUnsort(true)
+				  .SortMode(GridSortMode.MultipleColumn))
+				  .Filterable()
+				  .Scrollable()
+				  )
+		</div>
+	</div>
+</div>

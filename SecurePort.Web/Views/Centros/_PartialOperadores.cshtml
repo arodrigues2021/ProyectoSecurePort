@@ -1,0 +1,47 @@
+﻿@model SecurePort.Entities.Models.UsuarioFrontal
+<div class="panel-body">
+
+<input type="text" id="IdOperador"   name="IdValor"   style="display: none">
+<input type="text" id="NombreOperador"   name="NombreOperador"   style="display: none">
+	<div class="row">
+		<div class="col-md-12">
+		
+			 @(this.Html.Kendo().Grid<SecurePort.Entities.Models.OperadoresPuertoViewModel>().Name("GridOperadores")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.Id).Hidden(true);
+					  columns.Bound(o => o.Nombre).Title("Nombre").HtmlAttributes(new { style = "text-align: left;" }).Width(200);
+                      columns.Bound(o => o.Es_Suplente).ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= activado_Sup=='Si' ? checked='checked': '' # disabled='true' />").Title("Suplente").Width(90); 
+					  columns.Bound(o => o.Telefono).Title("Teléfono").HtmlAttributes(new { style = "text-align: left;" });
+                      columns.Bound(o => o.Fax).Title("Fax").HtmlAttributes(new { style = "text-align: left;" });
+                      columns.Bound(o => o.Email).Title("Correo").HtmlAttributes(new { style = "text-align: left;" });
+                      @*columns.Bound(o => o.Observaciones).Title("Observaciones").HtmlAttributes(new { style = "text-align: left;" });*@
+				  })				  
+				  .HtmlAttributes(new { style = "height: 220px" })
+				  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+				  .DataSource(dataSource => dataSource.Ajax()
+				  .PageSize(10).Model(model => model.Id(p => p.Id))
+				  .Read(read => read.Action("BuscadorOperadores", "Centros")))
+                  .Pageable()
+                  .Sortable(sortable => sortable.AllowUnsort(true)
+                  .SortMode(GridSortMode.MultipleColumn))
+				  .Filterable()
+				  .Scrollable()                 
+                  .Resizable(resize => resize.Columns(true))
+			      .Reorderable(reorder => reorder.Columns(true)))
+				  
+		</div>
+	</div>
+</div>
+<script>
+
+
+	function onShow(e) {
+	}
+	function onHide(e) {
+
+	}
+	
+
+</script>
+

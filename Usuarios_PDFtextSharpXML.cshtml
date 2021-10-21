@@ -1,0 +1,13 @@
+@inherits RazorTemplateFolderHost<IEnumerable<ExportUsuarios.Usuarios>>
+<itext author='Andrei Ignat' title='Collection'>
+                <chapter numberdepth='0'>
+                <newline />
+                <section numberdepth='0'>
+                <table width='100%'  cellspacing='0' cellpadding='2' columns='4' grayfill='0.90'>                
+            
+<row>
+<cell><phrase font='Arial' size='12' style='bold'>Dosage</phrase></cell><cell><phrase font='Arial' size='12' style='bold'>Drug</phrase></cell><cell><phrase font='Arial' size='12' style='bold'>Patient</phrase></cell><cell><phrase font='Arial' size='12' style='bold'>Date</phrase></cell></row>
+@foreach(var item in Model){
+@RenderPartial("~/Usuarios_PDFtextSharpXML_item.cshtml",item);
+}
+</table></section></chapter></itext>

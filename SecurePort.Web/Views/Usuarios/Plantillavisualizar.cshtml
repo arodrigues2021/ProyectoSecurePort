@@ -1,0 +1,274 @@
+﻿@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model Usuarios
+@{
+	this.Layout = null;
+	this.ViewBag.Observaciones = this.Model.observaciones;
+	string valorGrupo = this.Model.id_grupo.ToString();
+	string valorCategoria = this.Model.categoria.ToString();
+	bool opip = false;
+	bool opp = false;
+	bool otros = false;
+	if (Model.es_opip == true)
+	{
+		opip = true;
+	}
+	else if (Model.es_opp == true)
+	{
+		opp = true;
+	}
+	else
+	{
+		otros = true;
+	}
+}
+<div id="ListVisualizar">
+	<div class="row">
+		<div class="col-md-10">
+			<!-- start: FORM VALIDATION 1 PANEL -->
+			<div class="panel-body">
+				<div class="form-group"  style="display: none">
+					 @Html.Kendo().TextBoxFor(model => model.id).HtmlAttributes(new {  id = "id01", name = "id01", @class = "form-control" })
+				</div>
+				<label class="control-label" style="margin-left: 1%;">Acciones</label>
+				<div class="btn-group" style="margin-top: 0%; margin-left: 1%;">
+					<div class="form-group">
+						@(this.Html.Kendo().DropDownList()
+							.Name("acciones")
+							.DataTextField("Name")
+							.DataValueField("Id")
+							.AutoBind(false)
+							.Events(e => e.Change("PlantillaVisualizarAccionesChange"))
+							.HtmlAttributes(new { style = "width: 200px;text-align: center;" } )
+							.DataSource(ds =>
+							{
+							  ds.Read("PlantillaVisualizarAcciones","Usuarios");
+							})
+						) 
+					</div>
+				</div>
+				<hr>
+				<form action="#" role="form" id="form">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="control-label">
+									Login 
+								</label>
+								@(this.Html.Kendo().TextBoxFor(model => model.login).HtmlAttributes(new { itemid = "login", id = "login01", name = "login01", @class = "form-control", disabled = "disabled" }))
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="control-label">
+									Nombre 
+								</label>
+								@(this.Html.Kendo().TextBoxFor(model => model.nombre).HtmlAttributes(new { itemid = "Nombre", id = "firstname01", name = "firstname01", @class = "form-control", disabled = "disabled" }))
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="control-label">
+									Apellidos 
+								</label>
+								@(this.Html.Kendo().TextBoxFor(model => model.apellidos).HtmlAttributes(
+									  new { itemid = "Apellidos", id = "lastname01", name = "lastname01", @class = "form-control", disabled = "disabled" }))
+							</div>
+						</div>
+					</div> 
+					<div class="row">
+						<div class="col-md-1">
+							<div class="form-group">
+								<label class="control-label" title="Oficial de Protección del Puerto">
+									Es OPP <span></span>
+								</label>
+								@(this.Html.Kendo().RadioButton().Name("checkbox0011").Checked(opp).HtmlAttributes(new { @name = "engine", @class = "form-control" , disabled = "disabled"}))
+							</div>
+						</div>
+						<div class="col-md-1">
+							<div class="form-group">
+								<label class="control-label" title="Oficial de Protección de Instalaciones Portuarias">
+									Es OPIP <span></span>
+								</label>
+								@(this.Html.Kendo().RadioButton().Name("checkbox0012").Checked(opip).HtmlAttributes(new { @name = "engine", @class = "form-control" , disabled = "disabled"}))
+							</div>
+						</div>
+						<div class="col-md-1">
+							<div class="form-group">
+								<label class="control-label">
+									Otros <span></span>
+								</label>
+								@(this.Html.Kendo().RadioButton().Name("checkbox0013").Checked(otros).HtmlAttributes(new { @name = "engine", @class = "form-control" , disabled = "disabled"}))
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div id="IdFecha" style="display: none;">
+								<div class="form-group">
+									<label style="margin-bottom: 0px;" class="control-label">
+										Fecha Expedición 
+									</label>
+									@(this.Html.Kendo().DatePicker().Name("datetimepicker").Enable(true).Culture("es-ES").HtmlAttributes(new { style = "width:100%;background-color: #eeeeee;color: black", disabled = "disabled" }).Value(DateTime.Now).Footer("Hoy - #=kendo.toString(data, 'd') #"))
+								</div>
+							</div>
+						</div>
+					</div> 
+					<div class="row">   
+						<div class="col-md-3">
+							<div class="form-group">
+								<label class="control-label">
+									Categoria 
+								</label>
+								@(this.Html.Kendo().ComboBox()
+										.Name("Categoria01")
+										.Placeholder("Selecciona Categoria")
+										.DataTextField("Text")
+										.DataValueField("Value")
+										.Filter(FilterType.Contains)
+										.BindTo((IEnumerable<ListCategorias>)this.ViewData["Categoria"])
+										.Value(valorCategoria)
+										.Suggest(true)
+										.HtmlAttributes(new { style = "width:100%;background-color: #eeeeee;color: black",id="Categoria01", disabled = "disabled"  }))
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label class="control-label">
+									Grupo 
+								</label>
+								@(Html.Kendo().ComboBox()
+										 .Name("Gruposdropdown01")
+										 .Placeholder("Selecciona Grupo")
+										 .Filter(FilterType.Contains)
+										 .DataTextField("Text")
+										 .DataValueField("Value")
+										 .BindTo((IEnumerable<ListGrupos>)this.ViewData["Grupos"])
+										 .HtmlAttributes(new { style = "width: 100%;background-color: #eeeeee;color: black",id="Gruposdropdown01", disabled = "disabled" })
+										 .Value(valorGrupo)
+										 )
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="control-label">
+									Empresa 
+								</label>
+								@(this.Html.Kendo().TextBoxFor(model => model.empresa).HtmlAttributes( new { id = "empresas01", name = "empresas01", @class = "form-control", disabled = "disabled" }))
+							</div>
+						</div>
+					</div>
+					<div class="row"> 
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">
+									Observaciones <span></span>
+								</label>
+								 @(this.Html.Kendo().Editor().Name("Observaciones01")
+									.HtmlAttributes(new { style = "height:100px;",id="Observaciones01",@class = "form-control" , disabled = "disabled"})
+									.Tools(tools => tools.Clear())
+									.Value((string)this.ViewBag.Observaciones)
+									.Resizable(false))
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="row"> 
+								@if (this.Model.categoria == (int)EnumCategoria.Instalacion)
+								{
+									<div class="col-md-12">
+										<div id="Asignar-Instalacion">
+											@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialInstalacion.cshtml"))
+										</div>
+									</div>
+								}
+								@if (this.Model.categoria == (int)EnumCategoria.OrganismoGestionPortuaria)
+								{
+									<div class="col-md-12">
+										<div id="Asignar-Organismo">
+											@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialOrganismo.cshtml"))
+										</div>
+									</div>
+								}
+								@if (this.Model.categoria == (int)EnumCategoria.Puerto)
+								{
+									<div class="col-md-12">
+										<div id="Asignar-Puerto">
+											@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialPuertos.cshtml"))
+										</div>
+									</div>
+								}
+								@if (this.Model.categoria == (int)EnumCategoria.PuertosdelEstado)
+								{
+									<div class="col-md-12">
+										<div id="Asignar-PuertosdelEstado">
+											@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialPuertosdelEstado.cshtml"))
+										</div>
+									</div>
+								}
+								 @if (this.Model.categoria == (int)EnumCategoria.Administrador)
+								{
+									<div class="col-md-12">
+										<div id="Asignar-Administrador">
+											@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialAdministrador.cshtml"))
+										</div>
+									</div>
+								}
+								 @if (this.Model.categoria == (int)EnumCategoria.MinisteriodelInterior)
+								{
+									<div class="col-md-12">
+										<div id="Asignar-MinisteriodelInterior">
+											@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialMinisteriodelInterior.cshtml"))
+										</div>
+									</div>
+								}
+								<div id="Opcion04" class="space12" style="margin-left: 50%; display: block">
+									<div class="btn-group btn-group-sm">
+											@(this.Html.Kendo().Button().Name("ButtonVolverDoc").HtmlAttributes(new { type = "button", @class = "btn btn-default" })
+												  .Content("Volver").Events(ev => ev.Click("onClick")))
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div id="myModalUpload" class="modal fade in" data-width="800" tabindex="-1" aria-hidden="false" style="width:800px; margin-left: -299px; margin-top: -168px; display: none; height: 45%;">
+		<div class="modal-body">
+			<div class="apply_info">
+				<div id="AsignarDocumentos"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="mydocumento" class="modal container fade in" tabindex="-1" style="display: none;">
+	<div class="modal-header">
+		<h3><i class="icon-exclamation-sign"></i>Visualizar Documento</h3>
+	</div>
+	<div class="modal-body">
+	</div>
+	<div class="modal-footer">
+		<button type="button" data-dismiss="modal" class="btn btn-default" onclick="CerrarCondiciones()">
+			Cancelar
+		</button>
+	</div>
+</div>
+<input type="text" id="IdValor" name="IdValor" style="display: none">
+<input type="text" id="NombreDocumento" name="NombreDocumento" style="display: none">
+<input type="text" id="fechaOpip" name="fechaOpip" style="display: none">
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		$('input#NombreDocumento').val('');
+		$('input#fechaOpip').val('@(this.Model.fech_exp_opip)');
+		if ('@(this.Model.es_opip)' == 'True') {
+	        $('div#IdFecha').attr('style', 'display:block');
+	        var fechaOpip = $('input#fechaOpip').val();
+	        $('input#datetimepicker').val(fechaOpip.substring(0, 10));
+	    }
+		var editor = $('#Observaciones01').data('kendoEditor');
+		editor.body.contentEditable = false;
+		$($('#Observaciones01').data().kendoEditor.body).attr('contenteditable', false);
+		$($('#Observaciones01').data().kendoEditor.body).attr('style',"background-color:#eeeeee");
+	});
+</script>

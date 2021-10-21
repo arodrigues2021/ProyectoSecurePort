@@ -1,0 +1,347 @@
+﻿@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+@{
+    this.Layout                = null;
+    this.ViewBag.Observaciones = this.Model.EditUsuario.observaciones;
+    bool valor                 = this.ViewBag.valor;
+    string valorGrupo          = this.Model.EditUsuario.id_grupo.ToString();
+    string valorCategoria      = this.Model.EditUsuario.categoria.ToString();
+    bool opip = false;
+    bool opp = false;
+    bool otros = false;
+    if (Model.EditUsuario.es_opip == true)
+    {
+        opip = true;
+    }
+    else if (Model.EditUsuario.es_opp == true)
+    {
+        opp = true;
+    }
+    else
+    {
+        otros = true;
+    }
+}
+<div class="row">
+    <div class="col-md-10">
+        <!-- start: FORM VALIDATION 1 PANEL -->
+        <div class="panel-body">
+            <div id="Edit-page-Usuario">
+                <hr>
+                <form action="#" role="form" id="form">
+                    <ul id="fieldlist">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="errorHandler alert alert-danger no-display">
+                                    <i class="icon-remove-sign"></i> Usted tiene algunos errores. Por favor, consulte más abajo.
+                                </div>
+                                <div class="successHandler alert alert-success no-display">
+                                    <i class="icon-ok"></i> Su validación es exitosa!
+                                </div>
+                            </div>
+                            <div class="form-group"  style="display: none">
+                                @Html.Kendo().TextBoxFor(model => model.EditUsuario.id).HtmlAttributes(new {  id = "id01", name = "id01", @class = "form-control" })
+                            </div>
+                            <div class="col-md-3">
+                                <div id="email01" class="form-group">
+                                    <label class="control-label">
+                                        Correo Electrónico<span class="symbol required"></span>
+                                    </label>
+                                    @Html.Kendo().TextBoxFor(model =>  model.EditUsuario.email).HtmlAttributes(new {  itemid = "Email", id = "email01", name = "email01", type = "email", @class = "form-control", onChange = "ValidarVacio(this)", MaxLength="50"})
+                                    <span id="Spanemail01" for="email01" class="help-block" style="display: none">Este campo es requerido.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div id="nombre01" class="form-group">
+                                    <label class="control-label">
+                                        Nombre<span class="symbol required"></span> 
+                                    </label>
+                                    @Html.Kendo().TextBoxFor(model => model.EditUsuario.nombre).HtmlAttributes(new {  itemid = "Nombre", id = "firstname01", name = "firstname01", @class = "form-control", onChange = "ValidarVacio(this)",MaxLength="50" })
+                                    <span id="Spannombre01" for="firstname01" class="help-block" style="display: none">Este campo es requerido.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div id="apellidos01" class="form-group">
+                                    <label class="control-label">
+                                        Apellidos<span class="symbol required"></span> 
+                                    </label>
+                                    @Html.Kendo().TextBoxFor(model => model.EditUsuario.apellidos).HtmlAttributes(new {  itemid = "Apellidos", id = "lastname01", name = "lastname01", @class = "form-control", onChange = "ValidarVacio(this)" ,MaxLength="100"})
+                                    <span id="Spanapellidos01" for="lastname01" class="help-block" style="display: none">Este campo es requerido.</span>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label class="control-label" title="Oficial de Protección del Puerto">
+                                        Es OPP <span></span>
+                                    </label>
+                                    @(this.Html.Kendo().RadioButton().Name("checkbox0011").Checked(opp).HtmlAttributes(new { @name = "engine", @class = "form-control" }))
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label class="control-label" title="Oficial de Protección de Instalaciones Portuarias">
+                                        Es OPIP <span></span>
+                                    </label>
+                                    @(this.Html.Kendo().RadioButton().Name("checkbox0012").Checked(opip).HtmlAttributes(new { @name = "engine", @class = "form-control" }))
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Otros <span></span>
+                                    </label>
+                                    @(this.Html.Kendo().RadioButton().Name("checkbox0013").Checked(otros).HtmlAttributes(new { @name = "engine", @class = "form-control" }))
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div id="IdFecha" style="display: none;">
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 0px;" class="control-label">
+                                            Fecha Expedición <span class="symbol required"></span>
+                                        </label>
+                                        @(this.Html.Kendo().DatePicker().Name("datetimepicker")
+                                        .Enable(true).Culture("es-ES")
+                                        .HtmlAttributes(new { style = "width:100%;" }).Value(DateTime.Now).Footer("Hoy - #=kendo.toString(data, 'd') #"))
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="row" style="display: none">
+                            <div class="col-sm-2">
+                                <div id="password01" class="form-group">
+                                    <label class="control-label">
+                                        Contraseña<span class="symbol required"></span>
+                                    </label>
+                                    @Html.Kendo().TextBoxFor(model => model.EditUsuario.password).HtmlAttributes( new { itemid = "Password", id = "password01", name = "password01", @class = "form-control", type = "Password", onChange = "ValidarVacio(this)" }))
+                                    <span id="Spanpassword01" for="password01" class="help-block" style="display: none">Este campo es requerido.</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div  id="Passwordagain01" class="form-group">
+                                    <label class="control-label">
+                                        Confirmar Contraseña <span class="symbol required"></span>
+                                    </label>
+                                    @Html.Kendo().TextBoxFor(model => model.EditUsuario.password).HtmlAttributes( new { itemid = "Passwordagain", id = "passwordagain01", name = "passwordagain01", @class = "form-control", type = "Password", onChange = "ValidarVacioPassword(this)" }))
+                                    <span id="SpanPasswordagain01" for="passwordagain01" class="help-block" style="display: none">Este campo es requerido.</span>
+                                    <span id="SpanPasswordagain02" for="passwordagain02" class="help-block" style="display: none">Verifique la contraseña no coincide.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Categoria 
+                                    </label>
+                                    @(this.Html.Kendo().ComboBox()
+                                          .Name("Categoria01")
+                                          .Placeholder("Selecciona Categoria")
+                                          .DataTextField("Text").DataValueField("Value").Filter(FilterType.Contains)
+                                          .BindTo((IEnumerable<ListCategorias>)this.ViewData["Categoria"])
+                                          .Value(valorCategoria)
+                                          .Suggest(true)
+                                          .HtmlAttributes(new { style = "width:100%;", id = "Categoria01", validationmessage = "Este campo es requerido", required = "required", onChange = "ValidacionCombos(this,'errorCategoria')" }))
+                                          <span id="errorCategoria" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Grupo 
+                                    </label>
+                                    @(Html.Kendo().ComboBox().Name("Gruposdropdown01")
+                                          .Placeholder("Selecciona Grupo")
+                                          .Filter(FilterType.Contains)
+                                          .DataTextField("Text")
+                                          .DataValueField("Value")
+                                          .BindTo((IEnumerable<ListGrupos>)this.ViewData["Grupos"])
+                                          .HtmlAttributes(new { style = "width: 100%", id = "Gruposdropdown01", validationmessage = "Este campo es requerido",required = "required" })
+                                          .Value(valorGrupo)
+                                          .Events(e =>{
+                                                          e.Change("onChange").Select("onSelectGrupo");
+                                          }))
+                                        <span id="errorGrupo" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Empresa 
+                                    </label>
+                                    @Html.Kendo().TextBoxFor(model => model.EditUsuario.empresa).HtmlAttributes( new { id = "empresas01", name = "empresas01", @class = "form-control",MaxLength="100"})
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Observaciones <span></span>
+                                    </label>
+                                    @(this.Html.Kendo().Editor().Name("editor")
+                                          .HtmlAttributes(new { style = "height:100px",id="Observaciones01",@class = "form-control" })
+                                          .Tools(tools => tools.Clear())
+                                          .Value((string)this.ViewBag.Observaciones)
+                                          .Resizable(false))
+                                </div>
+                            </div>
+                        </div>
+                        <li class="status"></li>
+                    </ul>
+                    <span class="symbol required"></span>Campos requeridos
+                </form>
+                @if (this.Model.EditUsuario.categoria == (int)EnumCategoria.Instalacion)
+                {
+                    <div id="Asignar-Instalacion">
+                        @(this.Html.Partial("~/Views/Usuarios/_PartialInstalacion.cshtml"))
+                    </div>
+                }
+                @if (this.Model.EditUsuario.categoria == (int)EnumCategoria.OrganismoGestionPortuaria)
+                {
+                    <div id="Asignar-Organismo">
+                        @(this.Html.Partial("~/Views/Usuarios/_PartialOrganismo.cshtml"))
+                    </div>
+                }
+                @if (this.Model.EditUsuario.categoria == (int)EnumCategoria.Puerto)
+                {
+                    <div id="Asignar-Puerto">
+                        @(this.Html.Partial("~/Views/Usuarios/_PartialPuertos.cshtml"))
+                    </div>
+                }
+                @if (this.Model.EditUsuario.categoria == (int)EnumCategoria.PuertosdelEstado)
+                {
+                    <div class="col-md-12">
+                        <div id="Asignar-PuertosdelEstado">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <i class="clip-checkbox"></i>
+                                            Documentos asociados
+                                        </div>
+                                        <div class="panel-body" style="height: 295px">
+                                            <div id="PuertosdelEstadoRefrescar">
+                                                 @Html.Action("AsociadosEdit", "Usuarios", new { ToolBar=false })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (this.Model.EditUsuario.categoria == (int)EnumCategoria.Administrador)
+                {
+                    <div class="col-md-12">
+                        <div id="Asignar-Administrador">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <i class="clip-checkbox"></i>
+                                            Documentos asociados
+                                        </div>
+                                        <div class="panel-body" style="height: 295px">
+                                            <div id="AdministradorRefrescar">
+                                                @Html.Action("AsociadosEdit", "Usuarios", new { ToolBar=false })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (this.Model.EditUsuario.categoria == (int)EnumCategoria.MinisteriodelInterior)
+                {
+                    <div class="col-md-12">
+                        <div id="Asignar-MinisteriodelInterior">
+                            <div class="row">
+                                 <div class="col-md-6">
+                                      <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <i class="clip-checkbox"></i>
+                                                Documentos asociados
+                                            </div>
+                                            <div class="panel-body" style="height: 295px">
+                                                <div id="MinisteriodelInteriorRefrescar">
+                                                    @Html.Action("AsociadosEdit", "Usuarios", new { ToolBar=false })
+                                                </div>
+                                            </div>
+                                      </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div id="Opcion02" class="space12" style="margin-left: 50%; display: block">
+                    <div class="btn-group btn-group-sm">
+                        @(this.Html.Kendo().Button().Name("ButtonDeshacerDoc").HtmlAttributes(new { type = "button", @class = "btn btn-danger" })
+                          .Content("Deshacer").Events(ev => ev.Click("onClick")))
+                        @(this.Html.Kendo().Button().Name("ButtonGuardarDoc").HtmlAttributes(new { type = "button", @class = "btn btn-primary hidden-xs" })
+                          .Content("Guardar").Events(ev => ev.Click("onClick")))
+                        @(this.Html.Kendo().Button().Name("ButtonVolverDoc").HtmlAttributes(new { type = "button", @class = "btn btn-default" })
+                          .Content("Volver").Events(ev => ev.Click("onClick")))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="text" id="IdCategoria" name="IdCategoria" style="display: none">
+<input type="text" id="IdDependencias" name="IdDependencias" style="display: none">
+<input type="text" id="fechaOpip" name="fechaOpip" style="display: none">
+<script type="text/javascript" src="~/Scripts/AppSecureport/appUsuarios.js"></script>
+<script type="text/javascript">
+
+    jQuery(document).ready(function () {
+        $('input#IdCategoria').val('@(this.Model.EditUsuario.categoria)');
+        $('input#IdDependencias').val('@(this.ViewBag.valor)');
+        $('input#fechaOpip').val('@(this.Model.EditUsuario.fech_exp_opip)');
+        if ('@(this.Model.EditUsuario.es_opip)' == 'True') {
+            $('div#IdFecha').attr('style', 'display:block');
+            var fechaOpip = $('input#fechaOpip').val();
+            $('input#datetimepicker').val(fechaOpip.substring(0, 10));
+        }
+    });
+
+    function ValidarVacio(item)
+    {
+        var name = "";
+        if ('@(this.ViewBag.Navegador)' == "internetexplorer") {
+            name = item.attributes[0].value;
+        } else {
+            name = item.attributes[5].value;
+        }
+        if (rtrim($(item).val()) == "") {
+            $('div#' + name + '01.form-group').removeClass('has-success').addClass('has-error');
+            $('span#Span' + name + '01.help-block').attr('style', 'display:block');
+        } else {
+            $('div#' + name + '01.form-group').removeClass('has-error').addClass('has-success');
+            $('span#Span' + name + '01.help-block').attr('style', 'display:none');
+        }
+    }
+
+    function ValidarVacioPassword(item)
+    {
+        if (rtrim($(item).val()) == "") {
+            $('div#Passwordagain01.form-group').removeClass('has-success').addClass('has-error');
+            $('span#SpanPasswordagain01.help-block').attr('style', 'display:block');
+        } else {
+            $('div#Passwordagain01.form-group').removeClass('has-error').addClass('has-success');
+            $('span#SpanPasswordagain01.help-block').attr('style', 'display:none');
+        }
+        if ($('input#password01.form-control').val() != "" && $('input#passwordagain01.form-control').val() != "") {
+            if ($('input#password01.form-control').val() != $('input#passwordagain01.form-control').val()) {
+                $('div#Passwordagain01.form-group').removeClass('has-success').addClass('has-error');
+                $('span#SpanPasswordagain02.help-block').attr('style', 'display:block');
+            } else {
+                $('div#Passwordagain01.form-group').removeClass('has-error').addClass('has-success');
+                $('span#SpanPasswordagain02.help-block').attr('style', 'display:none');
+            }
+        }
+    }
+</script>

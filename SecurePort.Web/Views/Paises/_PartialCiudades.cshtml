@@ -1,0 +1,147 @@
+﻿@using DocumentFormat.OpenXml.Vml.Spreadsheet
+@using DocumentFormat.OpenXml.Wordprocessing
+@using System.Configuration
+@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model Ciudades
+@{
+	string color = ViewBag.disabled == false ? " #eeeeee;color: black" : "#FFFFFF";
+	string valor = ViewBag.Id_Provincia;
+	string Activar = Model.es_activo == true? "1": "2";	
+	string valorIsla = this.Model.Id_isla.ToString() == "0"? string.Empty: this.Model.Id_isla.ToString(); 
+}
+
+
+
+<div class="row">
+	<div class="col-lg-18">
+		<div class="panel panel-default" style="margin-top: -4%;">
+			<div class="panel-heading" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>Modificar Municipio</strong>
+			</div>
+			<div class="k-content">
+                <input type="text" id="ValidarAllCombos" name="ValidarAllCombos" style="display: none">
+				<div id="Ciudad">
+					<form id="CiudadForm">
+						<ul id="fieldlist">
+							<li>
+								&nbsp;
+								  @(Html.Kendo().TextBoxFor(model =>  model.id).Name("ID") 
+										.HtmlAttributes(new { id="ID01", style = "width:220px;margin-left: 4%;display:none"}))
+								  @(Html.Kendo().TextBox().Name("Tipo")
+										.HtmlAttributes(new { id="Tipo01", style = "width:220px;margin-left: 4%;display:none", value="Ciudad"}))
+
+							</li>
+							<div class="col-md-6"  >
+								<div class="form-group" >
+									<label for="Ciudad"  class="required">Municipio</label>
+									@(Html.Kendo().TextBoxFor(model =>  model.codigo).Name("Codigo")
+										  .HtmlAttributes(new { id="Codigo01",placeholder = "Insertar la Ciudad", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:220px;", MaxLength="4" }))
+								</div>
+							</div>
+							<div class="col-md-4" style= @ViewBag.display  >
+								<div class="form-group" >
+									<label class="control-label">
+										Activo
+									</label>
+									@(this.Html.Kendo().ComboBox().Name("Activo")
+										  .DataTextField("Text").DataValueField("Value")
+										  .Filter(FilterType.Contains)
+										  .BindTo(new List<SelectListItem>() {
+											  new SelectListItem() {
+												Text = "Si", Value = "1"   
+											  }, 
+											  new SelectListItem() {
+												Text = "No", Value = "2"   
+											  }
+										  })
+										  .Value(Activar)
+										  .Suggest(true).Enable(this.ViewBag.disabled)
+										  .HtmlAttributes(new { style = "width:100%;background-color:" + color, required = "required", validationmessage = "Este campo es requerido", id = "Activo01", name = "Activo01", onChange = "ValidacionCombos(this,'errorActivo')"  }))
+                                          <span id="errorActivo" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+    
+								</div>
+							</div>
+
+						   <div class="col-md-11">
+							   <div class="form-group">
+								 <label for="Nombre" class="required">Nombre</label>
+									 @(Html.Kendo().TextBoxFor(model =>  model.nombre).Name("Nombre")
+									  .HtmlAttributes(new { id="Nombre01",placeholder = "Insertar Nombre del Municipio", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:220px;", MaxLength="75" }))
+								</div>
+							</div>
+							 <div style="width:100%">   
+									<div class="col-md-9">
+									  <div class="form-group">
+										<label class="control-label">
+												Provincia
+											</label>
+												 @(this.Html.Kendo().ComboBox().Name("Provincias")
+												 .Placeholder("Selecciona Provincia")
+												 .DataTextField("Text").DataValueField("Value")
+												 .Filter(FilterType.Contains)
+												 .BindTo((SelectList)this.ViewData["Provincias"])
+												 .Value(valor).Suggest(true)
+												 .HtmlAttributes(new { style = "width:100%;", required = "required",id = "Provincia01" ,name="Provincia01", onChange = "ValidacionCombos(this,'errorProvincia')" }))
+                                                 <span id="errorProvincia" style="display: none; color: #b94a48;">Este campo es inválido.</span>   
+
+										</div>
+									</div>
+								</div>
+								<div style="width:100%">   
+									<div class="col-md-9">
+									  <div class="form-group">
+										<label class="control-label">
+												Isla
+											</label>
+												 @(this.Html.Kendo().ComboBox().Name("Islas")
+												 .Placeholder("Selecciona Isla")
+												 .DataTextField("Text").DataValueField("Value")
+												 .Filter(FilterType.Contains)
+												 .BindTo((SelectList)this.ViewData["Islas"])
+												 .Value(valorIsla).Suggest(true)
+												 .HtmlAttributes(new { style = "width:100%;", id = "Isla01" ,name="Isla01", onChange = "ValidacionCombos(this,'errorIsla')"}))
+                                                 <span id="errorIsla" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+										</div>
+									</div>
+								</div>                                
+
+							<li id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+								<div class="btn-group btn-group-sm">
+									<button class="btn btn-primary hidden-xs" type="submit">
+										Guardar
+									</button>
+									<a class="btn btn-default " href="javascript:VolverCiudad()">
+										Volver
+									</a>
+								</div>
+							</li>
+							<li class="status">
+							</li>
+						</ul>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(function () {
+		var validator = $("#CiudadForm").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$("form").submit(function (event) {
+		    event.preventDefault();
+		    if (ValidarAllCombosC("1"))
+		        $('input#ValidarAllCombos').val("1");
+		    else
+		        $('input#ValidarAllCombos').val("");
+			if (validator.validate()) {
+				status.removeClass("invalid").addClass("valid");
+				EditarPais();
+			} else {
+				status.removeClass("valid").addClass("invalid");
+			}
+		});
+	});
+</script>

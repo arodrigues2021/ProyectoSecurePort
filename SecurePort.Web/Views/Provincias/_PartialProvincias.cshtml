@@ -1,0 +1,131 @@
+﻿@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model Provincias
+@{
+	string color = ViewBag.disabled == false ? " #eeeeee;color: black" : "#FFFFFF";
+	string ID_ComAut = this.Model.ID_ComAut.ToString() == "0"? string.Empty: this.Model.ID_ComAut.ToString();
+	string valor = Model.es_activo ? "1" : "2";
+}
+<div class="row">
+	<div class="col-lg-13">
+		<div class="panel panel-default" style="margin-top: -4%;">
+			<div class="panel-heading" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>@ViewBag.Mensaje</strong>
+			</div>
+			<div class="k-content">
+                <input type="text" id="ValidarAllCombos" name="ValidarAllCombos" style="display: none">
+				<div id="Provincia">
+					<form id="ProvinciaForm">
+						<ul id="fieldlist">
+							<li style="list-style:none;">
+								&nbsp;
+							</li>
+							<li>
+								@(Html.Kendo().TextBoxFor(model =>  model.id).Name("ID")
+									  .HtmlAttributes(new { id="ID01", style = "width:220px;margin-left: 4%;display:none"}))
+
+							</li>
+							<div class="row">
+								   <div class="col-md-4" style = "margin-left: 4%;">
+										<div class="form-group" >
+											<label class="control-label">
+												Código
+											</label>
+											@(Html.Kendo().TextBoxFor(model =>  model.codigo).Name("Codigo")
+												.HtmlAttributes(new { id="Codigo01", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:50px;margin-left: 0%;", MaxLength="2" }))
+										</div>
+									</div>
+									@if (@ViewBag.action != General.AltaGeneral.ToDescription())
+									{
+										<div class="col-md-4" >
+											<div class="form-group" >
+												<label class="control-label">
+													Activo
+												</label>
+												@(this.Html.Kendo().ComboBox().Name("Activo")
+															.DataTextField("Text")
+															.DataValueField("Value")
+															.Filter(FilterType.Contains)
+															.BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "Si", Value = "1" }, new SelectListItem() { Text = "No", Value = "2" } })
+															.Value(valor)
+															.Suggest(true).Enable(this.ViewBag.disabled)
+                                                            .HtmlAttributes(new { style = "width:100%;background-color:" + color, required = "required", validationmessage = "Este campo es requerido", id = "Activo01", name = "Activo01", onChange = "ValidacionCombos(this,'errorActivo')" }))
+                                                            <span id="errorActivo" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+											</div>
+										</div>
+									}
+							</div>
+							<li style="list-style:none;">
+								<label for="Nombre" style = "margin-left: 4%;" class="required">Nombre</label>
+								@(Html.Kendo().TextBoxFor(model =>  model.nombre).Name("Nombre")
+									  .HtmlAttributes(new { id="Nombre01",placeholder = "Insertar Nombre de la Provincia", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:220px;margin-left: 4%;", MaxLength="75" }))
+							</li>
+							<div class="col-md-8" >
+								<div class="form-group" >
+									<label class="control-label">
+										Comunidad Autonóma
+									</label>
+									@(this.Html.Kendo().ComboBox().Name("Comunidad").Placeholder("Selecciona Comunidad Autonóma")
+										  .DataTextField("Text").DataValueField("Value").Filter(FilterType.Contains)
+										  .BindTo((SelectList)this.ViewData["Comunidades"])
+										  .Value(ID_ComAut)
+										  .Suggest(true).Enable(this.ViewBag.disabled)
+										  .HtmlAttributes(new { style = "width:100%;background-color:" + color, required = "required", validationmessage = "Este campo es requerido", id = "Comunidad01", name = "Comunidad01", onChange = "ValidacionCombos(this,'errorComunidad')" }))
+                                          <span id="errorComunidad" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+								</div>
+							</div>
+							@if (@ViewBag.action!=General.AltaGeneral.ToDescription())
+							{
+								<div class="row">
+									<div class="col-md-4">
+										<div class="form-group">
+											<label class="control-label">
+												País
+											</label>
+											@(this.Html.Kendo().ComboBox().Name("Pais").Placeholder("Selecciona País")
+												  .DataTextField("Text").DataValueField("Value").Filter(FilterType.Contains)
+												  .BindTo((SelectList)this.ViewData["Paises"]).Value(this.ViewBag.Id_Pais).Suggest(true)
+												  .Enable(false).HtmlAttributes(new { style = "width:100%;background-color:" + color, required = "required", validationmessage = "Este campo es requerido", id = "Pais01", name = "Pais01" }))
+										</div>
+									</div>
+								</div>
+							}
+							<li id="Opcion02" class="space12" style="margin-top: 6%;margin-left: 40%; display: block">
+								<div class="btn-group btn-group-sm">
+									<button class="btn btn-primary hidden-xs" type="submit">
+										Guardar
+									</button>
+									<a class="btn btn-default " href="javascript:VolverProvincia()">
+										Volver
+									</a>
+								</div>
+							</li>
+							<li class="status"></li>
+						</ul>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="~/Scripts/AppSecureport/appPaises.js"></script>
+<script>
+	$(function () {
+		var validator = $("#ProvinciaForm").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$("form").submit(function (event) {
+		    event.preventDefault();
+		    if (ValidarAllCombos('@(ViewBag.action)'))
+		        $('input#ValidarAllCombos').val("1");
+		    else
+		        $('input#ValidarAllCombos').val("");
+			if (validator.validate()) {
+				status.removeClass("invalid").addClass("valid");
+				AltaEditarProvincias('@ViewBag.action');
+			} else {
+				status.removeClass("valid").addClass("invalid");
+			}
+		});
+	});
+</script>

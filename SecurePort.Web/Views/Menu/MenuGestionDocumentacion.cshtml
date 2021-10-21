@@ -1,0 +1,19 @@
+﻿@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+<a href="javascript:void(0)"><i class="clip-stack"></i>
+    <span class="title"> Gestión Documentos</span><i class="icon-arrow"></i>
+    <span class="selected"></span>
+</a>
+<ul id="IdSubMenuPlantillas" class="sub-menu">
+     @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListGruposPerfilesPermisos)
+     {
+         if(Permisos.NombrePermiso == Gestion_Documento.LISTA_DOCUMENTO.ToDescription())
+          {
+              <li id="Id042">
+                   <a href="@(this.Url.Action("ListadoDocumentos","Vinculos"))">
+                      Documentación Legal</a>
+              </li>
+          }
+     }
+</ul>

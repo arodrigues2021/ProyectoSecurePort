@@ -1,0 +1,22 @@
+﻿@using SecurePort.Entities.Models
+@model UsuarioFrontal
+
+@{
+    ViewBag.Title = "Reporte";
+}
+
+@*<h2>Reporte Centros 24H</h2>*@
+@Html.Partial("ViewPage1")
+
+<div class="row">
+	<div class="col-md-8">
+		<p></p>
+	</div>
+			<div id="Opcion02" class="space10" style="margin-left: 40%; display: block">
+			<div class="btn-group btn-group-sm">   
+				<a class="btn btn-default " href="@(this.Url.Action("ListadoCentros","Centros"))">
+				Volver </a>
+			</div>
+		</div>
+							                         
+</div>

@@ -1,0 +1,16 @@
+﻿@using SecurePort.Entities.Models
+@(this.Html.Kendo().Grid<AmenazasViewModel>().Name("GridBienesAmenazas").DataSource(dataSource => dataSource.Ajax().ServerOperation(true)).Columns(columns =>
+   {
+       columns.Bound(o => o.Id).Hidden(true);
+       columns.Bound(o => o.Descripcion).Title("Amenazas").HtmlAttributes(new { style = "text-align: left;" });
+       columns.Bound(o => o.activado).ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= activado=='Si' ? checked='checked': '' #  />").Title("Selecciona").Width(100);
+   })
+      .HtmlAttributes(new { style = "height: 800px" })
+      .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+      .DataSource(dataSource => dataSource.Ajax().Model(model => model.Id(p => p.Id))
+      .Read(read => read.Action("AmenazasBienesPadreHijos","Amenazas")))
+      .Filterable()
+      .Scrollable()
+      .Resizable(resize => resize.Columns(true))
+      .Reorderable(reorder => reorder.Columns(true)))
+

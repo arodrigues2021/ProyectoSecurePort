@@ -1,0 +1,313 @@
+﻿@model SecurePort.Entities.Models.OperadoresPuertoViewModel
+@{
+	this.Layout = null;
+	int id = this.Model.Id;
+	this.ViewBag.Vista = "OperadoresPuerto";
+	string color = this.ViewBag.Operadordisabled == false? " #eeeeee;color: #000000": "#FFFFFF";
+	string suplente = this.Model.Es_Suplente == true? "1": "0";
+	string suplenteText = this.Model.Es_Suplente == true? "Si": "No";
+	int idPuerto = this.Model.Id_Puerto;
+	string Estado = this.ViewBag.Operadordisabled == false? "disabled = 'disabled'": "";
+	string requeridoOperador = this.ViewBag.Operadordisabled == false? string.Empty: "symbol required";
+	string idprovincia = this.Model.ID_Provincia.ToString() == "0"? string.Empty: this.Model.ID_Provincia.ToString();
+	string idciudad = this.Model.ID_Ciudad.ToString() == "0"? string.Empty: this.Model.ID_Ciudad.ToString();
+	string valor = this.Model.Es_Activo? "1": "0";
+	string ActivoOperador = this.Model.Es_Activo? "Si": "No";
+}
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default" style="margin-top: -2%; margin-left: -2%; margin-right: -2%;" >
+			<div class="panel-heading" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>@(this.ViewBag.Mensaje)</strong>
+			</div>
+			<input type="text" id="IdValor" name="IdValor" style="display: none">
+			@(this.Html.Kendo().TextBoxFor(model => model.Id).Name("ID_operador").HtmlAttributes(new { id = "IdOperador01", name = "IdOperador01", style = "width:220px;margin-left: 4%;display:none" }))
+			@(this.Html.Kendo().TextBoxFor(model => model.Id_Puerto).Name("IdPuerto").HtmlAttributes(new { id = "Puerto01", name = "Puerto01", style = "width:220px;margin-left: 4%;display:none" }))
+            <input type="text" id="ValidarAllCombosOP" name="ValidarAllCombosOP" style="display: none">
+			<div class="col-md-12">
+				<!-- start: FORM VALIDATION 1 PANEL -->
+				<div class="panel-body">
+					<hr>
+					<form action="#" role="form" id="Operadorform" onsubmit=" return validacionFomulario() ">
+						<div class="row">
+							<div id="Error02" class="errorHandler alert alert-danger no-display ">
+								<i class="icon-remove-sign"></i> Usted tiene algunos errores. Por favor, consulte más abajo.
+							</div>
+							<div id="Error01" class="successHandler alert alert-success no-display">
+								<i class="icon-ok"></i> Su validación es exitosa!
+							</div>
+							<div id="ComboUsuario">
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="control-label" >
+											Nombre <span class="@requeridoOperador"></span>
+										</label>                                    
+										@(this.Html.Kendo().TextBoxFor(model => model.Nombre).Name("Nombre").Enable(this.ViewBag.Operadordisabled).HtmlAttributes(new { id = "NombreOperador01", name = "NombreOperador01", style = "background-color:" + color, @class = "form-control", type = "text", Maxlength="75" }))
+										<span id="datosReponsable"  style="display: none; color: #b94a48;">Este campo es requerido.</span>
+									</div>
+								</div>
+							</div>
+							<div id="ComboSuplente">
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="control-label">
+											Suplente<span class="@requeridoOperador"></span>
+										</label>
+										<div style="@(this.ViewBag.Combo)">
+											@(this.Html.Kendo().ComboBox().Name("Suplente")
+                                            .DataTextField("Text").DataValueField("Value")
+                                            .Filter(FilterType.Contains)
+                                            .BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "Si", Value = "1" }, new SelectListItem() { Text = "No", Value = "0" } })
+                                            .Value(suplente).Enable(this.ViewBag.Operadordisabled).Suggest(true)
+                                            .HtmlAttributes(new { style = "width:100%;background-color:" + color, id = "Suplente01", required = "required", onChange = "ValidacionCombos(this,'errorSuplenteOP')" }))
+                                            <span id="errorSuplenteOP" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+										</div>
+										<span id="datosSuplente"  style="display: none; color: #b94a48;">Este campo es requerido.</span>
+										<div style="@(this.ViewBag.Texto)">
+											@(this.Html.Kendo().TextBox().Name("ActivoTxt").Enable(this.ViewBag.Operadordisabled).HtmlAttributes(new { id = "SuplenteText", name = "SuplenteText", style = "width:200px;margin-left: 4%;background-color:" + color, @class = "form-control", type = "text", value = @suplenteText }))
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4" style= @(this.ViewBag.display)  >
+								<div class="form-group" >
+									<label class="control-label">
+										Activo <span class="@requeridoOperador"></span>
+									</label>
+									<div style="@(this.ViewBag.Combo)">
+										@(this.Html.Kendo().ComboBox().Name("ActivoOperador")
+                                            .DataTextField("Text").DataValueField("Value")
+                                            .Filter(FilterType.Contains)
+                                            .BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "Si", Value = "1" }, new SelectListItem() { Text = "No", Value = "0" } })
+                                            .Value(valor).Suggest(true).Enable(this.ViewBag.Operadordisabled)
+                                            .HtmlAttributes(new { style = "width:100%;background-color:" + color, id = "ActivoOperador01", name = "ActivoOperador01", onChange = "ValidacionCombos(this,'errorActivoOP')" }))
+                                            <span id="errorActivoOP" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+									</div>
+									<div style="@(this.ViewBag.Texto)">
+										@(this.Html.Kendo().TextBox().Name("activadoTexto").Enable(this.ViewBag.Operadordisabled).HtmlAttributes(new { id = "ActivoOperadorText", name = "ActivoOperadorText", style = "background-color:" + color, @class = "form-control", type = "text", value = @ActivoOperador }))
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="control-label">
+										Dirección <span></span>
+									</label>
+									@(this.Html.Kendo().TextBoxFor(model => model.Direccion).Name("Direccion").Enable(this.ViewBag.Operadordisabled).HtmlAttributes(new { id = "DireccionOperador01", name = "DireccionOperador01", placeholder = "Inserte Nombre la Dirección", style = "background-color:" + color, @class = "form-control", type = "text", Maxlength="100" }))
+								</div>
+							</div>
+						</div>                
+						<div class="row">
+							<div id="ComboProvincia">
+								<div style="@(this.ViewBag.Combo)">
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">
+												Provincia <span></span>
+											</label>
+											@(this.Html.Kendo().ComboBox().Name("Provincia")
+                                                .Placeholder("Selecciona Provincia")
+                                                .DataTextField("Text").DataValueField("Value")
+                                                .Filter(FilterType.Contains)
+                                                .BindTo((SelectList)this.ViewData["Provincias"])
+                                                .Value(idprovincia).Suggest(true).Enable(this.ViewBag.Operadordisabled)
+                                                .HtmlAttributes(new { style = "width:100%;background-color:" + color, id = "ProvinciaOperador01", onChange = "CambiarProvinciaOperador()" }))
+                                                <span id="errorProvinciaOP" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+										</div>
+									</div>
+								</div>
+								<div style="@(this.ViewBag.Texto)">
+									<div class="col-md-3">
+										<div class="form-group">
+											<label class="control-label">
+												Provincia <span></span>
+											</label>
+											@(this.Html.Kendo().TextBoxFor(model => model.Provincia).Name("ProvinciaTexto").Enable(this.ViewBag.Operadordisabled).HtmlAttributes(new { id = "ProvinciaOperadorText", name = "ProvinciaOperadorText", style = "background-color:" + color, @class = "form-control", type = "text" }))
+										</div>	
+									</div>
+								</div>
+							</div>
+							<div id="OperadorComboCiudad">
+								<div style="@(this.ViewBag.Combo)">
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label" >
+												Municipio <span></span>
+											</label>
+											@(this.Html.Kendo().ComboBox().Name("CiudadOperador")
+                                                .Placeholder("Selecciona Municipio")
+                                                .DataTextField("Text").DataValueField("Value")
+                                                .Filter(FilterType.Contains)
+                                                .BindTo((SelectList)this.ViewData["Ciudades"])
+                                                .Value(idciudad).Enable(this.ViewBag.Operadordisabled).Suggest(true)
+                                                .HtmlAttributes(new { id = "CiudadOperador01", name = "CiudadOperador01", onChange = "ValidacionCombos(this,'errorCiudadOP')", style = "width:100%;background-color:" + color }))
+                                                <span id="errorCiudadOP" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+										</div>
+									</div>
+								</div>
+								<div style="@(this.ViewBag.Texto)">
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label" style="margin-left: 4%">
+												Municipio <span></span>
+											</label>
+											@(this.Html.Kendo().TextBoxFor(model => model.Ciudad).Name("CiudadTexto").Enable(this.ViewBag.Operadordisabled).HtmlAttributes(new { id = "CiudadoperadorText", name = "CiudadOperadorText", style = "background-color:" + color, @class = "form-control", type = "text" }))
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label" style="margin-left: 4%">
+										Código Postal <span></span>
+									</label>
+									@(this.Html.Kendo().TextBoxFor(model => model.Cod_Postal).Name("Postal_Operador").Enable(this.ViewBag.Operadordisabled).HtmlAttributes(new { id = "PostalOperador01", name = "PostalOperador01", placeholder = "Inserte Código Postal", style = "margin-left: 4%;background-color:" + color, @class = "form-control", type = "text" }))
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label class="control-label">
+										Teléfono  <span></span>
+									</label>
+									@(this.Html.Kendo().TextBoxFor(model => model.Telefono).Name("Teléfono").Enable(this.ViewBag.Operadordisabled).HtmlAttributes(new { id = "Telefono01", name = "Telefono01", placeholder = "Inserte el Teléfono", style = "background-color:" + color, @class = "form-control", type = "text", Maxlength="100" }))
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label class="control-label">
+										Fax <span></span>
+									</label>
+									@(this.Html.Kendo().TextBoxFor(model => model.Fax).Name("Fax").Enable(this.ViewBag.Operadordisabled).HtmlAttributes(new { id = "Fax01", name = "Fax01", placeholder = "Inserte el Fax", style = "background-color:" + color, @class = "form-control", type = "text", Maxlength="100" }))
+								</div>
+							</div>
+						</div>
+						<div class="row">					
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="control-label">
+										Correo <span></span>
+									</label>
+									@(this.Html.Kendo().TextBoxFor(model => model.Email).Name("Correo").Enable(this.ViewBag.Operadordisabled).HtmlAttributes(new { id = "Correo01", name = "Correo01", placeholder = "Inserte el Correo", style = "background-color:" + color, @class = "form-control", type = "text", onChange = "validarCorreo(this)", Maxlength="100" }))
+									<span Id="Contenido" Style="display: none; color: #b94a48;">Su direcci&oacuten de correo electr&oacutenico debe estar en el formato de name@domain.com</span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class="control-label">
+										Observaciones <span></span>
+									</label>
+									<textarea name="Observacion01" id="Observacion01" cols="30" rows="10" style="margin: 0px; height: 140px; width: 710px; white-space: normal; text-align: justify; text-align-last: left; -moz-text-align-last: left; background-color: @color"  @Estado >@(this.ViewBag.Observacion)</textarea>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<p></p>
+							</div>
+							<div style="@(this.ViewBag.Combo)">
+								<div class="col-md-12">
+									<div>
+										<span class="symbol required"></span>Campos requeridos
+										<hr>
+									</div>
+								</div>
+							</div>
+							<div style="@(this.ViewBag.Texto)">
+								<div class="col-md-12">
+									<div>
+										<span> &nbsp; </span>
+										<hr>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div style="@(this.ViewBag.Combo)">
+								<div class="space12" style="margin-top: -10%; margin-left: 50%; display: block">
+									<div class="btn-group btn-group-sm">
+										<button id="RegistroOperador" class="btn btn-primary hidden-xs" type="submit">
+											Guardar</button>
+										<a class="btn btn-default " href="javascript:void(0)" onclick=" VisualizarOperador(@id) ">Volver</a>
+									</div>
+								</div>
+							</div>
+							<div style="@(this.ViewBag.Texto)">
+								<div class="space12" style="margin-top: -10%; margin-left: 50%; display: block">
+									<div class="btn-group btn-group-sm">									
+										<a class="btn btn-default " href="javascript:void(0)" onclick=" VisualizarOperador(@id) ">Volver</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(function() {
+		$('button#RegistroOperador.btn.btn-primary.hidden-xs').click(function() {
+		    validarFormulario();
+		    if (ValidarAllCombosOP('@(this.ViewBag.display)'))
+		        $('input#ValidarAllCombosOP').val("1");
+		    else
+		        $('input#ValidarAllCombosOP').val("");
+			AltaEditarOperadoresPuerto('@(this.ViewBag.actionOperador)');
+
+		});
+
+	});
+
+	function validacionFomulario() {
+		if (!validarFormulario())
+			return false;
+		else {
+			true;
+		}
+	}
+
+	function validarFormulario() {
+	    var valido = false;
+            
+	    if (ValidarAllCombosOP(' @(this.ViewBag.display)'))
+	        $('input#ValidarAllCombosOP').val("1");
+
+		if ($('input#Correo01').val() != "") {
+			var Validado = validarCorreo($('input#Correo01').val());
+			if (Validado == false) {
+				Contenido.style.display = "";
+				valido = false;
+			} else
+				Contenido.style.display = "none";
+		} else {
+			$('input#IdValor').val(1);
+		}
+
+		if (!ValidarTexto($('input#NombreOperador01').val())) {
+			datosReponsable.style.display = "";
+			valido = false;
+		} else
+			datosReponsable.style.display = "none";
+
+
+		if (!ValidarCombo($('input#Suplente01').val())) {
+			if (!ValidarCombo($('input#Suplente01').val())) {
+				datosSuplente.style.display = "";
+				valido = false;
+			} else
+				datosSuplente.style.display = "none";
+		}
+
+		return valido;
+	}
+
+</script>

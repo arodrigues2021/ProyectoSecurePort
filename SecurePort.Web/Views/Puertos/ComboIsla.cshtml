@@ -1,0 +1,10 @@
+﻿<div class="col-md-2">
+	<div class="form-group">
+		<label class="control-label" style="margin-left: 4%">
+			Isla <span></span>
+		</label>
+		@(this.Html.Kendo().TextBox().Name("Isla").Enable(false)
+			  .HtmlAttributes(new { id="Isla01", name="Isla01", style = "background-color:#eeeeee;", @class="form-control",type="text", value=this.ViewData["Isla"].ToString() }))
+
+	</div>
+</div>

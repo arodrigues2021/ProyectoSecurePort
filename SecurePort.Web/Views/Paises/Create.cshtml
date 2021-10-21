@@ -1,0 +1,62 @@
+﻿@using DocumentFormat.OpenXml.Wordprocessing
+
+<div class="row">
+	<div class="col-lg-13">
+		<div class="panel panel-default" style="margin-top: -4%;">
+			<div class="panel-heading" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>Alta Pais</strong>
+			</div>
+			<div class="k-content">
+				<div id="Pais">
+					<form id="PaisForm">
+					    <ul id="fieldlist">
+					        <li style="list-style:none;">
+					            &nbsp;
+					        </li>
+					        <li style="list-style:none;height:6%">
+					            <label for="Codigo" style = "margin-left: 4%;" class="required">Pais</label>
+					            @(Html.Kendo().TextBox().Name("Codigo")
+					                  .HtmlAttributes(new { id="Codigo01",placeholder = "Insertar el País", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:220px;margin-left: 4%;text-transform: uppercase", MaxLength="2" }))
+					        </li>
+
+					        <li style="list-style:none;height:6%">
+					            <label for="Nombre" style = "margin-left: 4%;" class="required">Nombre</label>
+					            @(Html.Kendo().TextBox().Name("Nombre")
+					                  .HtmlAttributes(new { id="Nombre01",placeholder = "Insertar Nombre del País", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:220px;margin-left: 4%;", MaxLength="75"  }))
+					        </li>
+					        <li id="Opcion02" class="space12" style="margin-left: 40%; display: block" style="list-style:none;height:6%">
+					            <div class="btn-group btn-group-sm">
+					                <button class="btn btn-primary hidden-xs" type="submit">
+					                    Guardar
+					                </button>
+					                <a class="btn btn-default " href="javascript:VolverPais()">
+					                    Volver
+					                </a>
+					            </div>
+					        </li>
+					        <li class="status" style="list-style:none;">
+					        </li>
+					    </ul>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(function () {
+		var validator = $("#PaisForm").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$("form").submit(function (event) {
+			event.preventDefault();
+			if (validator.validate()) {
+			    status.removeClass("invalid").addClass("valid");
+			    AltaPais();
+			} else {
+				status.removeClass("valid").addClass("invalid");
+			}
+		});
+	});
+</script>
+

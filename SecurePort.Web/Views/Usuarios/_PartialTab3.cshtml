@@ -1,0 +1,61 @@
+﻿@using SecurePort.Entities.Models
+@model UsuarioPassword
+<div>
+    <span></span>
+    <hr style="margin-top: 4%;">
+</div>
+<input type="text" id="contrasena" name="contrasena" style="display: none">
+<div class="box-login">
+    <h2><i class="icon-edit-sign teal"></i> Contraseña</h2>
+    <div class="form-group"  style="display: none">
+        <label class="control-label">
+            Usuario:<span></span>
+        </label>
+        <h4>@Model.login</h4>
+    </div>
+    <div id="Password08" class="form-group">
+        <label class="control-label">
+            Contraseña Actual:<span class="symbol required"></span>
+        </label>
+        @(this.Html.TextBoxFor(model => model.passwordActual,
+              new { itemid = "Password", id = "Password08", name = "Password08", @class = "form-control", type = "Password", placeholder = "Inserte su Contraseña Actual", onChange = "ValidarVacio01(this)" }))
+        <span id="SpanPassword08" for="Password08" class="help-block" style="display:none">Contraseña Actual es requerido.</span>
+        <span id="SpanPassword11" for="Password11" class="help-block" style="display:none">La Contraseña Nueva no puede ser igual a la contraseña Actual.</span>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                <span class="symbol required"></span>Campos requeridos
+                <hr>
+            </div>
+        </div>
+    </div>
+    <div id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+        <div class="btn-group btn-group-sm">
+            <a  class="btn btn-primary hidden-xs" href="javascript:void(0)" onclick="ValidarContrasena()">
+                Guardar</a>
+            <a class="btn btn-default" href="javascript:void(0)" onclick=" Volver() ">
+                Volver</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/Scripts/AppSecureport/SecurePort.js"></script>
+<script type="text/javascript">
+    function ValidarVacio01(item) {
+        var name = "";
+        if ('@(this.ViewBag.Navegador)' == "internetexplorer") {
+            name = item.attributes[0].value;
+        } else {
+            name = item.attributes[2].value;
+        }
+        if ($(item).val() == "") {
+            $('div#' + name + '08.form-group').removeClass('has-success').addClass('has-error');
+            $('span#Span' + name + '08.help-block').attr('style', 'display:block');
+            $('input#' + name + '08.form-group').focus();
+        } else {
+            $('input#contrasena').val($(item).val());
+            $('div#' + name + '08.form-group').removeClass('has-error').addClass('has-success');
+            $('span#Span' + name + '08.help-block').attr('style', 'display:none');
+        }
+    }
+</script>

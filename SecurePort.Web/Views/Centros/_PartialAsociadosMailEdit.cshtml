@@ -1,0 +1,87 @@
+﻿@model SecurePort.Entities.Models.UsuarioFrontal
+<div class="panel-body">
+
+<input type="text" id="IdMail"   name="IdMail"   style="display: none">
+<input type="text" id="NombreMail"   name="NombreMail"   style="display: none">
+	<div class="row">
+		<div class="col-md-12">
+			@if (Model.valor)
+			{
+				
+			
+				@(this.Html.Kendo().ToolBar().Name("ToolBarMail").Items(items =>
+				  {
+					  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" })
+						  .Hidden(@Model.permisosViewModel.CON_MODIF_CENTRO).Id("toggle13");
+					  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" })
+						  .Hidden(@Model.permisosViewModel.CON_MODIF_CENTRO).Id("toggle14");
+					  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" })
+						  .Hidden(@Model.permisosViewModel.CON_MODIF_CENTRO).Id("toggle15");
+					  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" })
+						  .Hidden(@Model.permisosViewModel.CON_MODIF_CENTRO).Id("toggle16");
+				  })
+					  .Events(e => e.Toggle("onToggleCentro"))
+					  )
+			}
+			 @(this.Html.Kendo().Grid<SecurePort.Entities.Models.Comunica_Centro>().Name("Grid_Comunica_Mail")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.id).Hidden(true);
+					  columns.Bound(o => o.Dato).Title("Correo").HtmlAttributes(new { style = "text-align: left;" }).Width(250);
+					  columns.Bound(o => o.Nota).Title("Observcaiones").HtmlAttributes(new { style = "text-align: left;" });					  
+				  })
+				  .Events(events => events.Change("onChangeEditMail"))
+				  .HtmlAttributes(new { style = "height: 200px" })
+				  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+				  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(10)
+					  .Model(model => model.Id(p => p.id))
+					  .Read(read => read.Action("MailAsociados", "Centros")))
+				  .Pageable()
+                  .Sortable(sortable => sortable.AllowUnsort(true)
+                  .SortMode(GridSortMode.MultipleColumn))
+				  .Filterable()
+				  .Scrollable()
+                  .Resizable(resize => resize.Columns(true))
+                  
+				  )
+		</div>
+	</div>
+</div>
+<script>
+
+
+	function onShow(e) {
+	}
+	function onHide(e) {
+
+	}
+	$(document).ready(function () {
+		$("#toggle13").kendoTooltip({
+			content: "Alta Correo",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle14").kendoTooltip({
+			content: "Editar Correo",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle15").kendoTooltip({
+			content: "Borrar Correo",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle16").kendoTooltip({
+			content: "Visualizar Correo",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+	});
+
+</script>
+

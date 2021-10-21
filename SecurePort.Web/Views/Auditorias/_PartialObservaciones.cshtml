@@ -1,0 +1,29 @@
+﻿<div id="002" style="margin-top: -6%;">
+    <div class="col-md-3" style="margin-left: 1%;">
+        <div class="form-group">
+            <label class="control-label">
+                Seguimiento <span></span>
+            </label>
+            @(this.Html.Kendo().Editor().Name("editor").HtmlAttributes(new { style = "height:100px;", id = "Seguimiento01", name = "Seguimiento01" }).Tools(tools => tools.Clear()).Value((string)this.ViewBag.Seguimiento).Resizable(false))
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label class="control-label">
+                Observaciones <span></span>
+            </label>
+            @(this.Html.Kendo().Editor().Name("editor").HtmlAttributes(new { style = "height:100px;", id = "Observaciones01", name = "Observaciones01" }).Tools(tools => tools.Clear()).Value((string)this.ViewBag.Observaciones).Resizable(false))
+        </div>
+    </div>
+    @*<div class="row">
+        <div class="col-md-3" style="margin-left: 1%;">
+            <div class="form-group">
+                <label class="control-label">
+                    Programa 
+                </label>
+                @(this.Html.Kendo().Editor().Name("editor").HtmlAttributes(new { style = "height:100px;", id = "Programa01", name = "Programa01" }).Tools(tools => tools.Clear()).Value((string)this.ViewBag.Programa).Resizable(false))
+            </div>
+        </div>
+    </div>*@
+</div>
+

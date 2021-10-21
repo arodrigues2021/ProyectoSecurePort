@@ -1,0 +1,31 @@
+﻿@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+<a href="javascript:void(0)"><i class="clip-file-plus"></i>
+	<span class="title"> Gestión Evaluación </span><i class="icon-arrow"></i>
+	<span class="selected"></span>
+</a>
+<ul id="IdSubMenuEvaluaciones" class="sub-menu">
+   @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+    {
+        if(Permisos.NombrePermiso == Mov_Evaluaciones.LISTA_IIPP.ToDescription())
+        {
+            <li id="Id046">
+                <a href="@(this.Url.Action("ListadoInstalaciones","Evaluaciones"))">
+                    Lista Instalaciones</a>
+            </li>
+        }
+    }
+  @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+    {
+        if(Permisos.NombrePermiso == Mov_Evaluaciones.LISTA_EVAL.ToDescription())
+        {
+            <li id="Id047">
+                <a href="@(this.Url.Action("ListadoEvaluaciones","Evaluaciones"))">
+                    Evaluaciones Instalaciones</a>
+            </li>
+        }
+    }  
+
+</ul>
+

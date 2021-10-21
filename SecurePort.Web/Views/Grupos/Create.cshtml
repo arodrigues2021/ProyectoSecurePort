@@ -1,0 +1,153 @@
+﻿@using SecurePort.Entities.Enums
+@{
+    string publico = "2";
+}
+
+
+    <div class="row">
+        <div class ="col-lg-13">
+            <!-- start: FORM VALIDATION 1 PANEL -->
+	      <div class="panel panel-default" style="margin-top: -4%;">
+			<div class="panel-heading" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>Alta de Grupos</strong>
+			</div>
+	          <div class="k-content">
+                <input type="text" id="ValidarAllCombos" name="ValidarAllCombos" style="display: none">    
+	            <div id="Grupo">
+					<form id="GruposForm">
+					 <ul id="fieldlist">
+	                <li>
+	                    &nbsp;
+	                </li>
+	                <li>
+	                    <label cfor="Grupo" style = "margin-left: 4%;" class="required">Grupo </label>
+                        @(Html.Kendo().TextBox().Name("IdGrupoNombre")
+					        .HtmlAttributes(new { id="IdGrupoNombre01",placeholder = "Inserte Nombre Grupo", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:220px;margin-left: 4%;text-transform: uppercase", Maxlength ="75" }))
+	                </li>
+	                <li>
+	                    <label cfor="Descripcion" style = "margin-left: 4%;" class="required">Descripción </label>
+                        @(Html.Kendo().TextBox().Name("IdGrupoDescription")
+					        .HtmlAttributes(new { id="IdGrupoDescription01",placeholder = "Insertar la descripcion", required = "required", type = "text",validationmessage = "Este campo es requerido",  style = "width:220px;margin-left: 4%;", Maxlength ="2000" }))
+	                </li>   
+                    <li>
+	                    <label cfor="Publico" style = "margin-left: 4%;" class="required">Es Público </label>
+                          @(this.Html.Kendo().ComboBox().Name("GrupoPublico")
+										      .DataTextField("Text").DataValueField("Value")
+										      .Filter(FilterType.Contains)
+                                              .Placeholder("Selecciona ")
+										      .BindTo(new List<SelectListItem>() {
+                                                  new SelectListItem() {
+												    Text = TipoPublico.PRI.ToDescription(), Value = "2"   
+											      },  
+											      new SelectListItem() {                                                    
+												    Text = TipoPublico.PUB.ToDescription(), Value = "1"   
+											      },
+                                                  new SelectListItem() {                                                    
+												    Text = TipoPublico.ORG.ToDescription(), Value = "3"   
+											      }
+										      })
+										      .Value(publico)
+										      .Suggest(true)
+										      .HtmlAttributes(new {style = "margin-left: 4%;",  id = "Publico01", name = "Publico01", required = "required", validationmessage = "Este campo es requerido", onChange = "ValidacionCombos(this,'errorGrupo')" }))
+                                              <span id="errorGrupo" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+	                </li>    
+			        <li id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+					     <div class="btn-group btn-group-sm">
+					        <button class="btn btn-primary hidden-xs" type="submit">
+					           Guardar
+					        </button>
+					         <a class="btn btn-default " href="javascript:VolverGrupo()">
+					             Volver
+					         </a>
+					    </div>
+				     </li>
+                     <li class="status">
+   		            </li>
+				  </ul>
+				</form>
+			</div>
+
+	    </div>
+        </div>  
+      </div>
+  </div>
+<script>
+    $(function () {
+	    var validator = $("#GruposForm").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$("form").submit(function (event) {
+		    event.preventDefault();
+		    if (ValidarAllCombos("0"))
+		        $('input#ValidarAllCombos').val("1");
+		    else
+		        $('input#ValidarAllCombos').val("");
+			if (validator.validate()) {
+			    status.removeClass("invalid").addClass("valid");
+			    RegisterGrupos();
+			} else {
+				status.removeClass("valid").addClass("invalid");
+			}
+		});
+	});
+</script>
+<style>
+	
+	#fieldlist {
+		margin: 0;
+		padding: 0;
+	}
+
+	#fieldlist li {
+		list-style: none;
+		padding-bottom: .7em;
+		text-align: left;
+	}
+
+	#fieldlist label {
+		display: block;
+		padding-bottom: .3em;
+		font-weight: bold;
+		font-size: 12px;
+		color: #444;
+	}
+
+	#fieldlist li.status {
+		text-align: center;
+	}
+
+	#fieldlist li .k-widget:not(.k-tooltip),
+	#fieldlist li .k-textbox {
+		margin: 0 5px 5px 0;
+	}
+
+	.confirm {
+		padding-top: 1em;
+	}
+
+	.valid {
+		color: green;
+	}
+
+	.invalid {
+		color: red;
+	}
+
+	span.k-widget.k-tooltip-validation {
+		display: inline-block;
+		width: 160px;
+		text-align: left;
+		border: 0;
+		padding: 0;
+		margin: 0;
+		background: none;
+		color: red;
+	}
+
+	.k-tooltip-validation .k-warning {
+		display: none;
+	}
+
+</style>
+
+

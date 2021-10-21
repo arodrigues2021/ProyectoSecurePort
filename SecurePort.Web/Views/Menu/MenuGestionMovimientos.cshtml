@@ -1,0 +1,56 @@
+﻿@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+<a href="javascript:void(0)"><i class="clip-file-2"></i>
+	<span class="title"> Puertos/Instalaciones </span><i class="icon-arrow"></i>
+	<span class="selected"></span>
+</a>
+<ul id="IdSubMenuMovimientos" class="sub-menu">
+	
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+		if (Permisos.NombrePermiso == Organismo.LISTA_ORGANISMO.ToDescription())
+		{
+			<li id="Id013">
+				<a href="@(this.Url.Action("ListadoOrganismo","Organismo"))">
+					Organismos de Gestión Portuaria </a>
+			</li>
+		}
+	}
+	
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+		if (Permisos.NombrePermiso == Puerto.LISTAR_OPCION_PUERTO.ToDescription())
+		{
+			<li id="Id014">
+				<a href="@(this.Url.Action("ListadoPuertos","Puertos"))">
+					Puertos </a>
+			</li>
+		}
+	}
+	
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+		if (Permisos.NombrePermiso == Instalacion_Operadores.LISTA_IIPP.ToDescription())
+		{
+			<li id="Id016">
+				<a href="@(this.Url.Action("ListadoInstalaciones","Instalaciones"))">
+					Instalaciones </a>
+			</li>
+		}
+	}
+	
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+		if (Permisos.NombrePermiso == Centro.LISTAR_CENTRO.ToDescription())
+		{
+			<li id="Id017">
+				<a href="@(this.Url.Action("ListadoCentros","Centros"))">
+					Centros 24H </a>
+			</li>
+		}
+	}
+
+</ul>
+
+

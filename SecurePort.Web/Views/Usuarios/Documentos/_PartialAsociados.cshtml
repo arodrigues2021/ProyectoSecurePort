@@ -1,0 +1,24 @@
+﻿<div class="panel-body">
+	<div class="row">
+		<div class="col-md-10">
+			@(this.Html.Kendo().Grid<SecurePort.Entities.Models.Doc_Usuario_Asoc>().Name("GridDoc_Usuario_Asoc")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.id).Width(1).Groupable(false).Sortable(false).Filterable(false);
+					  columns.Bound(o => o.TipoNombre).Title("Tipo").HtmlAttributes(new { style = "text-align: left;" }).Width(90);
+					  columns.Bound(o => o.documento).Title("Documento").HtmlAttributes(new { style = "text-align: left;" });
+					  columns.Bound(o => o.descripcion).Title("Descripción").HtmlAttributes(new { style = "text-align: left;" });
+				  }).HtmlAttributes(new { style = "height: 200px" }).Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+				  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(15)
+					  .Model(model => model.Id(p => p.id))
+					  .Read(read => read.Action("DocumentosAsociados","Usuarios")))
+				  .Pageable()
+                  .Sortable(sortable => sortable.AllowUnsort(true)
+				  .SortMode(GridSortMode.MultipleColumn))
+				  .Filterable()
+				  .Scrollable()
+				)
+		</div>
+	</div>
+</div>

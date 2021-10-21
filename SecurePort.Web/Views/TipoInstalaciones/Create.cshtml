@@ -1,0 +1,84 @@
+﻿@using DocumentFormat.OpenXml.Wordprocessing
+
+<div class="row">
+	<div class="col-lg-13">
+		<div class="panel panel-default" style="margin-top: -4%;">
+			<div class="panel-heading" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>Alta Tipo Instalación</strong>
+			</div>
+			<div class="k-content">
+            <input type="text" id="ValidarAllCombos" name="ValidarAllCombos" style="display: none">
+				<div id="Instalacion">
+					<form id="InstalacionForm">
+						<ul id="fieldlist">
+							<li style="list-style:none;">
+					            &nbsp;
+					        </li>
+							<li style="list-style:none;height:6%">
+								<label for="Nombre" style = "margin-left: 4%;" class="required">Descripción</label>
+								@(Html.Kendo().TextBox().Name("Descripcion")
+									  .HtmlAttributes(new { id="Descripcion01", name="Descripcion01",placeholder = "Insertar Descripción", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:220px;margin-left: 4%;", MaxLength="1000" }))
+							</li>
+							<div class="col-md-6" >
+								<div class="form-group" >
+									<label class="control-label">
+										Clasificación
+									</label>
+									@(this.Html.Kendo().ComboBox().Name("clasificacion")
+										  .Placeholder("Selecciona Clasificacion")
+										  .DataTextField("Text")
+										  .DataValueField("Value")
+										  .Filter(FilterType.Contains)
+										  .BindTo(new List<SelectListItem>() { 
+													new SelectListItem() { Text = "725", Value = "1" }, 
+													new SelectListItem() { Text = "SEVESO", Value = "2" }, 
+													new SelectListItem() { Text = "Alto Riesgo", Value = "3" }, 
+													new SelectListItem() { Text = "Bajo Riesgo", Value = "4" }, 
+													new SelectListItem() { Text = "Zonas Adyacentes", Value = "5" }, 
+													new SelectListItem() { Text = "Tráficos Esporádicos", Value = "6" } })
+										  .Suggest(true)
+										  .HtmlAttributes(new { style = "width:100%;",  id = "clasificacion01", name = "clasificacion01", onChange = "ValidacionCombos(this,'errorClasifica')" }))
+                                          <span id="errorClasifica" style="display: none; color: #b94a48;">Este campo es inválido.</span>   
+								</div>
+							</div>
+							<li id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+								<div class="btn-group btn-group-sm">
+									<button class="btn btn-primary hidden-xs" type="submit">
+										Guardar
+									</button>
+									<a class="btn btn-default " href="javascript:VolverInstalacion()">
+										Volver
+									</a>
+								</div>
+							</li>
+							<li class="status">
+							</li>
+						</ul>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="~/Scripts/AppSecureport/appTiposInstalaciones.js"></script>
+<script>
+	$(function () {
+		var validator = $("#InstalacionForm").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$("form").submit(function (event) {
+		    event.preventDefault();
+		    if (ValidarAllCombos("0"))
+		        $('input#ValidarAllCombos').val("1");
+		    else
+		        $('input#ValidarAllCombos').val("");
+			if (validator.validate()) {
+				status.removeClass("invalid").addClass("valid");
+				AltaInstalacion();
+			} else {
+				status.removeClass("valid").addClass("invalid");
+			}
+		});
+	});
+</script>
+

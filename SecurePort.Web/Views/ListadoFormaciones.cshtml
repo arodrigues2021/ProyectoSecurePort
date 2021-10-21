@@ -1,0 +1,192 @@
+﻿@using System.Configuration
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+@{
+	this.Layout = "~/Views/Shared/LayoutSite.cshtml";
+	this.ViewBag.Title = "Control de Archivos, Informes y Registros";
+	string nombreCompleto = this.Model.Usuario.nombre + " " + this.Model.Usuario.apellidos;
+	UsuarioPassword usuarioPassword = new UsuarioPassword();
+	usuarioPassword.login = Model.Usuario.login;
+	string nombreRuta = ConfigurationManager.AppSettings["RutaDOC"] + ConfigurationManager.AppSettings["AvisoLegal"];
+}
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		@(this.Html.Partial("~/Views/Shared/Cabecera.cshtml",this.Model))
+		<!-- start: TOP NAVIGATION CONTAINER -->
+		<div class="container">
+			<div class="navbar-header">
+				<!-- start: RESPONSIVE MENU TOGGLER -->
+				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+					<span class="clip-list-2"></span>
+				</button>
+				<!-- end: RESPONSIVE MENU TOGGLER -->
+				<!-- start: LOGO -->
+				<!-- end: LOGO -->
+			</div>
+			<div class="navbar-tools">
+				<!-- start: TOP NAVIGATION MENU -->
+				<ul class="nav navbar-right">
+					<!-- end: TO-DO DROPDOWN-->
+					<!-- start: NOTIFICATION DROPDOWN -->
+					<li class="dropdown">
+					</li>
+					<li class="dropdown current-user">
+					</li>
+					<!-- end: USER DROPDOWN -->
+				</ul>
+				<!-- end: TOP NAVIGATION MENU -->
+			</div>
+		</div>
+		<!-- end: TOP NAVIGATION CONTAINER -->
+	</div>
+	<!-- end: HEADER -->
+	<!-- start: MAIN CONTAINER -->
+	<div class="main-container">
+		<div class="navbar-content" id="topbar">
+			<!-- start: SIDEBAR -->
+			<div class="main-navigation navbar-collapse collapse">
+				<div class="navigation-toggler">
+					<i class="clip-chevron-left"></i>
+					<a class="clip-chevron-right"></a>
+				</div>
+				<ul class="main-navigation-menu">
+					<li class="active open">
+						<a href="#">
+							<i class="clip-home-3"></i>
+							<span class="title"> Menú Principal </span><span class="selected"></span>
+						</a>
+					</li>
+					<li>
+						@(this.Html.Partial("~/Views/Menu/MenuGestionUsuario.cshtml"))
+					</li>
+					<li>
+						@(this.Html.Partial("~/Views/Menu/MenuGestionEvaluaciones.cshtml"))
+					</li>
+					<li>
+						@(this.Html.Partial("~/Views/Menu/MenuGestionPlanes.cshtml"))
+					</li>
+					<li>
+						@(this.Html.Partial("~/Views/Menu/MenuGestionArchivos.cshtml"))
+					</li>
+					<li>
+						@(this.Html.Partial("~/Views/Menu/MenuGestionMaestros.cshtml"))
+					</li>
+					<li>
+						@(this.Html.Partial("~/Views/Menu/MenuGestionDocumentacion.cshtml"))
+					</li>
+					<li>
+						@(this.Html.Partial("~/Views/Menu/MenuGestionProcedimientos.cshtml"))
+					</li>
+					<li>
+						@(this.Html.Partial("~/Views/Menu/MenuGestionPlantillas.cshtml"))
+					</li>
+				</ul>
+				<!-- end: MAIN NAVIGATION MENU -->
+			</div>
+			<!-- end: SIDEBAR -->
+		</div>
+		<!-- start: PAGE -->
+			<div class="main-content">
+			 <!-- start: PANEL CONFIGURATION MODAL FORM -->
+			<div id="AvisoLegal"></div>
+			<div id="IdContainer" class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<!-- start: BASIC TABLE PANEL -->
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick="Ayuda()"></a>
+								<strong>
+									<div id="MostrarMensaje">
+										Control de Archivos, Informes y Registros 
+									</div>
+								</strong>
+							</div>
+							<div id="ListFormaciones">
+								@(this.Html.Partial("~/Views/Formaciones/List.cshtml"))
+							</div>
+						</div>
+						<!-- end: BASIC TABLE PANEL -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<label class="control-label" style="margin-left: 1%;">
+		Versión SecurePort: @(this.Model.version)
+	</label>
+	<!-- end: MAIN CONTAINER -->
+	<!-- start: FOOTER -->
+   <div id="myModalCambiarPassword" class="modal fade in" data-width="500" tabindex="-1" aria-hidden="false" style="width: 500px; margin-left: -299px; margin-top: -168px; display: none; height: 50%;">
+		<div class="modal-body">
+			<div class="apply_info">
+				@(this.Html.Partial("~/Views/Usuarios/CambioPassword.cshtml",usuarioPassword))
+			</div>
+		</div>
+	</div>
+	<div id="myModalEditar" class="modal fade in" data-width="760" tabindex="-1" aria-hidden="false" style="display: none; width: 760px; margin-left: -374px; margin-top: -67px;">
+		<div class="modal-header">
+		</div>
+		<div class="modal-body">
+			<div class="apply_info">
+				<div id="Edit-page"></div>
+			</div>
+		</div>
+		<div id="Grupos" class="modal-footer">
+			<a data-dismiss="modal" class="btn btn-danger" href="javascript:void(0)" onclick="hideLoading()">
+				<i class='icon-remove'></i>Cancelar
+			</a>
+			<button type='button' id="IdPerfilesEditar"class='btn btn-blue' type="submit" >
+				<i class='icon-ok'></i>Guardar
+			</button>
+		</div>
+	</div>
+	<div id="myModalValidarPassword" class="modal fade in" data-width="500" tabindex="-1" aria-hidden="false" style="width: 500px; margin-left: -299px; margin-top: -168px; display: none; height: 50%;">
+		<div class="modal-body">
+			<div class="apply_info">
+				@(this.Html.Partial("~/Views/Usuarios/ValidarPassword.cshtml",usuarioPassword))
+			</div>
+		</div>
+	</div>
+	<div id="myModalValidarCorreoPassword" class="modal fade in" data-width="500" tabindex="-1" aria-hidden="false" style="width: 500px; margin-left: -299px; margin-top: -168px; display: none; height: 50%;">
+		<div class="modal-body">
+			<div class="apply_info">
+				@(this.Html.Partial("~/Views/Usuarios/ValidarCorreoPassword.cshtml",usuarioPassword))
+			</div>
+		</div>
+	</div>
+</body>
+<div id="myModal" class="modal container fade in" tabindex="-1">
+	<div class="modal-header">
+		<h3><i class="icon-exclamation-sign"></i> Condiciones</h3>
+	</div>
+	<div class="modal-body">
+		<object width="1100" height="650" data=@nombreRuta type="application/pdf"><param name="zoom" value="50"/></object> 
+	</div>
+	<div class="modal-footer">
+		<button type="button" data-dismiss="modal" class="btn btn-default" onclick=" CerrarCondiciones() ">
+			Cancelar
+		</button>
+	</div>
+</div>
+<script type="text/javascript" src="~/Scripts/AppSecureport/appFormaciones.js"></script>
+<script>
+   function Ayuda() {
+	   if (window.ventana) {
+		   ventana.close();
+		   OpenWin();
+	   } else {
+		   OpenWin();
+	   }
+   }
+   
+   function OpenWin() {
+	   ventana = window.open("@(this.Model.Path1)"+"Ayuda.html#primero", "_blank", "toolbar=no, scrollbars=yes, resizable=no, top=300, left=500, width=800, height=800");
+   }
+
+   function closeWin() {
+	   if (window.ventana) {
+		   ventana.close();
+	   }
+   }
+</script>

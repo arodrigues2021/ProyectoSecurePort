@@ -1,0 +1,22 @@
+﻿<div class="panel-body">
+	<div class="row">
+		<div class="col-md-10">
+			 @(this.Html.Kendo().Grid<SecurePort.Entities.Models.MOV_Instalaciones>().Name("GridMOV_Instalaciones")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.Id).Width(1).Groupable(false).Sortable(false).Filterable(false);
+					  columns.Bound(o => o.Nombre).Title("Nombre").HtmlAttributes(new { style = "text-align: left;" });
+				  }).HtmlAttributes(new { style = "height: 200px" }).Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+				  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(15)
+					  .Model(model => model.Id(p => p.Id))
+					  .Read(read => read.Action("InstalacionesAsociados","Usuarios")))
+				  .Sortable(sortable => sortable.AllowUnsort(true)
+				  .SortMode(GridSortMode.MultipleColumn))    
+				  .Pageable()
+				  .Filterable()
+				  .Scrollable()
+				)
+		</div>
+	</div>
+</div>

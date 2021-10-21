@@ -1,0 +1,27 @@
+﻿<script src="@(this.Url.Content("~/Scripts/FiltrarUsuarios01.js"))" type="text/javascript"></script>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="sample_5" data-url="@(this.Url.Action("Buscador","Usuarios"))">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Login</th>
+                            <th>Nombre</th>
+                            <th>Apellidos</th>
+                            <th><a style="text-align: center;"><i class="hidden-xs hidden-sm hidden-md"></i></a>OPIP</th>
+                            <th><a style="text-align: center;"><i class="hidden-xs hidden-sm hidden-md"></i></a>Fecha Expedición</th>
+                            <th><a style="text-align: center;"><i class="hidden-xs hidden-sm hidden-md"></i></a>OPP</th>
+                            <th><a style="text-align: center;"><i class="hidden-xs hidden-sm hidden-md"></i></a>Activado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+ </div>
+<input type="text" id="IdUsuario" name="IdUsuario" style="display: none">
+

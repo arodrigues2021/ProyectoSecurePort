@@ -1,0 +1,68 @@
+﻿@using SecurePort.Entities.Models
+@model UsuarioCorreo
+<div>
+    <span></span>
+    <hr style="margin-top: 4%;">
+</div>
+<div class="box-login">
+    <h2><i class="icon-edit-sign teal"></i> Cambio de Correo</h2>
+    <p>
+        Permite el cambio del correo de todos los usuarios que accedan al sistema. 
+    </p>
+    <div id="correo06" class="form-group">
+        <label class="control-label">
+            Correo Nuevo:<span class="symbol required"></span>
+        </label>
+        @(this.Html.TextBoxFor(model => model.correo,
+              new { itemid = "correo", id = "correo03", name = "correo03", @class = "form-control", type="email", placeholder = "Inserte su Nuevo Correo", onChange = "ValidarCorreoVacio(this)" }))
+        <span id="Spancorreo06" for="correo03" class="help-block" style="display:none">Este campo es requerido.</span>
+    </div>
+    <div  id="correoagain06" class="form-group">
+        <label class="control-label">
+            Confirmar Correo: <span class="symbol required"></span>
+        </label>
+        @(this.Html.TextBoxFor(model => model.correo_again,
+              new { itemid = "correoagain", id = "correoagain03", name = "correoagain03", @class = "form-control", type="email", placeholder = "Confirmar su Correo", onChange = "ValidarCorreoVacio(this)" }))
+        <span id="Spancorreoagain06" for="correoagain06" class="help-block" style="display:none">Este campo es requerido.</span>
+        <span id="Spancorreoagain05" for="correoagain05" class="help-block" style="display:none">Verifique el correo no coincide.</span>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                <span class="symbol required"></span>Campos requeridos
+                <hr>
+            </div>
+        </div>
+    </div>
+    <div id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+        <div class="btn-group btn-group-sm">
+            <a  class="btn btn-primary hidden-xs" href="javascript:void(0)" onclick="ValidarCorreo()">
+                Aceptar</a>
+            <a class="btn btn-default" href="javascript:void(0)" onclick="VolverAtras()">
+                Volver</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function ValidarCorreoVacio(item) {
+        var name = "";
+        if ('@(this.ViewBag.Navegador)' == "internetexplorer") {
+            name = item.attributes[0].value;
+        } else {
+            name = item.attributes[2].value;
+        }
+        if (rtrim($(item).val()) == "") {
+            $('div#' + name + '06.form-group').removeClass('has-success').addClass('has-error');
+            $('span#Span' + name + '06.help-block').attr('style', 'display:block');
+        } else {
+            $('div#' + name + '06.form-group').removeClass('has-error').addClass('has-success');
+            $('span#Span' + name + '06.help-block').attr('style', 'display:none');
+        }
+        if (name == 'correo') {
+            validarEmail($('input#correo03.form-control').val());
+        } else {
+            validarEmail($('input#correoagain03.form-control').val());
+        }
+        
+    }
+</script>

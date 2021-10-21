@@ -1,0 +1,571 @@
+﻿@using SecurePort.Entities.Models
+@{
+    this.Layout = "~/Views/Shared/LayoutSite.cshtml";  
+	this.ViewBag.Title = "CNAE";
+	var UsuarioLogeado = (Usuarios)this.ViewData["usuario"];
+	string nombreCompleto = UsuarioLogeado.Nombre + " " + UsuarioLogeado.Apellidos;
+}
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<!-- start: TOP NAVIGATION CONTAINER -->
+		<div class="container">
+			<div class="navbar-header">
+				<!-- start: RESPONSIVE MENU TOGGLER -->
+				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+					<span class="clip-list-2"></span>
+				</button>
+				<!-- end: RESPONSIVE MENU TOGGLER -->
+				<!-- start: LOGO -->
+				<!-- end: LOGO -->
+			</div>
+			<div class="navbar-tools">
+				<!-- start: TOP NAVIGATION MENU -->
+				<ul class="nav navbar-right">
+					<!-- end: TO-DO DROPDOWN-->
+					<!-- start: NOTIFICATION DROPDOWN -->
+					<li class="dropdown">
+					</li>
+					<li class="dropdown current-user">
+					</li>
+					<!-- end: USER DROPDOWN -->
+				</ul>
+				<!-- end: TOP NAVIGATION MENU -->
+			</div>
+		</div>
+		<!-- end: TOP NAVIGATION CONTAINER -->
+	</div>
+	<!-- end: HEADER -->
+	<!-- start: MAIN CONTAINER -->
+
+
+	<div class="main-container">
+		<div class="navbar-content" id="topbar">
+			<!-- start: SIDEBAR -->
+			<div class="main-navigation navbar-collapse collapse">
+				<!-- start: MAIN NAVIGATION MENU -->
+				<ul class="main-navigation-menu">
+					<li class="active open">
+						<a href="javascript:void(0)" onclick="MenuPrincipal()">
+							<i class="clip-home-3"></i>
+							<span class="title"> Inicio </span><span class="selected"></span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:void(0)"><i class="clip-cog-2"></i>
+							<span class="title"> UI Lab </span><i class="icon-arrow"></i>
+							<span class="selected"></span>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a href="ui_elements.html">
+									<span class="title"> Elements </span>
+								</a>
+							</li>
+							<li>
+								<a href="ui_buttons.html">
+									<span class="title"> Buttons &amp; icons </span>
+								</a>
+							</li>
+							<li>
+								<a href="ui_modals.html">
+									<span class="title"> Extended Modals </span>
+								</a>
+							</li>
+							<li>
+								<a href="ui_tabs_accordions.html">
+									<span class="title"> Tabs &amp; Accordions </span>
+								</a>
+							</li>
+							<li>
+								<a href="ui_sliders.html">
+									<span class="title"> Sliders </span>
+								</a>
+							</li>
+							<li>
+								<a href="ui_treeview.html">
+									<span class="title"> Treeview </span>
+								</a>
+							</li>
+							<li>
+								<a href="ui_nestable.html">
+									<span class="title"> Nestable List </span>
+								</a>
+							</li>
+							<li>
+								<a href="ui_typography.html">
+									<span class="title"> Typography </span>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li id="IdGestionMaestros">
+						@(this.Html.Partial("~/Views/Menu/MenuGestionMaestros.cshtml"))
+					</li>
+					<li>
+						<a href="javascript:void(0)"><i class="clip-pencil"></i>
+							<span class="title"> Forms </span><i class="icon-arrow"></i>
+							<span class="selected"></span>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a href="form_elements.html">
+									<span class="title">Form Elements</span>
+								</a>
+							</li>
+							<li>
+								<a href="form_wizard.html">
+									<span class="title">Form Wizard</span>
+								</a>
+							</li>
+							<li>
+								<a href="form_validation.html">
+									<span class="title">Form Validation</span>
+								</a>
+							</li>
+							<li>
+								<a href="form_inline.html">
+									<span class="title">Inline Editor</span>
+								</a>
+							</li>
+							<li>
+								<a href="form_image_cropping.html">
+									<span class="title">Image Cropping</span>
+								</a>
+							</li>
+							<li>
+								<a href="form_multiple_upload.html">
+									<span class="title">Multiple File Upload</span>
+								</a>
+							</li>
+							<li>
+								<a href="form_dropzone.html">
+									<span class="title">Dropzone File Upload</span>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						@(this.Html.Partial("~/Views/Menu/MenuGestionUsuario.cshtml"))
+					</li>
+					<li>
+						<a href="javascript:void(0)"><i class="clip-file"></i>
+							<span class="title">Pages</span><i class="icon-arrow"></i>
+							<span class="selected"></span>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a href="pages_user_profile.html">
+									<span class="title">User Profile</span>
+								</a>
+							</li>
+							<li>
+								<a href="pages_gallery.html">
+									<span class="title">Gallery</span>
+								</a>
+							</li>
+							<li>
+								<a href="pages_timeline.html">
+									<span class="title">Timeline</span>
+								</a>
+							</li>
+							<li>
+								<a href="pages_calendar.html">
+									<span class="title">Calendar</span>
+								</a>
+							</li>
+							<li>
+								<a href="pages_messages.html">
+									<span class="title">Messages</span>
+								</a>
+							</li>
+							<li>
+								<a href="pages_blank_page.html">
+									<span class="title">Blank Page</span>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:void(0)"><i class="clip-attachment-2"></i>
+							<span class="title">Utility</span><i class="icon-arrow"></i>
+							<span class="selected"></span>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a href="utility_faq.html">
+									<span class="title">Faq</span>
+								</a>
+							</li>
+							<li>
+								<a href="utility_lock_screen.html">
+									<span class="title">Lock Screen</span>
+								</a>
+							</li>
+							<li>
+								<a href="utility_404_example1.html">
+									<span class="title">Error 404 Example 1</span>
+								</a>
+							</li>
+							<li>
+								<a href="utility_404_example2.html">
+									<span class="title">Error 404 Example 2</span>
+								</a>
+							</li>
+							<li>
+								<a href="utility_404_example3.html">
+									<span class="title">Error 404 Example 3</span>
+								</a>
+							</li>
+							<li>
+								<a href="utility_500_example1.html">
+									<span class="title">Error 500 Example 1</span>
+								</a>
+							</li>
+							<li>
+								<a href="utility_500_example2.html">
+									<span class="title">Error 500 Example 2</span>
+								</a>
+							</li>
+							<li>
+								<a href="utility_pricing_table.html">
+									<span class="title">Pricing Table</span>
+								</a>
+							</li>
+							<li>
+								<a href="utility_coming_soon.html">
+									<span class="title">Cooming Soon</span>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;" class="active">
+							<i class="clip-folder"></i>
+							<span class="title"> 3 Level Menu </span>
+							<i class="icon-arrow"></i>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a href="javascript:;">
+									Item 1 <i class="icon-arrow"></i>
+								</a>
+								<ul class="sub-menu">
+									<li>
+										<a href="#">
+											Sample Link 1
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											Sample Link 2
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											Sample Link 3
+										</a>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<a href="javascript:;">
+									Item 1 <i class="icon-arrow"></i>
+								</a>
+								<ul class="sub-menu">
+									<li>
+										<a href="#">
+											Sample Link 1
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											Sample Link 1
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											Sample Link 1
+										</a>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<a href="#">
+									Item 3
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="clip-folder-open"></i>
+							<span class="title"> 4 Level Menu </span><i class="icon-arrow"></i>
+							<span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a href="javascript:;">
+									Item 1 <i class="icon-arrow"></i>
+								</a>
+								<ul class="sub-menu">
+									<li>
+										<a href="javascript:;">
+											Sample Link 1 <i class="icon-arrow"></i>
+										</a>
+										<ul class="sub-menu">
+											<li>
+												<a href="#"><i class="icon-remove"></i>
+													Sample Link 1</a>
+											</li>
+											<li>
+												<a href="#"><i class="icon-pencil"></i>
+													Sample Link 1</a>
+											</li>
+											<li>
+												<a href="#"><i class="icon-edit"></i>
+													Sample Link 1</a>
+											</li>
+										</ul>
+									</li>
+									<li>
+										<a href="#">
+											Sample Link 1
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											Sample Link 2
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											Sample Link 3
+										</a>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<a href="javascript:;">
+									Item 2 <i class="icon-arrow"></i>
+								</a>
+								<ul class="sub-menu">
+									<li>
+										<a href="#">
+											Sample Link 1
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											Sample Link 1
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											Sample Link 1
+										</a>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<a href="#">
+									Item 3
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="maps.html"><i class="clip-location"></i>
+							<span class="title">Maps</span>
+							<span class="selected"></span>
+						</a>
+					</li>
+					<li>
+						<a href="charts.html"><i class="clip-bars"></i>
+							<span class="title">Charts</span>
+							<span class="selected"></span>
+						</a>
+					</li>
+				</ul>
+				<!-- end: MAIN NAVIGATION MENU -->
+			</div>
+			<!-- end: SIDEBAR -->
+		</div>
+			
+		<!-- start: PAGE -->
+		<div class="main-content">
+			<!-- start: PANEL CONFIGURATION MODAL FORM -->
+			<div id="IdContainer" class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<!-- start: BASIC TABLE PANEL -->
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								Mantenimiento de CNAE
+								<div class="panel-tools">
+									@if (this.Session["UsuarioLogeado"] != null)
+									{
+
+										@(this.Html.AntiForgeryToken())
+
+										<ul class="nav navbar-nav navbar-right">
+											<div class="col-md-12" style="margin-top: 6%">
+												<label class="control-label" style="margin-top: 19%"><b>Hola,@nombreCompleto</b><span></span><span></span><span></span></label>
+												<li><a href="javascript:void(0)" onclick=" LogOff() ">Cerrar sesión</a></li>
+											</div>
+										</ul>
+									}
+								</div>
+							</div>
+							<div class="panel-body">
+								<table class="table table-hover" id="sample-table-1">
+									@(this.Html.Partial("~/Views/CNAE/List.cshtml"))
+								</table>
+							</div>
+						</div>
+						<!-- end: BASIC TABLE PANEL -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end: PAGE -->
+	</div>
+	<!-- end: MAIN CONTAINER -->
+	<!-- start: FOOTER -->
+	<div class="footer clearfix">
+		<div class="footer-inner"></div>
+		<div class="footer-items">
+			<span class="go-top"><i class="clip-chevron-up"></i></span>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	<!-- end: FOOTER -->
+	
+	<div id="myModalAgregar" class="modal fade in" data-width="600" tabindex="-1" aria-hidden="false" style="display: none; width: 600px; margin-left: -374px; margin-top: -67px;">
+		<div class="modal-header">
+		</div>
+		<div class="modal-body">
+			<div class="apply_info">
+				@(this.Html.Partial("~/Views/CNAE/Create.cshtml"))
+			</div>
+		</div>
+	</div>
+	<div id="myModalEditar" class="modal fade in" data-width="760" tabindex="-1" aria-hidden="false" style="display: none; width: 760px; margin-left: -374px; margin-top: -67px;">
+		<div class="modal-header">
+		</div>
+		<div class="modal-body">
+			<div class="apply_info">
+				<div id="Edit-page"></div>
+			</div>
+		</div>
+		<div id="CNAE" class="modal-footer">
+			<a data-dismiss="modal" class="btn btn-danger" href="javascript:void(0)" onclick="hideLoading()">
+				<i class='icon-remove'></i>Cancelar
+			</a>
+			<button type='button' id="IdCNAEEditar"class='btn btn-blue' type="submit" >
+				<i class='icon-ok'></i>Guardar
+			</button>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$('#IdCNAE').addClass('active open');
+
+		$('#IdGestionMaestros').attr('style', 'display:block');
+
+		$('#IdGestionMaestros').addClass('open');
+
+		$('#IdSubMenuMaestros').attr('style', 'display:block');
+
+		$('#confirm').attr('style', 'display:none');
+		
+		if (history.forward(1)) {
+			location.replace(history.forward(1));
+		}
+		
+		$('button#IdCNAEEditar.btn.btn-blue').click(function () {
+			
+			var CNAEJson = {
+				"Id": $('input#id01.form-control').val(),
+				"IdCodigo": $('input#IdCodigo01.form-control').val(),
+				"Descripcion": $('input#Descripcion01.form-control').val()
+			};
+		
+			$.ajax({
+				url: '/SecurePort/Usuarios/UsuarioLogueado',
+				type: "POST",
+				dataType: "json",
+				contentType: "application/json; charset=utf-8",
+				success: function (data) {
+					if (data.result) {
+						$.ajax({
+								url: '/SecurePort/CNAE/EditCNAE',
+								type: "POST",
+								data: JSON.stringify({ CNAEJson: CNAEJson }),
+								dataType: "json",
+								contentType: "application/json; charset=utf-8",
+								success: function (data) {
+								if (data.result) {
+									showLoading();
+									$('#myModalEditar').modal('hide');
+									alert("Actualización exitosa...");
+								}
+								else {
+									showLoading();
+									$('#myModalEditar').modal('hide');
+									alert(data.Message);
+								}
+							}
+						});
+					}
+				}
+			});
+
+		});
+
+		$('button#RegisterCNAE.btn.btn-blue').click(function () {
+			
+			var CNAEJson = {
+				"IdCodigo": $('input#IdCodigo.form-control').val(),
+				"Descripcion": $('input#IdDescripcion.form-control').val()
+			};
+
+			var o = eval(CNAEJson);
+
+			if (o.IdCodigo !== "" && o.Descripcion !== "" ) {
+				$.ajax({
+						url: '/SecurePort/Usuarios/UsuarioLogueado',
+						type: "POST",
+						dataType: "json",
+						contentType: "application/json; charset=utf-8",
+						success: function (data) {
+						if (data.result) {
+							$.ajax({
+								url: '/SecurePort/CNAE/AltaCNAE',
+								type: "POST",
+								data: JSON.stringify({ CNAEJson: CNAEJson }),
+								dataType: "json",
+								contentType: "application/json; charset=utf-8",
+								success: function (data) {
+									if (data.result) {
+										showLoading();
+										$('#myModalAgregar').modal('hide');
+										window.location.href = "/SecurePort/CNAE/ListadoCNAE";
+									} else {
+										$('input#password.form-control').blur();
+										$('input#password_again.form-control').blur();
+										$('#myModalAgregar').modal('hide');
+										showLoading();
+										alert(data.Message, 'Agregar');
+									}
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+	});
+</script>
+

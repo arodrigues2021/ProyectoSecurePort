@@ -1,0 +1,15 @@
+﻿<div class="col-md-2">
+    <div class="form-group">
+        <label class="control-label">
+            Puerto
+        </label>
+        @(this.Html.Kendo().ComboBox().Name("Puertos")
+				 .Placeholder("Selecciona Puerto")
+				 .DataTextField("Text").DataValueField("Value")
+				 .Filter(FilterType.Contains)
+				 .BindTo((SelectList)this.ViewData["Puertos"])
+				 .Suggest(true)
+				 .HtmlAttributes(new { style = "width:100%;", required = "required",id = "Puerto01" ,name="Puerto01", onChange = "CambiarPuerto()"}))
+            <span id="datosPuerto"  style="display:none;color:#b94a48;">Este campo es requerido.</span>        
+    </div>
+</div>

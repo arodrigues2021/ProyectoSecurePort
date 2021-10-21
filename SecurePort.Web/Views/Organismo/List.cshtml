@@ -1,0 +1,297 @@
+﻿@using System.Web.Optimization
+@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model UsuarioFrontal 
+<div class="panel-body buttons-widget">
+	@(this.Html.Kendo().ToolBar().Name("ToolBar").HtmlAttributes(new { style = "width: 65%;border: 0;background: rgba(0, 0, 255, 0);"  }).Items(items =>
+	  {
+		  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" })
+			  .Hidden(this.Model.permisosViewModel.CON_ALTA_ORGANISMO).Id("toggle11");
+		  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" })
+			  .Hidden(this.Model.permisosViewModel.CON_MODIF_ORGANISMO).Id("toggle22");
+		  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" })
+			  .Hidden(this.Model.permisosViewModel.CON_BORRA_ORGANISMO).Id("toggle44");
+		  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" })
+			  .Hidden(this.Model.permisosViewModel.CON_CONSULTA_ORGANISMO).Id("toggle33");
+	  }).Events(e => e.Toggle("onToggle")).Resizable(false))
+</div>   
+<div class="col-md-12">
+	<div>
+		<span></span>
+		<hr style="margin-top: 0%;">
+	</div>
+</div>
+<td class="panel-body">
+	<div id="container">
+		<div class="btn-group" style="margin-top: 0%; margin-left: 1%;">
+		</div>
+	</div>
+</td>
+<input type="text" id="IdNombre" name="IdNombre" style="display: none">
+<input type="text" id="IdValor" name="IdValor" style="display: none">
+<div class="panel-body">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="table-responsive">
+				@(this.Html.Kendo().Grid<ListadoOrganismo>().Name("GridOrganismos")
+					  .DataSource(dataSource => dataSource.Ajax().ServerOperation(true))
+					  .ToolBar(tools => tools.Excel()
+					  .Text("Exportar")
+					  .HtmlAttributes(new { @class="btn btn-black btn-xs",target="_self",hidefocus="true",style = "margin-left: 90%;outline: none;color: #44C51A;" }))
+					  .Excel(excel => excel.AllPages(true)
+					  .FileName("ListadoOrganismos.xlsx")
+					  .Filterable(true)
+					  .ProxyURL(Url.Action("Excel_Export_Save","Usuarios")))
+					  .Columns(columns =>
+					  {
+						  columns.Bound(o => o.id)
+							  .Hidden(true);
+						  columns.Bound(o => o.Organismo)
+							  .Title("Organismo")
+							  .HtmlAttributes(new { style = "text-align: left;" }).Width(150);
+						  columns.Bound(o => o.Tipo)
+							  .Title("Tipo")
+							  .HtmlAttributes(new { style = "text-align: left;" }).Width(150);
+						  columns.Bound(o => o.responsable)
+							  .Title("Contacto")
+							  .HtmlAttributes(new { style = "text-align: left;" }).Width(180);
+						  columns.Bound(o => o.Direccion)
+							  .Title("Dirección")
+							  .HtmlAttributes(new { style = "text-align: left;" }).Width(200);
+						  columns.Bound(o => o.Ciudad)
+							  .Title("Municipio")
+							  .HtmlAttributes(new { style = "text-align: left;" }).Width(120);
+						  columns.Bound(o => o.CodigoPostal)
+							  .Title("Código Postal")
+							  .HtmlAttributes(new { style = "text-align: left;" }).Width(120);
+						  columns.Bound(o => o.Provincia)
+							  .Title("Provincia")
+							  .HtmlAttributes(new { style = "text-align: left;" }).Width(130);
+						  columns.Bound(o => o.comunidad).Title("Comunidad Autónoma").HtmlAttributes(new { style = "text-align: left;" }).Width(200);
+						  columns.Bound(o => o.activado).Width(80)
+							  .ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= activado=='Si' ? checked='checked': '' # disabled='true' />")
+							  .Title("Activo")
+							  .HtmlAttributes(new { style = "text-align: left;" });
+					  })
+					  .HtmlAttributes(new { style = "height: 600px" })
+					  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+					  .Events(events => events.Change("onChangeOrganismo"))
+					  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(20)
+					  .Model(model => model.Id(p => p.id))
+					  .Read(read => read.Action("Buscador","Organismo")))
+					  .Pageable()
+					  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+					  .Filterable()
+					  .Scrollable()
+					  .Groupable()
+					  .Resizable(resize => resize.Columns(true))
+					  .Reorderable(reorder => reorder.Columns(true)))
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+
+	jQuery(document).ready(function () {
+		var grid = $("#GridOrganismos").data("kendoGrid");
+		grid.dataSource.filter({ field: "activado", operator: "eq", value: 'Si' });
+		$('#confirm').attr('style', 'display:none');
+
+		$('#IdGestionUsuarios').attr('style', 'display:none');
+
+		$('#IdSubMenuMaestros').attr('style', 'display:none');
+
+		$('#IdSubMenuMovimientos').attr('style', 'display:block');
+
+		$('#IdSubMenuMaestros').removeClass('open');
+
+		$('#IdSubMenuMovimientos').addClass('open');
+
+		$('#Id013').addClass('active open');
+
+		if (history.forward(1)) {
+			location.replace(history.forward(1));
+		}
+
+		$('a.clip-chevron-right').attr('style', 'display:none');
+
+		$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+
+		$('a.clip-chevron-right').click(function () {
+			$('body').addClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:none');
+			$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+		});
+
+		$('i.clip-chevron-left').click(function () {
+			$('body').removeClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:block;font-size: 25px;');
+			$('i.clip-chevron-left').attr('style', 'display:none');
+		});
+	});
+	
+	function Ayuda() {
+		if (window.ventana) {
+			ventana.close();
+			OpenWin();
+		} else {
+			OpenWin();
+		}
+	}
+
+	function OpenWin() {
+		ventana = window.open("@(this.Model.Path1)" + "Ayuda.html#tercero", "_blank", "toolbar=no, scrollbars=yes, resizable=no, top=300, left=500, width=800, height=800");
+	}
+
+	function closeWin() {
+		if (window.ventana) {
+			ventana.close();
+		}
+	}
+	
+	function onChange() {
+		//Seleccionamos el registro
+		var code = this.dataItem(this.select()).id;
+		var nombre = this.dataItem(this.select()).Organismo;
+		$('input#IdValor').val(code);
+		$('input#IdNombre').val(nombre);
+	}
+	
+	function onShow(e) {
+	}
+
+	function onHide(e) {
+	}
+
+	$(document).ready(function () {
+		$("#toggle11").kendoTooltip({
+			content: "Alta de Organismo de Gestión Portuaria",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle22").kendoTooltip({
+			content: "Editar de Organismo de Gestión Portuaria",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle33").kendoTooltip({
+			content: "Visualizar de Organismo de Gestión Portuaria",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle44").kendoTooltip({
+			content: "Borrar de Organismo de Gestión Portuaria",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+
+	});
+
+	function onToggle(e) {
+		//Aqui controlamos los eventos de la toolbar.
+		if (e.id == "toggle11") {
+			//ALTA DE ORGANISMOS
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Usuarios/ValidarCategoriaOrganismos',
+				success: function (data) {
+					if (data.result) {
+						$.ajax({
+							type: "POST",
+							url: '/Organismo/create',
+							success: function(data) {
+								if (data) {
+									hideLoading();
+									$('#MostrarMensaje').html('Alta de Organismo de Gestión Portuaria');
+									$('#Edit-Organismo').html(data);
+									$('#ListOrganismo').html('');
+								}
+							}
+						});
+					} else {
+						alert(data.Message);
+					}
+				}
+			});
+			
+		} else if (e.id == "toggle22") {
+			//EDITAR ORGANISMOS
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Usuarios/ValidarCategoriaOrganismos',
+				success: function (data) {
+					if (data.result) {
+						if ($('input#IdValor').val() == "") {
+							alert('Debe Seleccionar un registro');
+						} else {
+							showLoading();
+							$.ajax({
+								type: "POST",
+								url: '/Organismo/EditarOrganismo',
+								data: { id: $('input#IdValor').val() },
+								success: function (data) {
+									if (data) {
+										hideLoading();
+										$('#MostrarMensaje').html('Editar Organismo de Gestión Portuaria');
+										$('#Edit-Organismo').html(data);
+										$('#ListOrganismo').html('');
+									}
+								}
+							});
+					   }
+					} else {
+						alert(data.Message);
+					}
+				}
+			});
+			
+		} else if (e.id == "toggle33") {
+			//VISUALIZAR ORGANISMOS
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				showLoading();
+				$.ajax({
+					type: "POST",
+					url: '/Organismo/VisualizarOrganismo',
+					data: { id: $('input#IdValor').val() },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#MostrarMensaje').html('Visualizar Organismo de Gestión Portuaria');
+							$('#Edit-Organismo').html(data);
+							$('#ListOrganismo').html('');
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle44") {
+			//BORRAR ORGANISMOS
+			$.ajax({
+				type: "POST",
+				url: '/Usuarios/ValidarCategoriaOrganismos',
+				success: function (data) {
+					if (data.result) {
+						showLoading();
+						if ($('input#IdValor').val() == "") {
+							alert('Debe Seleccionar un registro');
+						} else {
+							showLoading();
+							AvisoOKOrganismo("¿Esta Seguro de Borrar el Organismo: " + $('input#IdNombre').val() + "?", $('input#IdValor').val());
+						}
+					} else {
+						alert(data.Message);
+					}
+				}
+			});
+		}
+	}
+</script>

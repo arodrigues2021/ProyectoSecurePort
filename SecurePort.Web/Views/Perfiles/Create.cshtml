@@ -1,0 +1,119 @@
+﻿		<div class="row">
+			<div class="col-lg-13">
+				<div class="panel panel-default" style="margin-top: -4%;">
+					<div class="panel-heading" >
+						<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+						<strong>Alta Perfil</strong>
+					</div>
+			<!-- start: FORM VALIDATION 1 PANEL -->
+					<div class="k-content">
+						<div id="Perfil">
+							<form id="PerfilForm">
+								<ul id="fieldlist">
+									<li>
+										&nbsp;
+									</li>
+									<li>
+										<label for="IdPerfilNombre" style = "margin-left: 4%;" class="required">Perfil</label>
+										@(Html.Kendo().TextBox().Name("IdPerfilNombre")
+											  .HtmlAttributes(new { id="IdPerfilNombre01",placeholder = "Inserte Nombre Perfil", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:220px;margin-left: 4%;text-transform: uppercase", Maxlength ="75" }))
+									</li>
+									<li>
+										<label for="IdPerfilDescrip" style = "margin-left: 4%;" class="required">Descripción</label>
+										@(Html.Kendo().TextBox().Name("IdPerfilDescrip")
+											  .HtmlAttributes(new { id="IdPerfilDescrip01", placeholder = "Inserte Descripción Perfil", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:220px;margin-left: 4%;", Maxlength = "2000" }))
+									</li>
+
+									<li id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+										<div class="btn-group btn-group-sm">
+											<button class="btn btn-primary hidden-xs" type="submit">
+												Guardar
+											</button>
+											<a class="btn btn-default " href="javascript:VolverPerfil()">
+												Volver
+											</a>
+										</div>
+									</li>
+									<li class="status">
+									</li>
+								</ul>
+							</form>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+<script>
+	$(function () {
+		var validator = $("#PerfilForm").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$("form").submit(function (event) {
+			event.preventDefault();
+			if (validator.validate()) {
+				status.removeClass("invalid").addClass("valid");
+				RegisterPerfiles();
+			} else {
+				status.removeClass("valid").addClass("invalid");
+			}
+		});
+	});
+</script>
+<style>
+	
+	#fieldlist {
+		margin: 0;
+		padding: 0;
+	}
+
+	#fieldlist li {
+		list-style: none;
+		padding-bottom: .7em;
+		text-align: left;
+	}
+
+	#fieldlist label {
+		display: block;
+		padding-bottom: .3em;
+		font-weight: bold;
+		font-size: 12px;
+		color: #444;
+	}
+
+	#fieldlist li.status {
+		text-align: center;
+	}
+
+	#fieldlist li .k-widget:not(.k-tooltip),
+	#fieldlist li .k-textbox {
+		margin: 0 5px 5px 0;
+	}
+
+	.confirm {
+		padding-top: 1em;
+	}
+
+	.valid {
+		color: green;
+	}
+
+	.invalid {
+		color: red;
+	}
+
+	span.k-widget.k-tooltip-validation {
+		display: inline-block;
+		width: 160px;
+		text-align: left;
+		border: 0;
+		padding: 0;
+		margin: 0;
+		background: none;
+		color: red;
+	}
+
+	.k-tooltip-validation .k-warning {
+		display: none;
+	}
+
+</style>

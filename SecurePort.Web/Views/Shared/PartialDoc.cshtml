@@ -1,0 +1,79 @@
+@using System.Configuration
+@model SecurePort.Entities.Models.UsuarioFrontal
+
+<html>
+<head>
+<meta content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+</head>
+<body>
+<div class="visualizar">
+<script>
+	jQuery(document).ready(function() {
+	 Windows();
+	});
+
+	function Windows() {
+	    if (window.ventanaexcel) {
+		    ventanaexcel.close();
+		    OpenWinExcel();
+	    } else {
+		    OpenWinExcel();
+	    }
+	}
+
+	function OpenWinExcel() {
+	    ventanaexcel = window.open(remaplazarValores("@(this.Model.Path)"), "_blank", "toolbar=no, scrollbars=no, resizable=no, top=100, left=200, width=500, height=500");
+	}
+
+	function remaplazarValores(cadena)
+	{	  
+	    var str = cadena;
+	    while (str.toString().indexOf("&#225;") != -1) {
+	        str = cadena.replace("&#225;", "á");
+	    }
+	    while (str.toString().indexOf("&#233;") != -1) {
+	        str = str.replace("&#233;", "é");
+	    }
+	    while (str.toString().indexOf("&#237;") != -1) {
+	        str = str.replace("&#237;", "í");
+	    }
+	    while (str.toString().indexOf("&#243;") != -1) {
+	        str = str.replace("&#243;", "ó");
+	    }
+	    while (str.toString().indexOf("&#243;") != -1) {
+            str = str.replace("&#250;", "ú");
+        }
+	    while (str.toString().indexOf("&#241;") != -1) {
+            str = str.replace("&#241;", "ñ");
+        }
+	    while (str.toString().indexOf("&#252;") != -1) {
+            str = str.replace("&#252;", "ü");
+        }
+         
+	    return str;
+	}
+
+</script>
+</div>
+
+</body>
+</html>
+
+
+<style>
+	.visualizar {
+		float: left;
+		margin: 30px 30px 120px 30px;
+		text-align: center;
+	}
+	.visualizar img {
+		display: block;
+		margin-bottom: 10px;
+	}
+	@@media screen and (max-width: 1023px) {
+		div.k-window {
+			display: none !important;
+		}
+	}
+</style>
+

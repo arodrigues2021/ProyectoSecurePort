@@ -1,0 +1,84 @@
+﻿@model SecurePort.Entities.Models.UsuarioFrontal
+<div class="panel-body">
+
+<input type="text" id="IdFax"   name="IdFax"   style="display: none">
+<input type="text" id="NombreFax"   name="NombreFax"   style="display: none">
+	<div class="row">
+		<div class="col-md-12">
+			@if (Model.valor)
+			{
+				@(this.Html.Kendo().ToolBar().Name("ToolBarFax").Items(items =>
+				  {
+					  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" })
+						  .Hidden(@Model.permisosViewModel.CON_MODIF_CENTRO).Id("toggle9");
+					  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" })
+						  .Hidden(@Model.permisosViewModel.CON_MODIF_CENTRO).Id("toggle10");
+					  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" })
+						  .Hidden(@Model.permisosViewModel.CON_MODIF_CENTRO).Id("toggle11");
+					  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" })
+						  .Hidden(@Model.permisosViewModel.CON_MODIF_CENTRO).Id("toggle12");
+				  })
+					  .Events(e => e.Toggle("onToggleCentro"))
+					  )
+			}
+			 @(this.Html.Kendo().Grid<SecurePort.Entities.Models.Comunica_Centro>().Name("GridDoc_Comunica_Fax")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.id).Hidden(true);
+					  columns.Bound(o => o.Dato).Title("Fax").HtmlAttributes(new { style = "text-align: left;" }).Width(150);
+					  columns.Bound(o => o.Nota).Title("Observaciones").HtmlAttributes(new { style = "text-align: left;" });					  
+				  })
+				  .Events(events => events.Change("onChangeEditFax"))
+				  .HtmlAttributes(new { style = "height: 200px" })
+				  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+				  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(10)
+					  .Model(model => model.Id(p => p.id))
+					  .Read(read => read.Action("FaxAsociados", "Centros")))
+				  .Pageable()
+                  .Sortable(sortable => sortable.AllowUnsort(true)
+                  .SortMode(GridSortMode.MultipleColumn))
+				  .Filterable()
+				  .Scrollable()  
+                  .Resizable(resize => resize.Columns(true))                
+				  )
+		</div>
+	</div>
+</div>
+<script>
+
+
+	function onShow(e) {
+	}
+	function onHide(e) {
+
+	}
+	$(document).ready(function () {
+		$("#toggle9").kendoTooltip({
+			content: "Alta Fax",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle10").kendoTooltip({
+			content: "Editar Fax",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle11").kendoTooltip({
+			content: "Borrar Fax",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle12").kendoTooltip({
+			content: "Visualizar Fax",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+	});
+
+</script>
+

@@ -1,0 +1,88 @@
+﻿@model SecurePort.Entities.Models.UsuarioFrontal
+<div class="panel-body">
+
+<input type="text" id="IdDoc"   name="IdValor"   style="display: none">
+<input type="text" id="NombreDocumento"   name="NombreDocumento"   style="display: none">
+	<div class="row">
+		<div class="col-md-10">
+			@if (Model.valor)
+			{
+
+
+			    @(this.Html.Kendo().ToolBar().Name("ToolBar").Items(items =>
+			      {
+			          items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" }).Hidden(@Model.permisosViewModel.CON_ADJUNTA_DOC_COMITE).Id("toggle5");
+			          items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" }).Hidden(@Model.permisosViewModel.CON_MODIF_DOC_COMITE).Id("toggle6");
+			          items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" }).Hidden(@Model.permisosViewModel.CON_BORRA_DOC_COMITE).Id("toggle7");
+			          items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" }).Hidden(@Model.permisosViewModel.CON_CONSULTA_COMITE).Id("toggle8");
+			      }).Events(e => e.Toggle("onToggleComite"))
+			          )
+			}
+			else
+			{
+			     @(this.Html.Kendo().ToolBar().Name("ToolBar").Items(items =>
+			      {
+			          items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" }).Hidden(@Model.permisosViewModel.CON_CONSULTA_COMITE).Id("toggle8");
+			      }).Events(e => e.Toggle("onToggleComite"))
+			          )
+
+			}
+			 @(this.Html.Kendo().Grid<SecurePort.Entities.Models.Doc_Asoc>().Name("GridDoc_Comite_Asoc")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.id).Hidden(true);
+					  columns.Bound(o => o.TipoNombre).Title("Tipo").HtmlAttributes(new { style = "text-align: left;" }).Width(90);
+					  columns.Bound(o => o.documento).Title("Documento").HtmlAttributes(new { style = "text-align: left;" });
+					  columns.Bound(o => o.descripcion).Title("Descripción").HtmlAttributes(new { style = "text-align: left;" });
+				  })
+				  .Events(events => events.Change("onChangeEditComite"))
+				  .HtmlAttributes(new { style = "height: 200px" })
+				  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+				  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(10)
+					  .Model(model => model.Id(p => p.id))
+					  .Read(read => read.Action("DocumentosAsociados", "Comites")))
+				  .Pageable()
+				  .Filterable()
+				  .Scrollable()
+				  )
+		</div>
+	</div>
+</div>
+<script>
+
+
+	function onShow(e) {
+	}
+	function onHide(e) {
+
+	}
+	$(document).ready(function () {
+		$("#toggle5").kendoTooltip({
+			content: "Alta Documento",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle6").kendoTooltip({
+			content: "Editar Documento",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle7").kendoTooltip({
+			content: "Borrar Documento",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle8").kendoTooltip({
+			content: "Visualizar Documento",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+	});
+
+</script>
+

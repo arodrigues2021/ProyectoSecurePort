@@ -1,0 +1,24 @@
+﻿<input type="text" id="IdPerfil"  name="IdPerfil"  style="display: none">
+<div class="panel-body">
+	<div class="row">
+		<div class="col-sm-8">
+			@(this.Html.Kendo().Grid<SecurePort.Entities.Models.AltaPerfiles>().Name("GridAltaPerfiles")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.Id).Hidden(true);
+					  columns.Bound(o => o.Nombre).Title("Nombre").HtmlAttributes(new { style = "text-align: left;" }).Width(90);
+				  })
+				  .HtmlAttributes(new { style = "height: 450px" })
+				  .Selectable(selectable => selectable.Mode(GridSelectionMode.Multiple)
+													  .Type(GridSelectionType.Row))
+				  .DataSource(dataSource => dataSource.Ajax()
+					  .Model(model => model.Id(p => p.Id))
+					  .Read(read => read.Action("SeleccionarPerfil", "Grupos")))
+				  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+				  .Filterable()
+				  .Scrollable()
+				  )
+		</div>
+	</div>
+</div>

@@ -1,0 +1,44 @@
+﻿@using System.Configuration
+@{
+	string nombreRuta = ConfigurationManager.AppSettings["RutaSecureDoc"] + ConfigurationManager.AppSettings["AvisoLegal"];
+}
+
+@(this.Html.Kendo().Window().Name("window")
+   .Title("Condiciones Legales")
+   .Content(@<text>
+			  <div class="armchair">
+				  <object width="1100" height="500" data=@nombreRuta type="application/pdf"><param name="zoom" value="50"/></object> 
+			  </div>
+			  <button type="button" data-dismiss="modal" class="btn btn-default" onclick=" CerrarModalCondiciones() " style="margin-left: 55%;">
+				  No acepto condiciones de uso
+			  </button>
+			  <button type="button" class="btn btn-primary" onclick=" AceptarCondiciones() ">
+				  Acepto condiciones de uso 
+			  </button>
+	   </text>)
+	   .Draggable(true)
+	   .Modal(true)
+	   .Width(1200)
+	   .Actions(a => a.Clear())
+	   .Visible(true))
+<style>
+	.armchair {
+		margin-top: 5%;
+		margin-bottom: 10%;
+		margin-left: 5%;
+	}
+	.armchair img {
+		display: block;
+		margin-bottom: 10px;
+	}
+	@@media screen and (max-width: 1023px) {
+		div.k-window {
+			display: none !important;
+		}
+	}
+</style>
+<script type="text/javascript">
+	jQuery(document).ready(function () {
+		$('div.k-widget.k-window').attr('style', 'display: block; z-index: 10003; left: 454px; top: 172px; width: 1195px; height: 757px;');
+	});
+</script>

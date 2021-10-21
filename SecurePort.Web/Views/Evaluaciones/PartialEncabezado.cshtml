@@ -1,0 +1,46 @@
+﻿@using SecurePort.Entities.Models
+@model BienPadreHijo
+<div class="row">
+    <div class="col-lg-13">
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="control-label">
+                    Organismo
+                </label>
+                @(this.Html.Kendo().TextBoxFor(model => this.Model.organismo).HtmlAttributes(new { id = "organismo01", name = "organismo01", @class = "form-control", disabled = "disabled" }))
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="control-label">
+                    Puertos
+                </label>
+                @(this.Html.Kendo().TextBoxFor(model => this.Model.puerto).HtmlAttributes(new { id = "puerto01", name = "puerto01", @class = "form-control", disabled = "disabled" }))
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="control-label">
+                    Instalación
+                </label>
+                @(this.Html.Kendo().TextBoxFor(model => this.Model.NombreInstalacion).HtmlAttributes(new { id = "NombreInstalacion01", name = "NombreInstalacion01", @class = "form-control", disabled = "disabled" }))
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="control-label">
+                    Clasificación
+                </label>
+                @(this.Html.Kendo().TextBoxFor(model => this.Model.clasificacion).HtmlAttributes(new { id = "clasificacion01", name = "clasificacion01", @class = "form-control", disabled = "disabled" }))
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label">
+                    Bien
+                </label>
+                @(this.Html.Kendo().TextBoxFor(model => this.Model.bien).HtmlAttributes(new { id = "Nombre01", name = "Nombre01", @class = "form-control", disabled = "disabled" }))
+            </div>
+        </div>
+    </div>
+</div>  

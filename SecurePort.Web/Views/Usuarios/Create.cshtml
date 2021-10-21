@@ -1,0 +1,244 @@
+﻿@using SecurePort.Entities.Models
+@{
+    string valor = string.Empty;
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <style>
+            #WindowLoad
+            {
+                position:fixed;
+                top:0px;
+                left:0px;
+                z-index:3200;
+                filter:alpha(opacity=55);
+               -moz-opacity:65;
+                opacity:0.60;
+                background:#F8F8FA;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-md-10">
+                <!-- start: FORM VALIDATION 1 PANEL -->
+                <input type="text" id="ValidarAllCombos" name="ValidarAllCombos" style="display: none">
+                <div class="panel-body">
+                    <hr>
+                    <form action="#" role="form" id="form">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="errorHandler alert alert-danger no-display">
+                                    <i class="icon-remove-sign"></i> Usted tiene algunos errores. Por favor, consulte más abajo.
+                                </div>
+                                <div class="successHandler alert alert-success no-display">
+                                    <i class="icon-ok"></i> Su validación es exitosa!
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div id="email01" class="form-group">
+                                    <label class="control-label">
+                                        Correo Electrónico<span class="symbol required"></span>
+                                    </label>
+                                    @(this.Html.Kendo().TextBox().Name("email")
+                                          .HtmlAttributes(new { placeholder = "Inserte su Correo electrónico", required = "required", @class="form-control",type="email", MaxLength="50"  }))
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Confirmar Correo Electrónico <span class="symbol required"></span>
+                                    </label>
+                                    @(this.Html.Kendo().TextBox().Name("login")
+                                          .HtmlAttributes(new { placeholder = "Inserte su Correo Electrónico", required = "required", @class="form-control",type="email",MaxLength="50" }))
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Nombre <span class="symbol required"></span>
+                                    </label>
+                                    @(this.Html.Kendo().TextBox().Name("firstname")
+                                          .HtmlAttributes(new { placeholder = "Inserte su Nombre", required = "required", @class="form-control",type="text",MaxLength="50" }))
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Apellidos <span class="symbol required"></span>
+                                    </label>
+                                    @(this.Html.Kendo().TextBox().Name("lastname")
+                                          .HtmlAttributes(new { placeholder = "Inserte su Apellido", required = "required", @class="form-control",type="text",MaxLength="100" }))
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label class="control-label" title="Oficial de Protección del Puerto">
+                                        Es OPP <span></span>
+                                    </label>
+                                    @Html.Kendo().RadioButton().Name("checkbox0011").Checked(false).HtmlAttributes(new{@name = "engine",@class="form-control"})
+                                    
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label class="control-label" title="Oficial de Protección de Instalaciones Portuarias">
+                                        Es OPIP <span></span>
+                                    </label>
+                                    @Html.Kendo().RadioButton().Name("checkbox0012").Checked(false).HtmlAttributes(new{@name = "engine",@class="form-control"})
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Otros <span></span>
+                                    </label>
+                                    @Html.Kendo().RadioButton().Name("checkbox0013").Checked(true).HtmlAttributes(new{@name = "engine",@class="form-control"})
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div id="IdFecha" style="display: none;">
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 0px;" class="control-label">
+                                            Fecha Expedición <span class="symbol required"></span>
+                                        </label>
+                                        @(Html.Kendo().DatePicker()
+                                              .Name("datetimepicker")
+                                              .Enable(true)
+                                              .Culture("es-ES")
+                                              .HtmlAttributes(new { style = "width:100%;"})
+                                              .Value(DateTime.Now)
+                                              .Footer("Hoy - #=kendo.toString(data, 'd') #")
+                                              )
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="row">     
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Categoria 
+                                    </label>
+                                    @(this.Html.Kendo().ComboBox()
+                                        .Name("Categoria01")
+                                        .Placeholder("Selecciona Categoria")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .Filter(FilterType.Contains)
+                                        .BindTo((IEnumerable<ListCategorias>)this.ViewData["Categoria"])
+                                        .Value(valor)
+                                        .Suggest(true)
+                                        .HtmlAttributes(new { style = "width:100%;",id="Categoria01", required = "required", onChange = "ValidacionCombos(this,'errorCategoria')"  }))
+                                        <span id="errorCategoria" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Grupo 
+                                    </label>
+                                     @(Html.Kendo().ComboBox()
+                                         .Name("Gruposdropdown01")
+                                         .Placeholder("Selecciona Grupo")
+                                         .Filter(FilterType.Contains)
+                                         .DataTextField("Text")
+                                         .DataValueField("Value")
+                                         .BindTo((IEnumerable<ListGrupos>)this.ViewData["Grupos"])
+                                         .Value(valor)
+                                         .HtmlAttributes(new { style = "width: 100%",id="Gruposdropdown01", required = "required", onChange = "ValidacionCombos(this,'errorGrupo')"   }))
+                                         <span id="errorGrupo" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Empresa 
+                                    </label>
+                                    @(this.Html.Kendo().TextBox().Name("empresa")
+                                          .HtmlAttributes(new { placeholder = "Inserte Nombre de la empresa para la que trabaja el usuario", @class="form-control",type="text" ,MaxLength="100"}))
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                               <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            Observaciones <span></span>
+                                        </label>
+                                        @(this.Html.Kendo().Editor().Name("editor")
+                                              .HtmlAttributes(new { style = "height:150px",id="Observaciones" })
+                                              .Tools(tools => tools.Clear())
+                                              .Resizable(false))
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p></p>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <span class="symbol required"></span>Campos requeridos
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <p></p>
+                            </div>
+                            <div id="Opcion02" class="space12" style="margin-left: 50%; display: block">
+                                <div class="btn-group btn-group-sm">
+                                    <button id="RegisterUsuario" class="btn btn-primary hidden-xs" type="submit">
+                                        Guardar</button>
+                                    <a class="btn btn-default " href="@(this.Url.Action("ListadoUsuarios","Usuarios"))">
+                                        Volver </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<input type="text" id="IdOpp" name="IdOpp" style="display: none">
+<script type="text/javascript" src="~/Scripts/AppSecureport/appUsuarios.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        FormElements.init();
+        FormValidator.init();
+        $(document).keydown(function(event) {
+            if (event.ctrlKey == true && (event.which == '118' || event.which == '86')) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+<style>
+     #tshirt {
+        display: block;
+        margin: 2em auto;
+    }
+    .k-readonly
+    {
+        color: gray;
+    }
+     .fieldlist {
+         margin: 0 0 -1em;
+         padding: 0;
+     }
+
+    .fieldlist li {
+        list-style: none;
+        padding-bottom: 1em;
+    }
+</style>

@@ -1,0 +1,138 @@
+﻿@using DocumentFormat.OpenXml.Vml.Spreadsheet
+@using DocumentFormat.OpenXml.Wordprocessing
+@using System.Configuration
+@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model Bienes
+@{
+	string color = ViewBag.disabled == false ? " #eeeeee;color: black" : "#FFFFFF";
+	string ID_Bien = this.Model.Id.ToString() == "0"? string.Empty: this.Model.Id.ToString();
+	string ID_Padre = this.Model.id_Bien_Padre.ToString() == "0"? string.Empty: this.Model.id_Bien_Padre.ToString();
+	string Tipo = this.Model.id_Tipo_IIPP.ToString() == "0"? string.Empty: this.Model.id_Tipo_IIPP.ToString();
+	string valor = Model.es_activo == true? "1": "2";
+	if (ViewBag.action == General.AltaGeneral.ToDescription())
+	{
+		valor = "1";
+	}
+}
+
+
+
+<div class="row">
+	<div class="col-lg-18">
+		<div class="panel panel-default" style="margin-top: -4%;">
+			<div class="panel-heading" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>@ViewBag.Mensaje</strong>
+			</div>
+			<div class="k-content">
+                <input type="text" id="ValidarAllCombos" name="ValidarAllCombos" style="display: none">
+				<div id="Bien">
+					<form id="BienForm">
+						<ul id="fieldlist">
+							<li style="list-style:none;">
+								&nbsp;
+							</li>
+							<li>
+								@(Html.Kendo().TextBoxFor(model =>  model.Id).Name("ID")
+									  .HtmlAttributes(new { id="ID01", style = "width:220px;margin-left: 4%;display:none"}))
+							</li>
+							<div class="col-md-6"  >
+								<div class="form-group" >
+									<label for="Bien" class="required">Tipo de Bien</label>
+									@(Html.Kendo().TextBoxFor(model =>  model.Descripcion).Name("Nombre")
+										  .HtmlAttributes(new { id="Descripcion01", nombre="Descripcion01",placeholder = "Insertar Nombre", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:220px;", MaxLength="1000" }))
+								</div>
+							</div>
+							<div class="col-md-4" style= @ViewBag.display  >
+								<div class="form-group" >
+									<label class="control-label">
+										Activo
+									</label>
+									@(this.Html.Kendo().ComboBox().Name("Activo")
+										  .DataTextField("Text").DataValueField("Value")
+										  .Filter(FilterType.Contains)
+										  .BindTo(new List<SelectListItem>() {
+																				 new SelectListItem() {
+																										  Text = "Si", Value = "1"   
+																									  },
+																				 new SelectListItem() {
+																										  Text = "No", Value = "2"   
+																									  }
+																			 })
+										  .Value(valor)
+										  .Suggest(true).Enable(this.ViewBag.disabled)
+										  .HtmlAttributes(new { style = "width:100%;background-color:" + color, required = "required", validationmessage = "Este campo es requerido", id = "Activo01", name = "Activo01", onChange = "ValidacionCombos(this,'errorActivo')"  }))
+                                          <span id="errorActivo" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+								</div>
+							</div>
+
+							<div class="col-md-10" >
+								<div class="form-group" >
+									<label class="control-label">
+										Tipo Instalación
+									</label>
+									@(this.Html.Kendo().ComboBox().Name("TipoInstalacion")
+										  .Placeholder("Selecciona Tipo Instalación")
+										  .DataTextField("Text").DataValueField("Value")
+										  .Filter(FilterType.Contains)
+										  .BindTo((SelectList)this.ViewData["TipoInstalaciones"])
+										  .Value(Tipo).Suggest(true).Enable(this.ViewBag.disabled)
+										  .HtmlAttributes(new { style = "width:100%;background-color:" + color, required = "required", validationmessage = "Este campo es requerido", id = "TipoInstalacion01", name = "TipoInstalacion01", onChange = "ValidacionCombos(this,'errorTipo')"  }))
+                                          <span id="errorTipo" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+								</div>
+							</div>
+							<div class="col-md-10" >
+								<div class="form-group" >
+									<label class="control-label">
+										Tipo de Bien Padre
+									</label>
+									@(this.Html.Kendo().ComboBox().Name("Bienes")
+										  .Placeholder("Selecciona el Bien Padre")
+										  .DataTextField("Text").DataValueField("Value")
+										  .Filter(FilterType.Contains).BindTo((SelectList)this.ViewData["Bienes"])
+										  .Value(ID_Padre).Suggest(true).Enable(this.ViewBag.disabled)
+										  .HtmlAttributes(new { style = "width:100%;background-color:" + color,  id = "BienPadre01", name = "BienPadre01", onChange = "ValidacionCombos(this,'errorPadre')"  }))
+                                          <span id="errorPadre" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+								</div>
+							</div>
+
+
+							<li id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+								<div class="btn-group btn-group-sm">
+									<button class="btn btn-primary hidden-xs" type="submit">
+										Guardar
+									</button>
+									<a class="btn btn-default " href="javascript:VolverBien()">
+										Volver
+									</a>
+								</div>
+							</li>
+							<li class="status">
+							</li>
+						</ul>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(function () {
+		var validator = $("#BienForm").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$("form").submit(function (event) {
+		    event.preventDefault();
+		    if (ValidarAllCombos('@(ViewBag.display)'))
+		        $('input#ValidarAllCombos').val("1");
+		    else
+		        $('input#ValidarAllCombos').val("");
+			if (validator.validate()) {
+				status.removeClass("invalid").addClass("valid");
+				AltaEditarBien('@ViewBag.action');
+			} else {
+				status.removeClass("valid").addClass("invalid");
+			}
+		});
+	});
+</script>

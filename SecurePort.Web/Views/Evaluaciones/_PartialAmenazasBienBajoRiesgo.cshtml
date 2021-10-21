@@ -1,0 +1,208 @@
+﻿@using SecurePort.Entities.Models
+@model UsuarioFrontal 
+@{
+	string color = @ViewBag.viualiza == "false" ? "#FFFFFF" : "#eeeeee";
+	bool visual = @ViewBag.viualiza == "false" ? false : true;
+	bool disabled = @ViewBag.viualiza == "false" ? true : false;
+	string visible = @ViewBag.viualiza == "false" ? "display:block" : "display:none"; 
+}
+<div class="row" style="width:104%;">
+	<div class="col-md-12" style="margin-top: -1.5%; margin-left: -1.5%; margin-right: -2%;">
+		<div class="panel-heading" style="width:102%;" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "  ></a>
+				<strong>@ViewBag.Mensaje</strong>
+		</div>
+		<div class="col-md-12">
+			<div>
+				<span></span>
+				<hr style="margin-top: 2%;">
+			</div>
+		</div>
+		<input type="text" id="DetalleAmenazaBien"  name="DetalleAmenazaBien"  style="display: none" value="@ViewBag.DetalleAmenazaBienDatail">
+		<div class="panel-body"  style="overflow-y: auto;height: 550px;width:100%;">
+			<div class="row">
+				<div class="col-md-4">
+					<div id="email01" class="form-group">
+						<label class="control-label">
+							Instalación
+						</label>
+						@(this.Html.Kendo().TextBox().Name("Instalacion").Enable(false).HtmlAttributes(new { id = "Evaluacion01", nombre = "Instalacion0101", type = "text", style = "background-color:#eeeeee", @class = "form-control", value = this.ViewBag.Instalacion }))
+					</div>
+				</div>      
+				<div class="col-md-5">
+					<div id="email01" class="form-group">
+						<label class="control-label">
+							Tipo Bien
+						</label>
+						@(this.Html.Kendo().TextBox().Name("Bien").Enable(false).HtmlAttributes(new { id = "Instalacion01", nombre = "Bien01", type = "text", style = "background-color:#eeeeee", @class = "form-control", value = this.ViewBag.Bien }))
+					</div>
+				</div>
+				<div class="col-md-2" style="@visible">
+					<div id="email01" class="form-group" >
+						<label class="control-label" >
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</label>
+						@(this.Html.Kendo().Button().Name("ButtonCalcularRiesgosBajo").HtmlAttributes(new { type = "button", @class = "btn btn-danger" }).Content("Calcular Riesgos").Events(ev => ev.Click("onClick")))				
+					</div>
+				</div>
+			</div>
+			<div class="row">
+			<div class="col-md-12">
+			 @(Html.Kendo().PanelBar()
+				.Name("panelbar")
+				.ExpandMode(PanelBarExpandMode.Multiple)
+				 .Items(items =>
+					{
+						// here is the trick to add the items dynamically
+						foreach (Detalle_EvaluacionViewModel detail in ViewBag.DetalleAmenazaBien)
+						{                            
+							items.Add()
+								.Text(detail.Amenaza)
+								.Expanded(visual)
+								.Content(@<div>
+									<TABLE BORDER>
+										<TR>
+											<TD rowspan="3" style="text-align:center;font-weight:bold;">&nbsp;</TD> 
+											<TD style="text-align:center;font-weight:bold;">Nivel</TD>
+											<TD style="text-align:center;font-weight:bold;">ID</TD> 
+											<TD style="text-align:center;font-weight:bold;">IV</TD> 
+											<TD style="text-align:center;font-weight:bold;">IC</TD>
+											<TD  id="titulo_|@detail.Id_Amenaza" style="text-align:center;font-weight:bold;@ViewBag.resulta"><font color="red">Calculo de Riesgos </font></TD>                                       
+										</TR> 
+										<TR>
+											<TD style="text-align:center;">1</TD>      
+											<TD >@(this.Html.Kendo().TextBox().Name("txtID1").Enable(disabled).HtmlAttributes(new { id = "NP1_ID_|" + detail.Id_Amenaza + "|1", name = "NP1_ID_|" + detail.Id_Amenaza, style = "background-color:" + color, @class = "form-control", type = "text", onblur="ModificarDetalleTextBajoRiesgo(this)", value=@detail.NP1_ID}))</TD>
+											<TD >@(this.Html.Kendo().TextBox().Name("txtIV1").Enable(disabled).HtmlAttributes(new { id = "NP1_IV_|" + detail.Id_Amenaza + "|2", name = "NP1_IV_|" + detail.Id_Amenaza, style = "background-color:" + color, @class = "form-control", type = "text", onblur="ModificarDetalleTextBajoRiesgo(this)", value=@detail.NP1_IV}))</TD>
+											<TD >@(this.Html.Kendo().TextBox().Name("txtIC1").Enable(disabled).HtmlAttributes(new { id = "NP1_IC_|" + detail.Id_Amenaza + "|3", name = "NP1_IC_|" + detail.Id_Amenaza, style = "background-color:" + color, @class = "form-control", type = "text", onblur="ModificarDetalleTextBajoRiesgo(this)", value=@detail.NP1_IC}))</TD>
+											<TD id="resultado1_|@detail.Id_Amenaza" style="@ViewBag.resulta" >@(this.Html.Kendo().TextBox().Name("txtResultado1").Enable(false).HtmlAttributes(new { id = "NP1_RESULTADO_|" + detail.Id_Amenaza, name = "NP1_RESULTADO_|" + detail.Id_Amenaza, style = "background-color:#eeeeee;", @class = "form-control", type = "text", onchange="ModificarDetalleTextBajoRiesgo(this)", value=@detail.NP1_RESULTADO}))</TD>
+										</TR>
+										<TR>
+										<TD style="text-align:center;">2</TD>                     
+										<TD >@(this.Html.Kendo().TextBox().Name("txtID2").Enable(disabled).HtmlAttributes(new { id = "NP2_ID_|" + detail.Id_Amenaza + "|1", name = "NP2_ID_|" + detail.Id_Amenaza, style = "background-color:" + color, @class = "form-control", type = "text", onblur="ModificarDetalleTextBajoRiesgo(this)", value=@detail.NP2_ID}))</TD>
+										<TD >@(this.Html.Kendo().TextBox().Name("txtIV2").Enable(disabled).HtmlAttributes(new { id = "NP2_IV_|" + detail.Id_Amenaza + "|2", name = "NP2_IV_|" + detail.Id_Amenaza, style = "background-color:" + color, @class = "form-control", type = "text", onblur="ModificarDetalleTextBajoRiesgo(this)", value=@detail.NP2_IV}))</TD>
+										<TD >@(this.Html.Kendo().TextBox().Name("txtIC2").Enable(disabled).HtmlAttributes(new { id = "NP2_IC_|" + detail.Id_Amenaza + "|3", name = "NP2_IC_|" + detail.Id_Amenaza, style = "background-color:" + color, @class = "form-control", type = "text", onblur="ModificarDetalleTextBajoRiesgo(this)", value=@detail.NP2_IC}))</TD>
+										<TD id="resultado2_|@detail.Id_Amenaza" style="@ViewBag.resulta" >@(this.Html.Kendo().TextBox().Name("txtResultado2").Enable(false).HtmlAttributes(new { id = "NP2_RESULTADO_|" + detail.Id_Amenaza, name = "NP2_RESULTADO_|" + detail.Id_Amenaza, style = "background-color:#eeeeee;", @class = "form-control", type = "text", onchange="ModificarDetalleTextBajoRiesgo(this)", value=@detail.NP2_RESULTADO}))</TD>
+									</TR>
+									<TR>
+										<TD style="text-align:center;font-weight:bold;">&nbsp;</TD> 
+										<TD style="text-align:center;">3</TD>                     
+										<TD >@(this.Html.Kendo().TextBox().Name("txtID3").Enable(disabled).HtmlAttributes(new { id = "NP3_ID_|" + detail.Id_Amenaza + "|1", name = "NP3_ID_|" + detail.Id_Amenaza, style = "background-color:" + color, @class = "form-control", type = "text", onblur="ModificarDetalleTextBajoRiesgo(this)", value=@detail.NP3_ID}))</TD>
+										<TD >@(this.Html.Kendo().TextBox().Name("txtIV3").Enable(disabled).HtmlAttributes(new { id = "NP3_IV_|" + detail.Id_Amenaza + "|2", name = "NP3_IV_|" + detail.Id_Amenaza, style = "background-color:" + color, @class = "form-control", type = "text", onblur="ModificarDetalleTextBajoRiesgo(this)", value=@detail.NP3_IV}))</TD>
+										<TD >@(this.Html.Kendo().TextBox().Name("txtIC3").Enable(disabled).HtmlAttributes(new { id = "NP3_IC_|" + detail.Id_Amenaza + "|3", name = "NP3_IC_|" + detail.Id_Amenaza, style = "background-color:" + color, @class = "form-control", type = "text", onblur="ModificarDetalleTextBajoRiesgo(this)", value=@detail.NP3_IC}))</TD>
+										<TD id="resultado3_|@detail.Id_Amenaza" style="@ViewBag.resulta" >@(this.Html.Kendo().TextBox().Name("txtResultado3").Enable(false).HtmlAttributes(new { id = "NP3_RESULTADO_|" + detail.Id_Amenaza, name = "NP3_RESULTADO_|" + detail.Id_Amenaza, style = "background-color:#eeeeee;", @class = "form-control", type = "text", onchange="ModificarDetalleTextBajoRiesgo(this)", value=@detail.NP3_RESULTADO}))</TD>
+									</TR>
+								</TABLE>
+							</div>);
+						}
+					})
+				)
+			</div>
+		</div>
+			<div class="row" style="position:relative;bottom:-25px; right:10px;">
+			   <div class="space12" style="margin-left: 40%;">
+				   <div class="btn-group btn-group-sm" style="@visible">
+						@(this.Html.Kendo().Button().Name("ButtonDeshacerAmenazasBajoRiesgo").HtmlAttributes(new { type = "button", @class = "btn btn-danger" }).Content("Deshacer").Events(ev => ev.Click("onClick")))
+				   </div>
+				   <div class="btn-group btn-group-sm" style="@visible">
+					   @(this.Html.Kendo().Button().Name("ButtonSaveAmenazasBajoRiesgo").HtmlAttributes(new { type = "button", @class = "btn btn-primary hidden-xs" }).Content("Guardar").Events(ev => ev.Click("onClick")))
+				   </div>
+				   <div class="btn-group btn-group-sm">
+					  @(this.Html.Kendo().Button().Name("ButtonVolverIns").HtmlAttributes(new { type = "button", @class = "btn btn-default" }).Content("Volver").Events(ev => ev.Click("onClick")))
+				   </div>
+			   </div>
+		   </div>
+		</div>
+	</div>
+</div>
+<div id="alerta">
+	<span id="message" style="font-size: 14px; font-family: 'Helvetica'; font-weight: bold;padding-left:13px;padding-right:13px;padding-top:15px;padding-bottom:10px"></span>
+	<div style="height:30px;">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+	<button class="blue" type="submit">OK</button>
+</div>
+<script>
+	var TotalAmenazasBajoRiesgo = @Html.Raw(
+		Json.Encode(
+			((IEnumerable<Detalle_EvaluacionViewModel>)ViewBag.DetalleAmenazaBien).Select(x => new 
+			{ 
+				Id              = x.Id,
+				Id_Evaluacion   = x.Id_Evaluacion,
+				Id_Version_Eval = x.Id_Version_Eval,
+				Id_Instalacion  = x.Id_Instalacion,
+				Id_Bien         = x.Id_Bien,
+				Id_Amenaza      = x.Id_Amenaza,
+				Amenaza         = x.Amenaza,
+				NP1_RESULTADO   = x.NP1_RESULTADO,
+				NP1_ID          = x.NP1_ID,
+				NP1_IC          = x.NP1_IC,
+				NP1_IV          = x.NP1_IV,
+				NP2_RESULTADO   = x.NP2_RESULTADO,
+				NP2_ID          = x.NP2_ID,
+				NP2_IC          = x.NP2_IC,
+				NP2_IV          = x.NP2_IV,
+				NP3_RESULTADO   = x.NP3_RESULTADO,
+				NP3_ID          = x.NP3_ID,
+				NP3_IC          = x.NP3_IC,
+				NP3_IV          = x.NP3_IV, 
+				tipo            = x.tipo,
+				Estado          = x.Estado                
+			})
+		)
+	);
+
+
+	function onShow(e) {
+	}
+	function onHide(e) {
+
+	}
+	
+</script>
+<style type='text/css'>
+	#panelbar {
+		max-width: 1115px;
+		margin: 0 auto;
+		width:103%;      
+	}
+	.teamMate:after {
+		content: ".";
+		display: block;
+		height: 0;
+		line-height: 0;
+		clear: both;
+		visibility: hidden;
+	}
+	.teamMate h2 {
+		font-size: 1.4em;
+		font-weight: normal;
+		padding-top: 20px;
+	}
+	.teamMate p {
+		margin: 0;
+	}
+	.teamMate img {
+		float: left;
+		margin: 5px 15px 5px 5px;
+		border: 1px solid #000;
+		border-radius: 50%;
+	}
+.k-panelbar>li.k-state-default>.k-link.k-state-selected, .k-panelbar>li>.k-state-selected, .k-state-selected>.k-link {
+	color: #000;
+}
+
+#alerta{
+	  display:none; 
+	  border-style: double; 
+	  border-width: 1px; 
+	  width:300px;
+	  height:150px;
+	  background-color:#FFFFFF;
+	  position: relative;
+	  top: -280px; 
+	  margin-left: 399px; 
+	  margin-top: -168px;
+	  padding: 50px 30px 13px 13px; 
+	  text-align: center;  
+	}
+
+
+</style>

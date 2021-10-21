@@ -1,0 +1,76 @@
+﻿@model SecurePort.Entities.Models.CNAE
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width" />
+	</head>
+	<body>
+		<div class="row">
+			<div class="col-md-10">
+				<!-- start: FORM VALIDATION 1 PANEL -->
+				<div class="panel-body">
+					<h2><i class="icon-edit-sign teal"></i> Alta de CNAE</h2>
+					<p>
+						Permite el alta de todos los Código Nacional de Actividades Económicas. 
+					</p>
+					<hr>
+					<form action="#" role="form" id="form">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="errorHandler alert alert-danger no-display">
+									<i class="icon-remove-sign"></i> Usted tiene algunos errores. Por favor, consulte más abajo.
+								</div>
+								<div class="successHandler alert alert-success no-display">
+									<i class="icon-ok"></i> Su validación es exitosa!
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="control-label">
+										Código <span class="symbol required"></span>
+									</label>
+									<input type="text" placeholder="Inserte Código CNAE" class="form-control" id="IdCodigo" name="IdCodigo">
+								</div>
+								<div class="form-group">
+									<label class="control-label">
+										Descripción <span class="symbol required"></span>
+									</label>
+									<input type="text" placeholder="Inserte Descripción CNAE" class="form-control" id="IdDescripcion" name="IdDescripcion">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div>
+									<span class="symbol required"></span>Campos requeridos
+									<hr>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-8">
+								<p>
+								</p>
+							</div>
+							<div class="alert alert-block alert-info fade in">
+								<p>
+									<a><button id="RegisterCNAE" class="btn btn-blue" type="submit">
+										   Registrar <i class="icon-circle-arrow-right"></i>
+									</button></a>
+											
+									<a data-dismiss="modal" class="btn btn-danger" href="javascript:void(0)" onclick=" hideLoading() ">
+										<i class='icon-remove'></i>Cancelar
+									</a>
+								</p>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+
+
+

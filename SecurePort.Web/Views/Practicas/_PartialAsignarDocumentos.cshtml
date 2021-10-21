@@ -1,0 +1,68 @@
+﻿@model SecurePort.Entities.Models.PracticasViewModel
+@{
+	this.Layout = null;
+    int id = Model.Id; 
+    ViewBag.UrlGuardar = "/Practicas/AsignarTipoDocumento";
+    ViewBag.UrlVolver = "/Practicas/AsociadosEditPracticas";
+    ViewBag.Idvista =id;    
+    ViewBag.servicioAlta = 12;
+    ViewBag.Vista ="Practicas";
+    ViewBag.Retorno = "DocPractica";
+    ViewBag.BotonRetorno ="VisualizarDocPractica(" +id + ")";
+    ViewBag.TipoSer="0011";
+}
+<div class="row">
+<input type="text" id="IdValor" name="IdValor" style="display: none">
+
+	<div class="col-md-12" style="margin-top: -2%; margin-left: -2%; margin-right: -2%;">
+         <div class="panel-heading" style="width:790px;" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "  ></a>
+				<strong>Asignar Documentos Asociados Prácticas o Ejercicios</strong>
+			</div>
+		<!-- start: FORM VALIDATION 1 PANEL -->
+		<div class="panel-body">
+			<hr>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="control-label">
+							Descripción 
+						</label>
+						@(this.Html.TextBoxFor(model => model.Descripcion,
+							  new { itemid = "Formacion", id = "DocOrganismo01", name = "DocOrganismo01", @class = "form-control", disabled = "disabled" }))
+					</div>
+				</div>
+				
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label class="control-label">
+							Tipos Documentos
+						</label>
+						@(this.Html.DropDownList("Tipos_Documento",(SelectList)this.ViewData["Tipos_Documento"],new { id = "TiposDocumento01", @class = "form-control"}))
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label">
+							Descripción <span class="symbol required"></span>
+						</label>
+						<input type="text" placeholder="Inserte la Descripción" class="form-control" id="descripcion01" name="descripcion01">
+					</div>
+				</div>
+			</div>
+		<span class="symbol required"></span>Campos requeridos
+		</div>
+	</div>
+</div>
+<div class="panel-body">
+	@(this.Html.Partial("~/Views/Home/Upload.cshtml"))
+</div>
+@*<div class="row">
+	<div class="space12" style="margin-top: -10%;margin-left: 50%; display: block">
+		<div class="btn-group btn-group-sm">
+			<a class="btn btn-default " href="javascript:void(0)" onclick=" VisualizarDocPractica(@id) ">Volver</a>
+		</div>
+	</div>
+</div>*@

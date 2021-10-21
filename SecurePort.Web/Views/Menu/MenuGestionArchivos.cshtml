@@ -1,0 +1,112 @@
+﻿@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+<a href="javascript:void(0)"><i class="icon-archive"></i>
+    <span class="title">Gestión Registros</span><i class="icon-arrow"></i>
+    <span class="selected"></span>
+</a>
+<ul id="IdSubMenuArchivos" class="sub-menu">
+    
+    @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+    {
+        if (Permisos.NombrePermiso == Auditoria.LISTA_AUDITORIA.ToDescription())
+        {
+            <li id="Id033">
+                <a href="@(this.Url.Action("ListadoAuditorias","Auditorias"))">
+                    Auditorias</a>
+            </li>
+        }
+    }
+    @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+    {
+        if (Permisos.NombrePermiso == Comunicacion.LISTA_COMUNICA.ToDescription())
+        {
+            <li id="Id036">
+                <a href="@(this.Url.Action("ListadoComunicaciones","Comunicaciones"))">
+                    Comunicaciones</a>
+            </li>
+        }
+    }
+    @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+    {
+        if (Permisos.NombrePermiso == Declara_Maritima.LISTA_DECLARA.ToDescription())
+        {
+            <li id="Id037">
+                <a href="@(this.Url.Action("ListadoDeclaraMaritima","DeclaraMaritima"))">
+                    Declaraciones de protección marítima</a>
+            </li>
+        }
+    }
+    @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+    {
+        if (Permisos.NombrePermiso == Formacion.LISTA_FORMACION.ToDescription())
+        {
+            <li id="Id030">
+                <a href="@(this.Url.Action("ListadoFormaciones","Formaciones"))">
+                    Formación del Personal</a>
+            </li>
+        }
+    }
+    @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+    {
+        if (Permisos.NombrePermiso == Mantenimiento.LISTA_MANTEN.ToDescription())
+        {
+            <li id="Id035">
+                <a href="@(this.Url.Action("ListadoMantenimientos","Mantenimiento"))">
+                    Mantenimiento,Calibración y Ensayos</a>
+            </li>
+        }
+    }
+    @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+    {
+        if (Permisos.NombrePermiso == Nivel.LISTA_NIVEL.ToDescription())
+        {
+            <li id="Id034">
+                <a href="@(this.Url.Action("ListadoNiveles","Niveles"))">
+                    Niveles de Protección</a>
+            </li>
+        }
+    }
+    @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+    {
+        if (Permisos.NombrePermiso == Practica.LISTA_PRACTICA.ToDescription())
+        {
+            <li id="Id031">
+                <a href="@(this.Url.Action("ListadoPracticas","Practicas"))">
+                    Prácticas o Ejercicios</a>
+            </li>
+        }
+    }
+    @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+    {
+        if (Permisos.NombrePermiso == Comite.LISTAR_OPCION_COMITES.ToDescription())
+        {
+            <li id="Id018">
+                <a href="@(this.Url.Action("ListadoComites","Comites"))">
+                    Reuniones Comités Consultivos</a>
+            </li>
+        }
+    }
+    @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+    {
+        if (Permisos.NombrePermiso == Gisis.LISTA_GISIS.ToDescription())
+        {
+            <li id="Id038">
+                <a href="@(this.Url.Action("ListadoGisis","Gisis"))">
+                    Registros GISIS</a>
+            </li>
+        }
+    }
+    @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+    {
+        if (Permisos.NombrePermiso == Incidente.LISTA_INCIDENTE.ToDescription())
+        {
+            <li id="Id032">
+                <a href="@(this.Url.Action("ListadoIncidentes","Incidentes"))">
+                    Violaciones y Amenazas/Incidencias</a>
+            </li>
+        }
+    }
+
+</ul>
+

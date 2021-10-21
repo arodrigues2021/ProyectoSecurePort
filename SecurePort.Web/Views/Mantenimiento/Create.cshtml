@@ -1,0 +1,367 @@
+﻿@using DocumentFormat.OpenXml.Vml.Spreadsheet
+@using DocumentFormat.OpenXml.Wordprocessing
+@using System.Configuration
+@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model MantenimientoViewModel
+@{
+	string color = ViewBag.disabled == false ? " #eeeeee;color: black" : "#FFFFFF";
+	string IDInstalacion = this.Model.Id_IIPP.ToString() == "0"? string.Empty: this.Model.Id_IIPP.ToString();
+	string IDPuerto = this.Model.Id_Puerto.ToString() == "0"? string.Empty: this.Model.Id_Puerto.ToString();
+	DateTime fecha = Model.Fecha == DateTime.MinValue ?  DateTime.Now : this.Model.Fecha;
+	DateTime? fechaRevision = Model.Fecha_Revision;      
+	string requerido   = ViewBag.disabled == false ? string.Empty:"symbol required";
+	
+	string valor = "0";
+	if (ViewBag.action == General.AltaGeneral.ToDescription())
+	{
+		valor = "1";
+	}
+
+}
+<div class="row">
+	<div class="col-lg-12">
+		
+			<div class="panel-heading">
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>@ViewBag.Mensaje</strong>
+			</div>
+		   <input type="text" id="Validar" name="Validar" style="display: none">
+           <input type="text" id="ValidarAllCombos" name="ValidarAllCombos" style="display: none">
+			<div class="panel-body">
+					<hr>
+					<form action="#" role="form" id="Mantenimientoform" onsubmit="return validarFormulario()">
+						<ul id="fieldlist">
+							<li style="list-style:none;">&nbsp;
+								  @(Html.Kendo().TextBoxFor(model =>  model.Id).Name("ID")
+										.HtmlAttributes(new { id="ID01", style = "width:220px;margin-left: 4%;display:none"}))
+							</li>
+							<div class="row">
+								<div id="ComboPuertos">
+										<div class="col-md-2">
+											<div class="form-group">
+												<label class="control-label">
+													Puerto <span class='@requerido'></span>
+												</label>
+												<div Style="@ViewBag.Combo">
+												@(this.Html.Kendo().ComboBox().Name("Puertos")
+												 .Placeholder("Selecciona Puerto")
+												 .DataTextField("Text").DataValueField("Value")
+												 .Filter(FilterType.Contains)
+												 .BindTo((SelectList)this.ViewData["puertos"])
+												 .Value(IDPuerto).Suggest(true)
+												 .HtmlAttributes(new { style = "width:100%;", id = "Puerto01" ,name="Puerto01", onChange = "CambiarPuerto()"}))
+												<span id="datosPuerto"  style="display:none;color:#b94a48;">Este campo es requerido.</span>
+                                                <span id="errorPuerto" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+											</div>
+											 <div Style=@ViewBag.Texto>
+												@(Html.Kendo().TextBoxFor(model =>  model.Puerto).Name("PuertoTexto").Enable(ViewBag.disabled) 
+													.HtmlAttributes(new { id="PuertoText", name="PuertoText" ,style = "background-color:" + color, @class="form-control"}))
+											</div>
+										</div>
+									</div>
+								   </div>                                    
+							   
+								<div id="ComboCentros">                                   
+									<div class="col-md-2">
+										<div class="form-group">
+											<label for="Centro" class="required">
+												Instalación 
+											</label>
+											<div Style="@ViewBag.Combo"> 
+											@(this.Html.Kendo().ComboBox().Name("Instalacion")
+												 .Placeholder("Selecciona Instalacion")
+												 .DataTextField("Text").DataValueField("Value")
+												 .Filter(FilterType.Contains)
+												 .BindTo((SelectList)this.ViewData["Instalaciones"])
+												 .Value(IDInstalacion).Suggest(true)
+												 .HtmlAttributes(new { style = "width:100%;", id = "Instalacion01" ,name="Instalacion01", onChange = "ValidacionCombos(this,'errorInsta')"}))  
+												<span id="datosCentro"  style="display:none;color:#b94a48;">Este campo es requerido.</span>
+                                                <span id="errorInsta" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+										</div>
+										 <div Style=@ViewBag.Texto>
+											@(Html.Kendo().TextBoxFor(model =>  model.IIPP).Name("InstalacionTexto").Enable(ViewBag.disabled) 
+											.HtmlAttributes(new { id="InstalacionText", name="InstalacionText" ,style = "background-color:" + color, @class="form-control"}))
+										</div>  
+									 </div>  
+									</div>
+								  </div>
+								<div class="col-md-3">
+									<div class="form-group">
+										<label class="control-label" >
+											Mantenimiento <span class='@requerido'></span>
+										</label>
+										@(this.Html.Kendo().TextBoxFor(model =>  model.Descripcion).Name("Descripcion").Enable(ViewBag.disabled)
+										.HtmlAttributes(new { id="Descripcion01", name="Descripcion01", placeholder = "Inserte Mantenimiento", onChange = "ValidarMantenimiento()", style = "background-color:" + color, @class="form-control",MaxLength="100" }))
+										<span id="datosDescripcion"  style="display:none;color:#b94a48;">Este campo es requerido.</span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-2">
+									<div class="form-group">
+										<label class="control-label" >
+											Fecha <span class='@requerido'></span>
+										</label>
+										@(Html.Kendo().DatePicker()
+											  .Name("iniciopicker")                                              
+											  .Enable(ViewBag.disabled)
+											  .Culture("es-ES")
+											  .HtmlAttributes(new { id="Fecha01", name="Inicio", placeholder = "Inserte el Fecha", onChange = "ValidarFecha()", style = "width:100%;background-color:" + color })
+											  .Value(fecha)
+											  .Footer("Hoy - #=kendo.toString(data, 'd') #")
+											  )
+										<span id="datosFecha"  style="display:none;color:#b94a48;">Este campo es requerido.</span>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+								<div class="form-group">
+									<label class="control-label">
+										Equipo <span class='@requerido'></span>
+									</label>
+									 @(this.Html.Kendo().TextBoxFor(model =>  model.Equipo).Name("Equipo").Enable(ViewBag.disabled)
+									  .HtmlAttributes(new { id="Equipo01", name="Equipo01", placeholder = "Inserte equipo", onChange = "ValidarEquipo()",style = "background-color:" + color, @class="form-control",MaxLength="100" }))
+									<span id="datosEquipo"  style="display:none;color:#b94a48;">Este campo es requerido.</span>
+								</div>
+							</div>
+								<div class="col-md-3">
+								<div class="form-group">
+									<label class="control-label" >
+										Realizado por 
+									</label>
+									@(this.Html.Kendo().TextBoxFor(model =>  model.Realizador).Name("Realizador").Enable(ViewBag.disabled)
+										  .HtmlAttributes(new { id="Realizador01", name="Realizador01", placeholder = "Realizado por", style = "background-color:" + color, @class="form-control",MaxLength="100" }))
+									
+								</div>
+							</div>    
+							</div>
+							<div class="row">
+								
+								<div class="col-md-3">
+								<div class="form-group">
+									<label class="control-label" >
+										Validado Por 
+									</label>
+									@(this.Html.Kendo().TextBoxFor(model =>  model.Validador).Name("Validador").Enable(ViewBag.disabled)
+										  .HtmlAttributes(new { id="Validador01", name="Validador01", placeholder = "Validado por ", style = "background-color:" + color, @class="form-control",MaxLength="100" }))
+								</div>
+							</div>	
+									  
+								<div class="col-md-2">
+									<div class="form-group">
+										<label class="control-label">
+											Fecha Próxima Revisión 
+										</label>
+										@(Html.Kendo().DatePicker()
+											  .Name("Finpicker")                                              
+											  .Enable(ViewBag.disabled)
+											  .Culture("es-ES")
+											  .HtmlAttributes(new { id="FechaRevision01", name="Fin", placeholder = "Inserte el Fecha",  style = "width:100%;background-color:" + color,onChange = "ValidarFechaProxima()"  })
+											  .Value(fechaRevision)
+											  .Footer("Hoy - #=kendo.toString(data, 'd') #")
+											  ) 
+                                        <span id="datosFinValida"  style="display:none;color:#b94a48;">La fecha próxima revisión es menor a la fecha.</span>                                          
+									</div>
+								</div>
+								
+							</div>
+						    <div class ="row">
+						        <div class="col-md-6">
+						            <div class="form-group">
+						                <label class="control-label">
+						                    Observaciones <span></span>
+						                </label>
+						                @(this.Html.Kendo()
+						                      .Editor()
+						                      .Name("editor")
+						                      .HtmlAttributes(new { style = "height:150px;", id="Observaciones01",name="Observaciones01" })                                        
+						                      .Tools(tools => tools.Clear())
+						                      .Value((string)this.ViewBag.Observaciones)                                       
+						                      .Resizable(false))
+						            </div>
+						        </div>
+						        <div style ="@(this.ViewBag.alta)">
+						            <div class="col-md-6">
+						                <div id="Asignar-Documentos">
+						                    <div class="row">
+						                        <div class="col-md-10">
+						                            <div class="panel panel-default">
+						                                <div class="panel-heading">
+						                                    <i class="clip-checkbox"></i>
+						                                    Documentos asociados
+						                                </div>
+						                                <div class="panel-body" style="height: 200px">
+						                                    <div id="DocumentosRefrescar">
+						                                        @(this.Html.Action("AsociadosEdit",
+						                                              "Mantenimiento",
+						                                              new { ToolBar = this.ViewBag.ToolMantenimiento }))
+						                                    </div>
+						                                </div>
+						                            </div>
+						                        </div>
+						                    </div>
+						                </div>
+						            </div>
+						        </div> 
+						    </div>
+                             @if (ViewBag.action == General.AltaGeneral.ToDescription() || ViewBag.action == General.EditGeneral.ToDescription())
+							{
+								<div class="row">
+									<div class="col-md-12">
+										<p></p>
+									</div>
+									<div class="col-md-12">
+										<div>
+											<span class="symbol required"></span>Campos requeridos
+											<hr>
+										</div>
+									</div>
+								</div>
+							}
+							<li id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+								<div Style="@ViewBag.Combo"> 
+								<div class="btn-group btn-group-sm">
+									<button id="RegistroMantenimiento" class="btn btn-primary hidden-xs" type="submit">
+										Guardar
+									</button>
+									<a class="btn btn-default " href="javascript:VolverMantenimiento()">Volver
+									</a>
+								   </div>
+								  
+								</div>
+								 <div Style=@ViewBag.Texto>
+									 <div class="btn-group btn-group-sm">
+										 <a class="btn btn-default " href="javascript:VolverMantenimiento()">Volver
+										</a>
+									 </div>
+								</div>
+							</li>
+							<li class="status"></li>
+						</ul>
+					</form>
+				</div>
+			<div id="myModalUpload" class="modal fade in" data-width="800" tabindex="-1" aria-hidden="false" style="width: 800px; margin-left: -299px; margin-top: -168px; display: none; height: 45%;">
+				<div class="modal-body">
+					<div class="apply_info">
+					<div id="AsignarDocumentos"></div>
+					</div>
+				</div>
+		   </div>
+   </div> 
+</div>
+
+	<script type="text/javascript">
+		jQuery(document).ready(function () {
+			var bool = '@ViewBag.disabled';
+			if (bool == 'False') {
+				var editor = $('#Observaciones01').data('kendoEditor');
+				editor.body.contentEditable = false;
+				$($('#Observaciones01').data().kendoEditor.body).attr('contenteditable', false);
+				$($('#Observaciones01').data().kendoEditor.body).attr('style', "background-color:#eeeeee");
+			}
+
+		});
+
+	$(function () {
+
+		var validator = $("#mantenimientoform").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$('button#RegistroMantenimiento.btn.btn-primary.hidden-xs').click(function () {
+		    ValidarMayor();
+		    if (ValidarAllCombos())
+		        $('input#ValidarAllCombos').val("1");
+		    else
+		        $('input#ValidarAllCombos').val("");
+			AltaEditarMantenimiento('@ViewBag.action');
+		});
+
+	});
+
+	    //function ValidaFechaRevision() {
+	    //    var valor = false;
+	    //    var fecha = $('input#FechaRevision01').val();
+	    //    var fecha2 =$('input#Fecha01').val();
+	    //    var xMonth = fecha.substring(3, 5);
+	    //    var xDay = fecha.substring(0, 2);
+	    //    var xYear = fecha.substring(6, 10);
+	    //    var yMonth = fecha2.substring(3, 5);
+	    //    var yDay = fecha2.substring(0, 2);
+	    //    var yYear = fecha2.substring(6, 10);
+	    //    if (yYear > xYear) {
+	    //       valor=true;
+	    //    }
+	    //    else {
+	    //        if (xYear == yYear) {
+	    //            if (yMonth> xMonth) {
+	    //                valor = true;;
+	    //            }
+	    //            else {
+	    //                if (xMonth == yMonth) {
+	    //                    if (yDay > xDay)
+	    //                        valor = true;
+	    //                    else
+	    //                        valor = false;
+	    //                }
+	    //                else
+	    //                    valor = false;
+	    //            }
+	    //        }
+	    //        else
+	    //            valor = false;
+	    //    }
+	    //    if (valor) {
+	    //        alert("La Fecha Próxima Revisión no puede ser menor a la Fecha de Inicio", "Mensaje");
+	    //        $('input#FechaRevision01').val('');
+	    //    }
+		//}
+
+	function validarFormulario()
+	{
+	    var valido = false;
+
+
+	    if (ValidarAllCombos())
+	        $('input#ValidarAllCombos').val("1");
+		
+		if (!ValidarCombo($('input#Puerto01').val())) {
+			datosPuerto.style.display = "";
+			valido = false;
+		}
+		else
+			datosPuerto.style.display = "none";
+	   if (!ValidarTexto($('input#Descripcion01').val())) {
+			datosDescripcion.style.display = "";
+			valido = false;
+		}
+		else
+			datosDescripcion.style.display = "none";
+
+	   if (!ValidarTexto($('input#Fecha01').val())) {
+	       datosFinValida.style.display = "none";
+	       datosFecha.style.display = "";
+	       valido = false;
+	   }
+	   else {
+	       if (ValidarMayor()) {
+	           datosFecha.style.display = "none";
+	           datosFinValida.style.display = "none";
+	       } else {
+	           datosFinValida.style.display = "";
+	           datosFinValida.style.display = "none";
+	       }
+	   }
+
+		if (!ValidarTexto($('input#Equipo01').val())) {
+			datosEquipo.style.display = "";
+			valido = false;
+		}
+		else
+			datosEquipo.style.display = "none";
+
+		
+
+		return valido;
+	}
+   
+</script>

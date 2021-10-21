@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{192718FE-7FC0-4B8C-B438-A18740F0AE78}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SecurePort.Repository</RootNamespace>
+    <AssemblyName>SecurePort.Repository</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="SecurePort.Entities">
+      <HintPath>..\SecurePort.Entities\bin\Debug\SecurePort.Entities.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\BaseRepository.cs" />
+    <Compile Include="Repository\CiudadesRepository.cs" />
+    <Compile Include="Repository\Contactos_OrganismoRepository.cs" />
+    <Compile Include="Repository\Comunidades_AutonomasRepository.cs" />
+    <Compile Include="Repository\CapitaniasRepository.cs" />
+    <Compile Include="Repository\BienesRepository.cs" />
+    <Compile Include="Repository\CentrosRepository.cs" />
+    <Compile Include="Repository\AmenazasRepository.cs" />
+    <Compile Include="Repository\ComunicacionesRepository.cs" />
+    <Compile Include="Repository\Detalle_EvaluacionRepository.cs" />
+    <Compile Include="Repository\Historico_EvaluacionRepository.cs" />
+    <Compile Include="Repository\EvaluacionesRepository.cs" />
+    <Compile Include="Repository\Versiones_EvaluacionRepository.cs" />
+    <Compile Include="Repository\MovDetalleInstalacionesRepository.cs" />
+    <Compile Include="Repository\ProcedimientosRepository.cs" />
+    <Compile Include="Repository\VinculosRepository.cs" />
+    <Compile Include="Repository\GisisRepository.cs" />
+    <Compile Include="Repository\Det_PracticaRepository.cs" />
+    <Compile Include="Repository\Det_IncidenteRepository.cs" />
+    <Compile Include="Repository\DeclaraMaritimaRepository.cs" />
+    <Compile Include="Repository\Det_NivelRepository.cs" />
+    <Compile Include="Repository\MantenimientosRepository.cs" />
+    <Compile Include="Repository\Comunica_CentroRepository.cs" />
+    <Compile Include="Repository\NivelesRepository.cs" />
+    <Compile Include="Repository\DocumentosRepository.cs" />
+    <Compile Include="Repository\AuditoriasRepository.cs" />
+    <Compile Include="Repository\IncidentesRepository.cs" />
+    <Compile Include="Repository\PracticasRepository.cs" />
+    <Compile Include="Repository\OperadoresPuertoRepository.cs" />
+    <Compile Include="Repository\FormacionesRepository.cs" />
+    <Compile Include="Repository\InstalacionesRepository.cs" />
+    <Compile Include="Repository\OperadoresRepository.cs" />
+    <Compile Include="Repository\MotivosRepository.cs" />
+    <Compile Include="Repository\ComitesRepository.cs" />
+    <Compile Include="Repository\PaisesRepository.cs" />
+    <Compile Include="Repository\ProvinciasRepository.cs" />
+    <Compile Include="Repository\OrganismoRepository.cs" />
+    <Compile Include="Repository\DependenciaUsuarioRepository.cs" />
+    <Compile Include="Repository\DocumentosUsuarioRepository.cs" />
+    <Compile Include="Repository\GestionpermisosRepository.cs" />
+    <Compile Include="Repository\GruposRepository.cs" />
+    <Compile Include="Repository\TipoInstalacionRepository.cs" />
+    <Compile Include="Repository\OrganismosRepository.cs" />
+    <Compile Include="Repository\PerfilesGruposRepository.cs" />
+    <Compile Include="Repository\PerfilesPermisosRepository.cs" />
+    <Compile Include="Repository\PerfilesRepository.cs" />
+    <Compile Include="Repository\PermisosRepository.cs" />
+    <Compile Include="Repository\PuertosRepository.cs" />
+    <Compile Include="Repository\TiposDocumentosRepository.cs" />
+    <Compile Include="Repository\TrazasRepository.cs" />
+    <Compile Include="Repository\UsuariosRepository.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

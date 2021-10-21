@@ -1,0 +1,437 @@
+﻿@*@model InfovialWeb.Models.About
+
+@{
+    ViewBag.Title = "Portel S.A.";
+}
+
+<script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+<script src="~/SignalR/Hubs"></script>
+
+
+<script type="text/javascript">
+
+    var $vial = 0;
+
+    $ip = "localhost";
+    //var $urlbase = "Infovial/";
+    var $urlbase = "";
+
+
+
+/*
+    $.ajax({
+        type: "POST",
+        url: "/Infovial/VialHandler.ashx",
+        data: {ip:$ip},
+        dataType: "json",
+        success: function (response) {
+            
+           $vial = response;
+           console.log($vial);
+           $('#vial').text($vial);
+           
+            alert(response);
+        },
+        complete: function () {
+           // alert("completado");
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(textStatus);
+        }
+    }).fail( function (jqXHR, textStatus, errorThrown) {
+        alert(textStatus);
+    });
+    */
+
+    
+
+    var dataHub = $.connection.infovialHub;
+    if (dataHub == null) {
+        console.log ("dataHub es nulo");
+    }
+    else {
+        console.log("dataHub no nulo");
+    }
+
+    
+   
+    dataHub.on('sendInfovialMsg', function (msg) {
+        console.log(msg.Vial);
+
+         $('#matricula').text(msg.NumeroMovimiento);
+
+    });
+
+      
+
+    dataHub.client.sendTarjetaMsg = function (vial, tarjeta) {
+
+        if (vial == $vial){
+
+            $('#nombre').text(tarjeta.Nombre);
+            $('#empresa').text(tarjeta.Empresa);
+        }
+    };
+
+    dataHub.client.sendMatriculaMsg = function (vial, matricula) {
+        console.log('Recibida matricula vial recibido: ' );
+        console.log('Recibida matricula vial browser: ' );
+
+        if (vial == $vial) {
+           
+
+            console.log(matricula.Fiabilidad);
+            if (matricula.Fiabilidad >= 80)
+                $('#matricula').css("color", "green");
+            else
+                $('#matricula').css("color", "red");
+            $('#matricula').text(matricula.MatriculaVehiculo);
+        }
+    };
+
+    dataHub.client.sendAlertaMsg = function (vial, alerta) {
+        if (vial == $vial) {
+            console.log('Recibida alerta');
+            $('#alerta').css("color", "red");
+            $('#alerta').text(alerta);
+        }
+    };
+
+
+    dataHub.client.sendEmptyTable = function (vial) {
+        if (vial == $vial) {
+
+            console.log('Limpiando tablas');
+
+            var count = 0;
+                $('#tbl_cont_arco tr').each(function () {
+                    if (count != 0)
+                        $(this).remove();
+                    else
+                        count++;
+                });
+
+                count = 0;
+                $('#tbl_cont_terminal tr').each(function () {
+                    if (count != 0)
+                        $(this).remove();
+                    else
+                        count++;
+                });
+
+        }
+    }
+
+    dataHub.client.sendEmptyTableTerminal = function (vial) {
+        if (vial == $vial) {
+
+            console.log('Limpiando tablas terminal');
+
+            var count = 0;
+
+            $('#tbl_cont_terminal tr').each(function () {
+                if (count != 0)
+                    $(this).remove();
+                else
+                    count++;
+            });
+
+        }
+    }
+
+
+
+    dataHub.client.sendContenedorArco = function (vial, contenedores) {
+        if (vial == $vial) {
+            console.log('Recibidos contenedores arco');
+
+            tbl = '<tr><td>' + contenedores.codigoISO + '</td></tr>';
+            $('#tbl_cont_arco tr:last').after(tbl);
+        }
+    };
+
+   
+
+    dataHub.client.sendContenedorTerminal = function (vial, contenedores) {
+        if (vial == $vial) {
+            console.log('Recibidos contenedores Terminal');
+            $iso = contenedores.codigoISO;
+            var $color;
+            if (contenedores.consultaLsp == "SI") {
+                $color = "style=\"color:green\"";
+            }
+            else {
+                $color = "style=\"color:red\"";
+            }
+
+            tbl = '<tr ' + $color + '>' + '><td>' + contenedores.id + '</td><td><input type="text" id="' + $iso + '" value="' + $iso + '" /></td><td><p>' + contenedores.respAeat + '</p></td></tr>';
+
+            $('#tbl_cont_terminal tr:last').after(tbl);
+
+
+        }
+    };
+
+
+    dataHub.client.sendHeartbeat = function (color, status) {
+        console.log('Recibidos  HEARTBEAT arco');
+        $('#estado_enyca').css("color", color);
+        $('#estado_enyca').text(status);
+    };
+
+    
+    
+    $.connection.hub.start({transport: 'longPolling'})
+        .done(function () {
+            console.log('Conectado....');
+        })
+        .fail(function (err) { console.log('Error....'.err); });
+
+    
+    function salir() {
+        
+        clearInterval(refresco);
+
+    }
+
+    function VerifySessionState(result) {
+        /*
+        if (result.d) {
+            $("#alerta").text("activo");
+        }
+        else
+            $("#alerta").text("expiro");
+            */
+        //$("#alerta").text("Sesion OK");
+        console.log("Sesion renovada");
+       
+
+    }
+
+    var refresco;
+
+    $(document).ready(function () {
+
+        refresco = setInterval (function () {
+
+            $.ajax({
+                type: "POST",
+                url: $urlbase + "SesionHandler.ashx",
+                data: {},
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                success: VerifySessionState,
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    //alert(textStatus + ": " + XMLHttpRequest.responseText);
+                    console.log(textStatus + ": " + XMLHttpRequest.responseText);
+                }
+            });
+
+        }, 900000);
+
+      
+        window.onbeforeunload = salir;
+
+
+       
+        urlaux = $urlbase+"Infovial/GetVial";
+        $.ajax({
+            type: "POST",
+            //url: "Infovial/Infovial/GetVial",
+            url: urlaux,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                $vial = data.vial;
+                console.log($vial);
+                console.log(data.host);
+
+                $vial = 3;
+                $('#vial').text($vial);
+                $('#nombre').text('');
+                $('#empresa').text('');
+            },
+            error: function (error) {
+                console.log('Error ready');
+            }
+        });
+
+    });
+
+    //respuesta al click del boton de envio
+    //recog los contenedores modificados y los envia al control de accesos
+
+    function respuesta() {
+        var count = 0;
+        urlaux = $urlbase + "ContainersHandler.ashx";
+        console.log('--------------------------------');
+        console.log(urlaux);
+
+        $('#tbl_cont_terminal tr').each(function () {
+            if (count != 0) {
+
+                var $idc = $(this).find("td").eq(0).html ();
+                var $cont = $(this).find("td").eq(1).find("input").val();
+
+
+                /*
+                var postData = [];
+
+                postData[0] = $vial;
+                postData[1] = $cont;
+                postData[2] = $idc;
+                var jsonData = JSON.stringify({ postData: postData });
+                console.log(jsonData);
+                */
+
+               
+
+                $.ajax({
+                    type: "POST",
+                    url: urlaux,
+                    data: { "vial": $vial, "matricula": $cont, "idc":$idc},
+                    dataType: "json",
+                    success: function (response) {
+
+                    },
+                });
+            }
+            else
+                count++;
+        });
+
+        console.log('--------------------------------');
+
+        $.ajax({
+            type: "POST",
+            url: urlaux,
+            data: { vial: $vial, matricula: "", idc: ""},
+            dataType: "json",
+            success: function (response) {
+
+            },
+        });
+
+    }
+
+    function operaciones() {
+        var v = $vial;
+        var aux = '@Url.Action("Operations", "Operations", new { vial = "vial_param" })';
+        aux = aux.replace("vial_param", v);
+        location.href = aux;
+
+        
+
+    }
+
+</script>*@
+
+
+<div>
+    <table class="table_color" style="width: 100%;">
+        <tr>
+         
+            <td>
+                 <table style="width: 100%">
+                     <tr>
+                         <td width="5%"><h2>Vial: </h2></td>
+                         <td width="5%"><h2 id="vial" style="position:relative; top:50%; left:20%;color:blue"></h2></td>
+                         <td width="10%"><h2>Estado: </h2></td>
+                         <td width="20%"><h2 id="estado_enyca"  style= "color:red">ERROR</h2></td>
+                         <td width="60%"><input id="btnOperaciones" onclick="" type="button" value="Ver Operaciones" style="color:blue" /></td>
+                     </tr>
+                </table>
+
+            </td>
+        </tr>
+        <tr>  
+            <td>
+                <table style="width: 50%" ; border="1">
+                    <tr>
+                        <td width="20%"><h2>MATRICULA: </h2></td>
+                        <td width="80%"><h2 id="matricula"></h2></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p style="color:blue">DATOS TARJETA</p>
+                <table  style="width: 100%" border="1">
+                    <tr >
+                        <td width="20%"><p>NOMBRE: </p></td>
+                        <td width="80%"><p id="nombre">2</p></td>
+                    </tr>
+                    <tr>
+                        <td  width="20%"><p>EMPRESA: </p></td>
+                        <td  width="80%"><p id="empresa">2</p></td>
+                 
+                    </tr>
+                    
+                </table>
+            </td>
+        </tr>
+        <tr>
+
+            <td>
+                <p style="color:blue">ALERTAS</p>
+                <table style="width: 100%"  border="1">
+                    <tr>
+                        
+                        <td width="100%"><p id="alerta"></p></td>
+                    </tr>
+               
+                 </table>
+            </td>
+        </tr>
+        <tr>
+            <td> 
+                <hr />
+                <div id="tabla_cont_arco" style="visibility: visible">
+                    <p style="color:blue">CONTENEDORES ARCO</p>
+                    
+                    <table id="tbl_cont_arco" class="table_color_cont" style="width: 100%" border="1">
+                        
+                        <tr>
+                            <th>CODIGO ISO</th>
+                            
+                        </tr>
+                        
+                    </table>
+
+                </div>           
+            </td>
+           
+      
+            <td>
+                <hr />
+                <div id="tabla_cont_terminal" style="visibility: visible">
+                    <p style="color:blue">CONTENEDORES TERMINAL</p>
+                    <table id="tbl_cont_terminal" class="table_color_cont"  style="width: 100%"  border="1">
+
+                        <tr>
+                            <th>ID</th>
+                            <th>CODIGO ISO</th>
+                            <th>CODIGO AEAT</th>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    
+        <tr>
+            <td>
+
+            </td>
+            <td>
+                <input id="btnEnviar" onclick ="" type="button" value="Enviar" style="color:blue"/>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+
+

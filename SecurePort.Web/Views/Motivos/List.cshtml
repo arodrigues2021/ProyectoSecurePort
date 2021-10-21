@@ -1,0 +1,205 @@
+﻿
+@using SecurePort.Entities.Models
+@model UsuarioFrontal 
+<div class="panel-body buttons-widget">
+   @(this.Html.Kendo().ToolBar().Name("ToolBar").HtmlAttributes(new { style = "width: 65%;border: 0;background: rgba(0, 0, 255, 0);" }).Items(items =>
+			{
+			   items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_ALTA_MOTIVO).Id("toggle1");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_MODIF_MOTIVO).Id("toggle2");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_BORRA_MOTIVO).Id("toggle3");
+			}).Events(e => e.Toggle("onToggleAmenazas")).Resizable(false))
+</div>
+<input type="text" id="IdNombre" name="IdNombre" style="display: none">
+<input type="text" id="IdValor" name="IdValor" style="display: none">
+<input type="text" id="URL" name="URL" style="display: none">
+<div class="col-md-12">
+	<div>
+		<span></span>
+		<hr style="margin-top: 0%;">
+	</div>
+</div>
+<td class="panel-body">
+	<div id="container">
+		<div class="btn-group" style="margin-top: 0%; margin-left: 1%;">
+		</div>
+	</div>
+</td>
+<div class="panel-body">
+	<div class="row">
+		<div class="col-md-10">
+			<div class="table-responsive">
+				@(this.Html.Kendo().Grid<MotivosViewModel>().Name("GridMotivos")
+					  .DataSource(dataSource => dataSource.Ajax()
+					  .ServerOperation(true))
+					  .ToolBar(tools => tools.Excel().Text("Exportar").HtmlAttributes(new { @class="btn btn-black btn-xs",target="_self",hidefocus="true",style = "margin-left: 90%;outline: none;color: #44C51A;" }))
+					  .Excel(excel => excel.AllPages(true)
+					  .FileName("ListadoMotivos.xlsx")
+					  .Filterable(true)
+					  .ProxyURL(this.Url.Action("Excel_Export_Save","Usuarios")))
+					  .Columns(columns =>
+					  {
+						  columns.Bound(o => o.Id).Hidden(true);
+						  columns.Bound(o => o.Motivo).Title("Motivo").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Descripcion).Title("Descripción").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.activado).ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= activado=='Si' ? checked='checked': '' # disabled='true' />").Title("Activo").Width(90); 
+					  })
+					  .HtmlAttributes(new { style = "height: 600px" })
+					  .Events(events => events.Change("onChange"))
+					  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+					  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(20).Model(model => model.Id(p => p.Id))
+					  .Read(read => read.Action("BuscadorMotivos","Motivos")))
+					  .Pageable()
+					  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+					  .Filterable()
+					  .Scrollable()
+					  .Groupable()
+					  .Resizable(resize => resize.Columns(true))
+					  .Reorderable(reorder => reorder.Columns(true)))
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	jQuery(document).ready(function () {
+		var grid = $("#GridMotivos").data("kendoGrid");
+		grid.dataSource.filter({ field: "activado", operator: "eq", value: 'Si' });
+		
+		$('#confirm').attr('style', 'display:none');
+
+		if (history.forward(1)) {
+			location.replace(history.forward(1));
+		}
+
+		$('#IdGestionUsuarios').attr('style', 'display:none');
+
+		$('#IdSubMenuMaestros').attr('style', 'display:block');
+
+		$('#Id025').addClass('active open');
+
+		$('a.clip-chevron-right').attr('style', 'display:none');
+
+		$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+
+		$('a.clip-chevron-right').click(function () {
+			$('body').addClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:none');
+			$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+		});
+
+		$('i.clip-chevron-left').click(function () {
+			$('body').removeClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:block;font-size: 25px;');
+			$('i.clip-chevron-left').attr('style', 'display:none');
+		});
+	});
+
+	function Ayuda() {
+		if (window.ventana) {
+			ventana.close();
+			OpenWin();
+		} else {
+			OpenWin();
+		}
+	}
+
+	function OpenWin() {
+		ventana = window.open("@(this.Model.Path1)" + "Ayuda.html#tercero", "_blank", "toolbar=no, scrollbars=yes, resizable=no, top=300, left=500, width=800, height=800");
+	}
+
+	function closeWin() {
+		if (window.ventana) {
+			ventana.close();
+		}
+	}
+	
+	function onChange() {
+		//Seleccionamos el registro
+		var nombre = this.dataItem(this.select()).Descripcion;
+		var id =  this.dataItem(this.select()).Id;
+		$('input#IdNombre').val(nombre);
+		$('input#IdValor').val(id);
+	}
+	
+	function onShow(e) {
+	}
+
+	function onHide(e) {
+	}
+
+	$(document).ready(function() {
+		$("#toggle1").kendoTooltip({
+		    content: "Alta de Motivos de Declaración Marítima",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle2").kendoTooltip({
+		    content: "Editar Motivos de Declaración Marítima",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle3").kendoTooltip({
+		    content: "Borrar Motivos de Declaración Marítima",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		
+	});
+
+	function onToggleAmenazas(e) {
+		//Aqui controlamos los eventos de la toolbar.
+		if (e.id == "toggle1") {
+			//ALTA MOTIVOS
+			showLoading();
+			$('#MostrarMensaje').html("Alta de Motivos de Declaración Marítima");
+			$.ajax({
+				type: "POST",
+				url: '/Motivos/Create',
+				success: function (data) {
+					if (data) {
+						$('#DatosMotivos').html(data);
+						hideLoading();
+					}
+				}
+			});
+			$('#myModalMotivos').modal('show');
+		} else if (e.id == "toggle2") {
+			//EDITAR MOTIVOS
+			$('#MostrarMensaje').html("Modificar Motivos de Declaración Marítima");
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				$.ajax({
+					type: "POST",
+					url: '/Motivos/VisualizarMotivos',
+					data: { id: $('input#IdValor').val() },
+					success: function (data) {
+						if (data) {
+							$('#DatosMotivos').html(data);
+							showLoading();
+						}
+					}
+				});
+				$('#myModalMotivos').modal('show');
+			}
+		}  else if (e.id == "toggle3") {
+			//BORRAR MOTIVOS
+			showLoading();
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+			    $('input#URL').val('@(this.ViewBag.URLDelete)');
+				alert("¿Esta Seguro de Borrar el motivo " + "\n" + $('input#IdNombre').val() + "?", 'Confirm', $('input#IdValor').val(), 49);
+			}
+		}  
+	}
+	
+</script>

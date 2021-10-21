@@ -1,0 +1,372 @@
+﻿@using DocumentFormat.OpenXml.Vml.Spreadsheet
+@using DocumentFormat.OpenXml.Wordprocessing
+@using System.Configuration
+@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model CentrosViewModel
+@{
+	
+	string idorganismo = Model.Id_Organismo.ToString() == "0"? string.Empty :(this.Model.OrganismoActivo== true?this.Model.Id_Organismo.ToString():string.Empty);
+	string idpuerto    = Model.Id_Puerto.ToString() == "0"? string.Empty : this.Model.Id_Puerto.ToString();
+	string color       = ViewBag.disabled == false ? " #eeeeee;color: #000000" : "#FFFFFF";
+	string requerido   = ViewBag.disabled == false ? string.Empty:"symbol required";
+    string idprovincia = this.Model.Id_Provincia.ToString() == "0"? string.Empty: this.Model.Id_Provincia.ToString();
+	string idciudad = this.Model.Id_Ciudad.ToString() == "0"? string.Empty: this.Model.Id_Ciudad.ToString();
+
+
+}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width" />
+        <style>
+            #WindowLoad
+            {
+                position:fixed;
+                top:0px;
+                left:0px;
+                z-index:3200;
+                filter:alpha(opacity=55);
+               -moz-opacity:65;
+                opacity:0.60;
+                background:#F8F8FA;
+            }
+</style>
+	</head>
+	<body>
+		<div class="row">
+			<div class="col-md-12">
+			<div class="panel-heading">
+			<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick="Ayuda()"></a>
+								<strong>
+									<strong>@ViewBag.Mensaje</strong>
+								</strong>
+							</div>
+				<!-- start: FORM VALIDATION 1 PANEL -->
+                <input type="text" id="ValidarAllCombos" name="ValidarAllCombos" style="display: none">
+				<div class="panel-body">
+					<hr>
+					<form action="#" role="form" id="Centroform" onsubmit="return validarFormulario()">
+						<div class="row">
+    						<div class="col-md-10">
+								<div id="Error02" class="errorHandler alert alert-danger no-display ">
+									<i class="icon-remove-sign"></i> Usted tiene algunos errores. Por favor, consulte más abajo.
+								</div>
+								<div id="Error01" class="successHandler alert alert-success no-display">
+									<i class="icon-ok"></i> Su validación es exitosa!
+								</div>
+								@(Html.Kendo().TextBoxFor(model =>  model.id).Name("ID") 
+										.HtmlAttributes(new { id="Id01", name="Id01" ,style = "width:220px;margin-left: 4%;display:none"}))
+							</div>
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label class="control-label">
+										Organismo <span class='@requerido'></span>
+									</label>
+									<div Style=@ViewBag.Combo_Ad>
+									@(this.Html.Kendo().ComboBox().Name("Organismo")
+										.Placeholder("Selecciona Organismo")
+										.DataTextField("Text")
+										.DataValueField("Value")
+										.Filter(FilterType.Contains)
+										.BindTo((SelectList)this.ViewData["organismos"])
+										.Value(idorganismo)
+										.Enable(ViewBag.disabled)
+										.Suggest(true)
+										.HtmlAttributes(new { style = "width:100%;", validationmessage = "Este campo es requerido",  required = "required",id = "Organismo01" ,name="Organismo", onChange = "CambiarPuerto('2')" }))
+                                        <span id="datosOrganismo" style="display: none; color: #b94a48;">Este campo es requerido.</span>
+                                        <span id="errorOrganismo" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+									</div>
+									<div Style=@ViewBag.Texto_Ad>
+									@(Html.Kendo().TextBoxFor(model =>  model.Organismo).Name("OrganismoTexto").Enable(ViewBag.disabled) 
+										.HtmlAttributes(new { id="OrganismoText", name="OrganismoText" ,style = "background-color:" + color, @class="form-control"}))
+									</div>
+								</div>
+							</div>
+
+                            <div id="ComboPuertos">
+						 <div class="col-md-3">
+							<div class="form-group">
+								<label class="control-label">
+									Puerto 
+								</label>
+								<div Style=@ViewBag.Combo_Ad>
+									@(this.Html.Kendo()
+									  .ComboBox().Name("Puerto")
+									  .Placeholder("Selecciona Puerto")
+									  .DataTextField("Text").DataValueField("Value")
+									  .Filter(FilterType.Contains)
+									  .BindTo((SelectList)this.ViewData["Puertos"])
+									  .Value(idpuerto).Suggest(true)
+									  .Enable(ViewBag.disabled)
+									  .HtmlAttributes(new { style = "width:100%;", id = "Puerto01", name= "Puerto01", onChange = "ValidacionCombos(this,'errorPuerto')"}))
+                                      <span id="errorPuerto" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+								  </div>
+								  <div Style=@ViewBag.Texto_Ad>                                        
+									@(Html.Kendo().TextBoxFor(model =>  model.Puerto).Name("PuertoTexto").Enable(ViewBag.disabled) 
+										.HtmlAttributes(new { id="PuertoText", name="PuertoText" ,style = "background-color:" + color, @class="form-control" }))
+								  </div>  
+							</div>
+						</div>
+                        </div>
+
+                            <div class="col-md-3"  >
+					            <div class="form-group" >
+					                <label for="Centro" class="required">
+                                        Centro 24h<span class='@requerido'></span>
+        			                </label>
+					                @(Html.Kendo().TextBoxFor(model =>  model.Centro_24H).Name("Nombre").Enable(ViewBag.disabled)
+					                      .HtmlAttributes(new { id="Centro01", nombre="Centro01",placeholder = "Insertar Centro 24h", type = "text", style = "background-color:" + color, @class="form-control" , MaxLength ="50"}))
+                                    <span id="datosCentro" style="display: none; color: #b94a48;">Este campo es requerido.</span>
+					            </div>
+					        </div>
+
+
+						</div>
+                         <div class="row">
+                            <div class="col-md-4">
+								<div class="form-group">
+									<label class="control-label">
+										Dirección <span></span>
+									</label>
+									  @(this.Html.Kendo().TextBoxFor(model => model.Direccion).Name("Direccion").Enable(ViewBag.disabled)
+                                        .HtmlAttributes(new { id = "Direccion01", name = "Direccion01", placeholder = "Inserte Nombre la Dirección",  style = "background-color:" + color, @class = "form-control", type = "text", MaxLength ="100" }))
+ 								</div>
+							</div>
+							
+									<div class="col-md-2">
+										<div class="form-group">
+											<label class="control-label">
+												Provincia <span></span>
+											</label>
+                                            <div Style=@ViewBag.Combo_Ad>    
+										    	@(this.Html.Kendo().ComboBox().Name("Provincia").Placeholder("Selecciona Provincia").DataTextField("Text")
+                                                .DataValueField("Value").Filter(FilterType.Contains).BindTo((SelectList)this.ViewData["Provincias"]).Value(idprovincia).Suggest(true)
+                                                .HtmlAttributes(new { style = "width:100%;", id = "Provincia01", onChange = "CambiarProvincia('2')" }))
+                                                <span id="errorProvincia" style="display: none; color: #b94a48;">Este campo es inválido.</span>    
+										    </div>
+								              <div Style=@ViewBag.Texto_Ad>                                        
+									            @(Html.Kendo().TextBoxFor(model =>  model.Provincia).Name("ProvinciaTexto").Enable(ViewBag.disabled) 
+										            .HtmlAttributes(new { id="ProvinciaText", name="ProvinciaText" ,style = "background-color:" + color, @class="form-control" }))
+								              </div>  
+                                        </div>
+									</div>							
+								
+							
+							<div id="ComboCiudad">
+									<div class="col-md-2">
+										<div class="form-group">
+											<label class="control-label">
+												Municipio <span></span>
+											</label>
+                                            <div Style=@ViewBag.Combo_Ad> 
+											    @(this.Html.Kendo().ComboBox().Name("CiudadOperador").Placeholder("Selecciona Municipio").DataTextField("Text").DataValueField("Value")
+                                                  .Filter(FilterType.Contains).BindTo((SelectList)this.ViewData["Ciudades"]).Value(idciudad).Suggest(true)
+                                                  .HtmlAttributes(new { style = "width:100%;", id = "Ciudad01", name = "Ciudad01", onChange = "ValidacionCombos(this,'errorCiudad')" }))
+                                                  <span id="errorCiudad" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+										    </div>
+								              <div Style=@ViewBag.Texto_Ad>                                        
+									            @(Html.Kendo().TextBoxFor(model =>  model.Ciudad).Name("CiudadTexto").Enable(ViewBag.disabled) 
+										            .HtmlAttributes(new { id="CiudadText", name="CiudadText" ,style = "background-color:" + color, @class="form-control" }))
+								              </div>
+                                        </div>
+									</div>
+							</div>
+							
+                            <div class="col-md-2">
+								<div class="form-group">
+									<label class="control-label">
+										Código Postal <span></span>
+									</label>
+									  @(this.Html.Kendo().TextBoxFor(model => model.Cod_Postal).Name("Cod_Postal").Enable(ViewBag.disabled)
+                                        .HtmlAttributes(new { id = "Postal01", name = "Postal01", placeholder = "Inserte Código Postal",  style = "background-color:" + color, @class = "form-control", type = "text" }))
+								</div>
+							</div>
+
+
+						</div>
+    
+					
+					<div class="row">
+						
+						<div style="@ViewBag.alta"> 
+							<div class="col-md-4">
+							<div id="Asignar-MinisteriodelInterior">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<i class="clip-checkbox"></i>
+												Teléfonos asociados
+											</div>
+											<div class="panel-body" style="height: 285px">
+												<div id="TelRefrescar">
+													@Html.Action("AsociadosTelEdit", "Centros", new { ToolBar=ViewBag.ToolCentro })
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						  </div>
+						</div>
+
+                        <div style="@ViewBag.alta"> 
+							<div class="col-md-4">
+							<div id="Asignar-MinisteriodelInterior">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<i class="clip-checkbox"></i>
+												Fax asociados
+											</div>
+											<div class="panel-body" style="height: 285px">
+												<div id="FaxRefrescar">
+													@Html.Action("AsociadosFaxEdit", "Centros", new { ToolBar=ViewBag.ToolCentro })
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						  </div>
+						</div>
+
+                        <div style="@ViewBag.alta"> 
+							<div class="col-md-4">
+							<div id="Asignar-MinisteriodelInterior">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<i class="clip-checkbox"></i>
+												Correos  asociados
+											</div>
+											<div class="panel-body" style="height: 285px">
+												<div id="MailRefrescar">
+													@Html.Action("AsociadosMailEdit", "Centros", new { ToolBar=ViewBag.ToolCentro })
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						  </div>
+						</div>
+					</div> 
+                    
+                    <div class="row">
+						
+						<div style="@ViewBag.alta"> 
+							<div class="col-md-10">
+							<div id="Asignar-MinisteriodelInterior">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<i class="clip-checkbox"></i>
+												Operadores asociados
+											</div>
+											<div class="panel-body" style="height: 260px">
+												<div id="MinisteriodelInteriorRefrescar">
+													@Html.Action("OperadoresEditar", "Centros", new { id=1 })
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						  </div>
+						</div>
+
+                    </div>
+
+						@if (ViewBag.disabled == true)
+						{
+								<div class="row">
+									<div class="col-md-12">
+										<p></p>
+									</div>
+									<div class="col-md-12">
+										<div>
+											<div Style=@(this.ViewBag.Combo)>
+												<span class="symbol required"></span>Campos requeridos
+											</div>
+											<hr>
+										</div>
+									</div>
+								</div>
+						} 
+						<div class="row">
+							<div class="col-md-8">
+								<p></p>
+							</div>
+							<div Style=@ViewBag.Combo_Ad>
+								<div id="Opcion02" class="space10" style="margin-left: 40%; display: block">
+									<div class="btn-group btn-group-sm">                                   
+									<button id="RegistroCentro" class="btn btn-primary hidden-xs" type="submit">
+										Guardar</button>
+									<a class="btn btn-default " href="@(this.Url.Action("ListadoCentros","Centros"))">
+										Volver </a>                                   
+									</div>
+								</div>
+							</div>
+							<div Style=@ViewBag.Texto_Ad>
+								 <div id="Opcion02" class="space10" style="margin-left: 40%; display: block">
+									<div class="btn-group btn-group-sm">   
+										<a class="btn btn-default " href="@(this.Url.Action("ListadoCentros","Centros"))">
+										Volver </a>
+									</div>
+								</div>
+							</div>                            
+						</div>                        
+					</form>
+				</div>
+			</div>
+			<div id="myModalDatos" class="modal fade in" data-width="600" tabindex="-1" aria-hidden="false" style="width:600px; margin-left: -299px; margin-top: -168px; display: none; height: 41%;">
+				<div class="modal-body">
+					<div class="apply_info">
+						<div id="AsignarDatos"></div>
+				</div>
+			</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="~/Scripts/AppSecureport/appCentros.js"></script>
+<script type="text/javascript">
+	
+	$(function () {
+
+		var validator = $("#Comiteform").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$('button#RegistroCentro.btn.btn-primary.hidden-xs').click(function () {
+		    if (ValidarAllCombos())
+		        $('input#ValidarAllCombos').val("1");
+		    else
+		        $('input#ValidarAllCombos').val("");
+		    AltaEditarCentro('@ViewBag.action');
+		});
+
+	});
+
+	function validarFormulario() {
+	    var valido = false;
+        
+	    if (ValidarAllCombos())
+	        $('input#ValidarAllCombos').val("1");
+
+	    if (!ValidarOrganismo())
+	        valido = false;
+
+	    if (!ValidarCentro())
+	        valido = false;
+
+	    return valido
+
+	}
+
+
+</script>

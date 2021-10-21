@@ -1,0 +1,32 @@
+
+@{
+	Layout = "~/Views/Shared/LayoutSite.cshtml";
+}
+<body class="error-full-page">
+<!-- start: PAGE -->
+<div class="container">
+	<div class="row">
+		<!-- start: 404 -->
+		<div class="col-sm-12 page-error">
+			<div class="error-number teal">
+				404
+			</div>
+			<div class="error-details col-sm-6 col-sm-offset-3">
+				<p>
+					Lamentablemente la página que estás buscando no se pudo encontrar.
+					<br>
+					Puede ser disponible temporalmente, movida o ya no existe.
+					<br>
+					Compruebe la dirección URL que ha introducido y vuelva a intentarlo.
+					<br>
+					<a href="@(this.Url.Action("Index","Menu"))" class="btn btn-teal btn-return">
+						Retornar Inicio
+					</a>
+					<br>
+				</p>
+			</div>
+		</div>
+		<!-- end: 404 -->
+	</div>
+</div>
+	

@@ -1,0 +1,137 @@
+﻿@using DocumentFormat.OpenXml.Vml.Spreadsheet
+@using DocumentFormat.OpenXml.Wordprocessing
+@using System.Configuration
+@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model Centros
+@{
+	string color = ViewBag.disabled == false ? " #eeeeee;color: black" : "#FFFFFF";
+	string ID_Centro = this.Model.id.ToString() == "0"? string.Empty: this.Model.id.ToString();
+	string ID_Puerto = this.Model.Id_Puerto.ToString() == "0"? string.Empty: this.Model.Id_Puerto.ToString();
+	string ID_Organismo = this.Model.Id_Organismo.ToString() == "0"? string.Empty: this.Model.Id_Organismo.ToString();
+	
+
+	string valor = "0";
+	if (ViewBag.action == General.AltaCentro.ToDescription())
+	{
+		valor = "1";
+	}
+
+}
+<div class="row">
+	<div class="col-lg-18">
+		<div class="panel panel-default" style="margin-top: -4%;">
+			<div class="panel-heading" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>@ViewBag.Mensaje</strong>
+			</div>
+			<div class="k-content">
+				<div id="Centro">
+					<form id="CentroForm">
+						<ul id="fieldlist">
+							<li>
+								&nbsp;
+								  @(Html.Kendo().TextBoxFor(model =>  model.id).Name("ID")
+										.HtmlAttributes(new { id="ID01", style = "width:220px;margin-left: 4%;display:none"}))
+
+							</li>
+							<div style="width:100%">   
+							   <div class="col-md-9">
+								  <div class="form-group">
+										<label class="control-label">
+												Organismo
+											</label>
+												 @(this.Html.Kendo().ComboBox().Name("Organismos")
+												 .Placeholder("Selecciona Organismo")
+												 .DataTextField("Text").DataValueField("Value")
+												 .Filter(FilterType.Contains)
+												 .BindTo((SelectList)this.ViewData["Organismos"])
+												 .Value(ID_Organismo).Suggest(true)
+												 .HtmlAttributes(new { style = "width:100%;", required = "required",id = "Organismo01" ,name="Organismo01"}))
+									</div>
+								 </div>
+							  </div>  
+							  <div style="width:100%">   
+									<div class="col-md-9">
+									  <div class="form-group">
+										<label class="control-label">
+												Puerto
+											</label>
+												 @(this.Html.Kendo().ComboBox().Name("Puertos")
+												 .Placeholder("Selecciona Puerto")
+												 .DataTextField("Text").DataValueField("Value")
+												 .Filter(FilterType.Contains)
+												 .BindTo((SelectList)this.ViewData["Puertos"])
+												 .Value(ID_Puerto).Suggest(true)
+												 .HtmlAttributes(new { style = "width:100%;", required = "required",id = "Puerto01" ,name="Puerto01"}))
+										</div>
+									</div>
+								</div>  
+
+							 <div class="col-md-8"  >
+								<div class="form-group" >
+									<label for="Centro" class="required">Centro 24h</label>
+									@(Html.Kendo().TextBoxFor(model =>  model.Centro_24H).Name("Nombre")
+									  .HtmlAttributes(new { id="Centro01", nombre="Centro01",placeholder = "Insertar Centro 24h", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:220px;"}))
+								</div>
+							</div>
+
+						  <!--<div class="col-md-4" style= @ViewBag.display  >
+
+								<div class="form-group" >
+									<label class="control-label">
+										Activo
+									</label>
+									@(this.Html.Kendo().ComboBox().Name("Activo")
+										  .DataTextField("Text").DataValueField("Value")
+										  .Filter(FilterType.Contains)
+										  .BindTo(new List<SelectListItem>() {
+											  new SelectListItem() {
+												Text = "Activo", Value = "1"   
+											  },
+											  new SelectListItem() {
+												Text = "No Activo", Value = "2"   
+											  }
+										  })
+										  .Value(valor)
+										  .Suggest(true).Enable(this.ViewBag.disabled)
+										  .HtmlAttributes(new { style = "width:100%;background-color:" + color, required = "required", validationmessage = "Este campo es requerido", id = "Activo01", name = "Activo01"  }))
+								</div>
+
+							</div>-->
+
+
+							<li id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+								<div class="btn-group btn-group-sm">
+									<button class="btn btn-primary hidden-xs" type="submit">
+										Guardar
+									</button>
+									<a class="btn btn-default " href="javascript:VolverCentros()">
+										Volver
+									</a>
+								</div>
+							</li>
+							<li class="status">
+							</li>
+						</ul>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(function () {
+		var validator = $("#CentroForm").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$("form").submit(function (event) {
+			event.preventDefault();
+			if (validator.validate()) {
+				status.removeClass("invalid").addClass("valid");
+				AltaEditarCentro('@ViewBag.action');
+			} else {
+				status.removeClass("valid").addClass("invalid");
+			}
+		});
+	});
+</script>

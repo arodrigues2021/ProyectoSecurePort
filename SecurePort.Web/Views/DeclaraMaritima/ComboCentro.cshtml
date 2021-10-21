@@ -1,0 +1,21 @@
+﻿@using SecurePort.Entities.Enums
+@model SecurePort.Entities.Models.DeclaraMaritimaViewModel
+@{
+	string requerido   = ViewBag.disabled == false ? string.Empty:"symbol required";
+	}
+<div class="col-md-2">
+    <div class="form-group">
+        <label class="control-label">
+			Instalación <span class='@requerido'></span>
+		</label>
+        @(this.Html.Kendo().ComboBox().Name("Instalacion")
+					 .Placeholder("Selecciona Instalacion")
+					 .DataTextField("Text").DataValueField("Value")
+					 .Filter(FilterType.Contains)
+					 .BindTo((SelectList)this.ViewData["Instalaciones"])
+					 .Suggest(true)
+ 				     .HtmlAttributes(new { style = "width:100%;",id = "Instalacion01" ,name="Instalacion01" , onChange = "ValidarInstalacion()"})) 
+            <span id="datosInsta"  style="display:none;color:#b94a48;">Este campo es requerido.</span>
+            <span id="errorInsta" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+    </div>
+</div>

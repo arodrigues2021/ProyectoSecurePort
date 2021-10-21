@@ -1,0 +1,45 @@
+﻿@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+<a href="javascript:void(0)"><i class="icon-folder-close"></i>
+    <span class="title">Procedimientos</span><i class="icon-arrow"></i>
+    <span class="selected"></span>
+</a>
+<ul id="IdSubMenuProcedimientos" class="sub-menu">
+@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+{
+   
+
+	if(Permisos.NombrePermiso == Procedimiento_AP.LISTA_PROCEDIM_AP.ToDescription())
+    {
+        <li id="Id043">
+            <a href="@(this.Url.Action("ListadoProcedimientos","Procedimientos"))">
+                Autoridades Portuarias</a>
+        </li>
+    }
+
+}
+@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+{
+   
+ if(Permisos.NombrePermiso == Procedimiento_OPPE.LISTA_PROCEDIM_OPPE.ToDescription())
+    {
+        <li id="Id044">
+            <a href="@(this.Url.Action("ListadoProcedimientosOPPE","Procedimientos"))">
+                Puertos del Estado</a>
+        </li>
+    }
+}
+@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+{
+   
+ if(Permisos.NombrePermiso == Procedimiento_OPPE_AP.LISTA_PROCEDIM_OPPE_AP.ToDescription())
+    {
+        <li id="Id045">
+            <a href="@(this.Url.Action("ListadoProcedimientosOPPEAP","Procedimientos"))">
+                Puertos del Estado para Autoridades Portuarias</a>
+        </li>
+    }
+}  
+</ul>
+

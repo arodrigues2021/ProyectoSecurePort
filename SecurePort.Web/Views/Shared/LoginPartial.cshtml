@@ -1,0 +1,62 @@
+﻿@using System.Configuration
+@model SecurePort.Entities.Models.Usuarios
+@{
+    this.ViewBag.Title = "Login";
+
+    string nombreRuta = ConfigurationManager.AppSettings["RutaSecureDoc"] + ConfigurationManager.AppSettings["AvisoLegal"];
+
+    string rutaimagen = "images/" + ConfigurationManager.AppSettings["logo"];
+}
+<div class="container">
+    <div class="navbar-header">
+        <img src=@rutaimagen alt="" style="margin-top: -237px; margin-left: -200px; width: 150%;">
+    </div>
+</div>
+<div id="AvisoLegalInicio"></div>    
+<div class="box-login" style="width: 80%; display: block">
+    <h3>SecurePort</h3>
+    <p>Introduzca Usuario y Contraseña</p>
+    <fieldset>
+        <legend></legend>
+        <div class="form-group">
+            <span class="input-icon">
+                @(this.Html.Kendo().TextBoxFor(m => m.login).HtmlAttributes(new { @class = "form-control", @PlaceHolder = "Usuario", onChange = "ValidarAviso(this)" }))
+                <i class="icon-user"></i>
+            </span>
+        </div>
+        <div class="form-group">
+            <span class="input-icon">
+                @(this.Html.Kendo().TextBoxFor(m => m.password).HtmlAttributes(new { @class = "form-control", @PlaceHolder = "Contraseña", type = "password", onChange = "ValidarAviso(this)" })) 
+                <i class="icon-lock"></i>
+            </span>
+        </div>
+    </fieldset>
+    <div class="form-actions">
+        <button type="button" id="send" value="Send" class="btn btn-bricky pull-right">
+            Acceder <i class="icon-circle-arrow-right"></i>
+        </button>
+    </div>
+</div>
+<div id="alert">
+    <span id="message">Error</span>
+    <button class="red" type="submit">OK</button>
+</div>
+<div id="confirm">
+    <span id="message">Error</span>
+    <button class="red" id="yes">Si</button>
+    <button class="black" id="no">No</button>
+</div>
+<script language="javascript">
+    $(document).keypress(function (e) {
+        if (e.which == 13) {
+            var LoginJson = {
+                "Email": $('input#login.form-control').val(),
+                "Password": $('input#password.form-control').val(),
+            };
+            comprobar(LoginJson);
+        }
+    });
+</script>
+<script type="text/javascript" src="~/Scripts/AppSecureport/SecurePort.js"></script>
+<script type="text/javascript" src="~/Scripts/AppSecureport/Login.js"></script>
+<script type="text/javascript" src="~/Scripts/AppSecureport/alert.js"></script>

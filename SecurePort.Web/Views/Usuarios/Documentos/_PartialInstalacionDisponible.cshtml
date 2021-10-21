@@ -1,0 +1,28 @@
+﻿<input type="text" id="IdInstalacion"  name="IdInstalacion"  style="display: none">
+<div class="panel-body">
+	<div class="row">
+		<div class="col-md-10">
+			<div class="table-responsive">
+				@(this.Html.Kendo().Grid<SecurePort.Entities.Models.PuertosViewModel>().Name("GridInstalaciones")
+					  .Columns(columns =>
+					  {
+						  columns.Bound(o => o.Id).Hidden(true);
+						  columns.Bound(o => o.Nombre).Title("Nombre").HtmlAttributes(new { style = "text-align: left;" }).Width(60);
+						  columns.Bound(o => o.IIPP).Title("Clasificación").HtmlAttributes(new { style = "text-align: left;" }).Width(50);
+					  })
+					  .HtmlAttributes(new { style = "height: 390px;width:80%" })
+					  .Selectable(selectable => selectable.Mode(GridSelectionMode.Multiple))
+					  .DataSource(dataSource => dataSource.Ajax()
+						  .PageSize(15)
+						  .Model(model => model.Id(p => p.Id))
+						  .Read(read => read.Action("InstalacionesDisponibles", "Usuarios")))
+					  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+					  .Filterable()
+					  .Scrollable()
+					  .Pageable()
+					  )
+			</div>
+		</div>
+	</div>
+</div>

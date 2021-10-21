@@ -1,0 +1,29 @@
+﻿@using SecurePort.Entities.Models
+
+
+	@(this.Html.Kendo().Grid<BienesViewModel>().Name("grid_00").Columns(columns =>
+	  {
+		  columns.Bound(e => e.Descripcion).Title("Bien Padre").HtmlAttributes(new { style = "text-align: left;" });
+		  columns.Bound(e => e.sel).Title("Asignar").Width(70).ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= activado=='Si' ? checked='checked': '' #  onclick='ClickPadre(this,#=Id#)' />");
+		  columns.Bound(e => e.Id).Hidden(true);
+	  }).Selectable(selectable => selectable.Mode(GridSelectionMode.Single)).Scrollable(scrollable => scrollable.Height("auto"))
+	  .ClientDetailTemplateId("template").HtmlAttributes(new { style = "height:798px;width: 75%;" })
+	  .Events(events => events.Change("onChangeListPadre").DataBound("onDataBound")).DataSource(dataSource => dataSource.Ajax().ServerOperation(true)
+		  .Read(read => read.Action("HierarchyBinding_BienPadre","Evaluaciones"))))
+
+	<script id="template" type="text/kendo-tmpl">
+	   @(this.Html.Kendo().Grid<BienesHijosViewModel>().Name("grid_#=Id#").Columns(columns =>
+		 {
+			 columns.Bound(o => o.Id).Hidden(true);
+			 columns.Bound(o => o.id_Bien_Padre).Hidden(true);
+			 columns.Bound(o => o.Descripcion).Title("Bien Hijo").Width(40);
+			 columns.Bound(o => o.sel).Title("Asignar").HtmlAttributes(new { style = "text-align: left;" })
+				 .ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' \\#= activado=='Si' ? checked='checked': ''  \\# onclick='ClickHijo(this,\\#= Id\\#,#=Id#)'/>").Width(10);
+			 columns.Bound(o => o.Id).Hidden(true);
+			 columns.Bound(o => o.id_Bien_Padre).Hidden(true);
+		 }).DataSource(dataSource => dataSource.Ajax().ServerOperation(true)
+			 .Read(read => read.Action("HierarchyBinding_BienHijo2","Evaluaciones",new { BienPadreId = "#=Id#" })))
+			 .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+			 .Scrollable(scrollable => scrollable.Height("auto"))
+			 .Events(events => events.Change("onChangeListHijo")).ToClientTemplate())
+	</script>

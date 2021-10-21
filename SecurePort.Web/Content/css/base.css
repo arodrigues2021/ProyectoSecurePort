@@ -1,0 +1,89 @@
+.only-mobile{visibility: hidden}
+.fl{float: left !important;}
+.fr{float: right !important;}
+.tr{text-align: right;}
+.tc{text-align: center;}
+.w50{width: 50%}
+.w40{width: 40%}
+.w60{width: 60%}
+.w45{width: 45%}
+.w70{width: 70%}
+.w33{width: 33%}
+.w25{width: 25%}
+.w95{width: 95%}
+.w100{width: 100%}
+.nm{margin: 0;padding:0;}
+.bold{font-weight: bold;}
+.tachado{text-decoration: line-through; }
+.color-white{color:#FFF;}
+.color-red{color: #df1e3c;}
+.color-green{color:#8bb429;}
+.color-light-blue{color:#a2d5ff;}
+.border-top-gray{border-top: 1px solid #c4c7c7;}
+.bgblue {background-color: #0062b7; }
+.bglightblue {background-color: #1376c5; }
+.bg-light-grey {background-color: #e8e8eb;}
+.bg-medium-grey {background-color: #d1d1d5;}
+.bg-grey {background-color: #a2d5ff;}
+.bg-orange{ background-color: #ffae00;}
+.bg-black{ background-color: #000000;}
+.lightbox{position: absolute; width: 100%; height: 100%; 
+	background: rgb(0, 0, 0); /* Fallback for older browsers without RGBA-support */
+	background: rgba(0, 0, 0, 0.75);
+	color:#FFF;
+	z-index: 100; 
+	top: 0; 
+	display: none;
+  }
+  .lightbox.white{background: rgb(255, 255, 255); /* Fallback for older browsers without RGBA-support */
+	background: rgba(255, 255, 255, 0.75);}
+  .separator{width: 100%; height: 1px; border-top: 1px solid #0055a4}
+#loading-page{position: relative}
+.lightbox #loading-page {position: fixed; top: 50%;margin-top: -250px; left: 50%; margin-left: -150px;}
+#loading-page .bg-grey{height: 485px; display: table; width: 100%}
+#loading-page .bg-grey .w90{display: table-cell; vertical-align: middle; text-align: center;  }
+#loading-page .bg-grey .w90 img{width: 80px}
+#loading-page .bg-grey .w90 h2{font-family: 'Gibson-SemiBold'; font-size: 1.2em; padding: 0 20px }
+
+#loading-page .bg-grey.transparent{background-color: rgba(0, 0, 0, 0);color: #333333}
+/*CAJA QUE CONTIENE DENTRO (.Absolute-Center) LO QUE QUERAMOS CENTRAR VERTICAL Y HORIZONTALMENTE*/
+button.small {min-height: 40px;}
+
+button.red{background-color: #df1e3c; color:#FFF; }
+	button.red:hover {background-color: #ff0042; }
+button.red.border{border-bottom: 4px solid #bb0d27}
+	button.red:disabled{background-color: #ec788a;pointer-events: none;cursor: inherit;}
+button.green{background-color: #8bb429 ;color: #FFF;}
+	button.green:hover{background-color: #89c200}
+	button.green:disabled{background-color: #629c53;pointer-events: none;cursor: inherit; }
+button.black{background-color: #333333; color:#FFF; }
+	button.black:hover{background-color: #000000}
+button.blue{background-color: #1376c5; color:#FFF; }
+	button.blue:hover {background-color: #1376c5; }
+/* ERRORES EN FORMULARIOS */
+input.error{border:2px solid #df1e3c !important; background-color: #ff7b90 !important; color:#FFF !important;}
+span.error{display: none; color:#df1e3c; font-family: 'Helvetica'; font-weight: bold; font-size: 14px;margin:10px 0; }
+label.error span.field-title{color:#df1e3c;font-weight: bold;}
+label.error span.error,
+div.inner.error span.error {display: block} 
+
+/*Errores en los campos de fecha */
+#fecha.error select{border:2px solid #df1e3c;background-color: #ff7b90 !important; color:#FFF !important;}
+.dateErrorMsg{display: inline-block; width: 100%; margin-top: 10px;color:#df1e3c;font-family: 'Helvetica'; font-weight: bold; font-size: 14px;}
+
+/* ALERT y CONFIRM PERSONALIZADOS*/
+
+#alert, #confirm{position: fixed; width: 562px; top: 50%; margin-left: -195px; left: 50%; margin-top: -150px;padding: 35px 70px; display: none; z-index: 1000; background: #FFF; text-align: center; border: 1px solid #d7d7d7; box-shadow: 0px 7px 0px 0px rgba(0, 0, 0, 0.23); border-radius: 5px;}
+#alert span, #confirm span{display: block; width: 100%; margin: 15px 0; font-family: 'Helvetica'; font-size: 1em; color:#333333;}
+#confirm button{margin: 0 5px;}
+
+/* Alertas en la web*/
+.alert{ padding: 13px 40px 13px 13px; text-align: center;position: relative; }
+.alert span{font-size: 14px; font-family: 'Helvetica'; font-weight: bold}
+.alert span.ico-close-white {position: absolute;right: 10px;top: 13px;}
+.alert.left{padding: 13px 0 0;text-align: left; height: 15px}
+.alert.left span{font-size: 1em}
+#wrapper > div > .alert{position: relative;top: -4px;}
+
+
+

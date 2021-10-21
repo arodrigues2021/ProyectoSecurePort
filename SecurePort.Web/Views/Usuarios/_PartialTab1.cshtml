@@ -1,0 +1,91 @@
+﻿@using SecurePort.Entities.Models
+@model UsuarioPassword
+<div>
+    <span></span>
+    <hr style="margin-top: 4%;">
+</div>
+<div class="box-login">
+    <h2><i class="icon-edit-sign teal"></i> Cambio de Contraseña</h2>
+    <p>
+        Permite el cambio de contraseña de todos los usuarios que accedan al sistema. 
+    </p>
+    <div class="form-group"  style="display: none">
+        <label class="control-label">
+            Usuario:<span></span>
+        </label>
+        <h4>@Model.login</h4>
+    </div>
+    <div id="password03" class="form-group">
+        <label class="control-label">
+            Contraseña Nueva:<span class="symbol required"></span>
+        </label>
+        @(this.Html.TextBoxFor(model => model.password,
+              new { itemid = "password", id = "password03", name = "password03", @class = "form-control", type = "Password", placeholder = "Inserte su Nueva Contraseña", onChange = "ValidarContrasena01(this)" }))
+        <span id="Spanpassword03" for="password03" class="help-block" style="display:none">Este campo es requerido.</span>
+        <span id="Spanpassword09" for="password09" class="help-block" style="display:none">La contraseña debe tener como mínimo 8 caracteres.</span>
+        <span id="Spanpassword10" for="password10" class="help-block" style="display:none">La contraseña debe tener al menos un caracter númerico.</span>
+        <span id="Spanpassword11" for="password11" class="help-block" style="display:none">La contraseña Nueva no puede ser igual que la Contraseña Anterior.</span>
+    </div>
+    <div  id="Passwordagain033" class="form-group">
+        <label class="control-label">
+            Confirmar Contraseña: <span class="symbol required"></span>
+        </label>
+        @(this.Html.TextBoxFor(model => model.password_again,
+              new { itemid = "Passwordagain", id = "passwordagain033", name = "passwordagain033", @class = "form-control", type = "Password", placeholder = "Confirmar su Contraseña", onChange = "ValidarContrasena02(this)" }))
+        <span id="SpanPasswordagain033" for="passwordagain04" class="help-block" style="display:none">Este campo es requerido.</span>
+        <span id="SpanPasswordagain05" for="passwordagain05" class="help-block" style="display:none">Verifique la contraseña no coincide.</span>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                <span class="symbol required"></span>Campos requeridos
+                <hr>
+            </div>
+        </div>
+    </div>
+    <div id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+        <div class="btn-group btn-group-sm">
+            <a  class="btn btn-primary hidden-xs" href="javascript:void(0)" onclick=" ValidarPassword()">
+                Aceptar</a>
+            <a class="btn btn-default" href="javascript:void(0)" onclick=" VolverAtras() ">
+                Volver</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/Scripts/AppSecureport/SecurePort.js"></script>
+<script type="text/javascript">
+    function ValidarContrasena01(item) {
+        var name = "";
+        if ('@(this.ViewBag.Navegador)' == "internetexplorer") {
+            name = item.attributes[0].value;
+        } else {
+            name = item.attributes[2].value;
+        }
+        if (rtrim($(item).val()) == "") {
+            $('div#' + name + '03.form-group').removeClass('has-success').addClass('has-error');
+            $('span#Span' + name + '03.help-block').attr('style', 'display:block');
+        } else {
+            $('div#' + name + '03.form-group').removeClass('has-error').addClass('has-success');
+            $('span#Span' + name + '03.help-block').attr('style', 'display:none');
+            
+        }
+    }
+
+    function ValidarContrasena02(item) {
+        var name = "";
+        if ('@(this.ViewBag.Navegador)' == "internetexplorer") {
+            name = item.attributes[0].value;
+        } else {
+            name = item.attributes[2].value;
+        }
+        if (rtrim($(item).val()) == "") {
+            $('div#' + name + '033.form-group').removeClass('has-success').addClass('has-error');
+            $('span#Span' + name + '033.help-block').attr('style', 'display:block');
+        } else {
+            $('div#' + name + '033.form-group').removeClass('has-error').addClass('has-success');
+            $('span#Span' + name + '033.help-block').attr('style', 'display:none');
+
+        }
+        
+    }
+</script>

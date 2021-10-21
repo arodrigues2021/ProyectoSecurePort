@@ -1,0 +1,172 @@
+﻿@using DocumentFormat.OpenXml.Vml.Spreadsheet
+@using DocumentFormat.OpenXml.Wordprocessing
+@using System.Configuration
+@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model Comunidades_Autonomas
+@{
+	string color = ViewBag.disabled == false ? " #eeeeee;color: black" : "#FFFFFF";
+	string valor = Model.es_activo == true? "1": "2";	
+
+}
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default" style="margin-top: -4%;">
+			<div class="panel-heading" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>Modificar Comunidad Autonóma</strong>
+			</div>
+			<div class="k-content">
+                <input type="text" id="ValidarAllCombos" name="ValidarAllCombos" style="display: none">
+				<div id="Comunidad">
+					<form id="ComunidadForm">
+						<ul id="fieldlist">
+							<li style="list-style:none;">
+								&nbsp;
+							</li>
+							<li style="list-style:none;height:6%">
+								@(Html.Kendo().TextBoxFor(model =>  model.Id).Name("ID")
+									  .HtmlAttributes(new { id="ID01", style = "width:220px;margin-left: 4%;display:none"}))
+							</li>
+							<li style="list-style:none;height:6%">
+								<label for="Comunidad" style = "margin-left: 4%;" class="required">Nombre</label>
+								@(Html.Kendo().TextBoxFor(model =>  model.Nombre).Name("Comunidad")
+									  .HtmlAttributes(new { id="Comunidad01",placeholder = "Insertar Comunidad Autonóma", required = "required", type = "text",validationmessage = "Campo requerido", style = "width:220px;margin-left: 4%;", MaxLength="75" }))
+							</li>
+							<div class="col-md-9"  style = "margin-left: 2%;">
+								<div class="form-group">
+									<label class="control-label">
+										País
+									</label>
+									@(this.Html.Kendo().ComboBox().Name("Pais")
+										  .Placeholder("Selecciona País")
+										  .DataTextField("Text")
+										  .DataValueField("Value")
+										  .Filter(FilterType.Contains)
+										  .BindTo((SelectList)this.ViewData["Paises"])
+										  .Value(Model.ID_Pais.ToString())
+										  .Suggest(true)
+										  .HtmlAttributes(new { style = "width:100%;", id = "Pais01", required = "required", type = "text", validationmessage = "Campo requerido", onChange = "ValidacionCombos(this,'errorPais')" }))
+                                          <span id="errorPais" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+								</div>
+							</div>
+							
+							<div class="col-md-4"  style = "margin-left: 2%;">
+								<div class="form-group" >
+									<label class="control-label">
+										Activo
+									</label>
+									@(this.Html.Kendo().ComboBox().Name("Activo")
+										  .DataTextField("Text").DataValueField("Value")
+										  .Filter(FilterType.Contains)
+										  .BindTo(new List<SelectListItem>() {
+																				 new SelectListItem() {
+																										  Text = "Si", Value = "1"   
+																									  }, 
+																				 new SelectListItem() {
+																										  Text = "No", Value = "2"   
+																									  }
+																			 })
+										  .Value(valor)
+										  .Suggest(true).Enable(this.ViewBag.disabled)
+										  .HtmlAttributes(new { style = "width:100%;background-color:" + color, required = "required", validationmessage = "Este campo es requerido", id = "Activo01", name = "Activo01", onChange = "ValidacionCombos(this,'errorActivo')"  }))
+                                          <span id="errorActivo" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+								</div>
+							</div>
+							<li id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+								<div class="btn-group btn-group-sm">
+									<button class="btn btn-primary hidden-xs" type="submit">
+										Guardar
+									</button>
+									<a class="btn btn-default " href="javascript:VolverComunidad()">
+										Volver
+									</a>
+								</div>
+							</li>
+							<li class="status">
+							</li>
+						</ul>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(function () {
+		var validator = $("#ComunidadForm").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$("form").submit(function (event) {
+		    event.preventDefault();
+		    if (ValidarAllCombos("1"))
+		        $('input#ValidarAllCombos').val("1");
+		    else
+		        $('input#ValidarAllCombos').val("");
+			if (validator.validate()) {
+				status.removeClass("invalid").addClass("valid");
+				EditarComunidad();
+			} else {
+				status.removeClass("valid").addClass("invalid");
+			}
+		});
+	});
+</script>
+<style>
+	
+	/*#fieldlist {
+		margin: 0;
+		padding: 0;
+	}
+
+	#fieldlist li {
+		list-style: none;
+		padding-bottom: .7em;
+		text-align: left;
+	}
+
+	#fieldlist label {
+		display: block;
+		padding-bottom: .3em;
+		font-weight: bold;
+		font-size: 12px;
+		color: #444;
+	}
+
+	#fieldlist li.status {
+		text-align: center;
+	}
+
+	#fieldlist li .k-widget:not(.k-tooltip),
+	#fieldlist li .k-textbox {
+		margin: 0 5px 5px 0;
+	}
+
+	.confirm {
+		padding-top: 1em;
+	}
+
+	.valid {
+		color: green;
+	}
+
+	.invalid {
+		color: red;
+	}
+
+	span.k-widget.k-tooltip-validation {
+		display: inline-block;
+		width: 160px;
+		text-align: left;
+		border: 0;
+		padding: 0;
+		margin: 0;
+		background: none;
+		color: red;
+	}
+
+	.k-tooltip-validation .k-warning {
+		display: none;
+	}*/
+
+</style>

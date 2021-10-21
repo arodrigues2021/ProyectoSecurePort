@@ -1,0 +1,42 @@
+﻿@model SecurePort.Entities.Models.UsuarioFrontal
+<div class="panel-body">
+
+<input type="text" id="IdOperador"   name="IdValor"   style="display: none">
+<input type="text" id="NombreOperador"   name="NombreOperador"   style="display: none">
+	<div class="row">
+		<div class="col-md-12">
+		
+			 @(this.Html.Kendo().Grid<SecurePort.Entities.Models.Det_PracticaViewModel>().Name("GridInstalaciones")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.Id).Hidden(true);
+					  columns.Bound(o => o.IIPP).Title("IIPP").HtmlAttributes(new { style = "text-align: left;" });                      
+				  })				  
+				  .HtmlAttributes(new { style = "height: 180px" })
+				  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+				  .DataSource(dataSource => dataSource.Ajax()
+				  .PageSize(10).Model(model => model.Id(p => p.Id))
+				  .Read(read => read.Action("BuscadorInstalaciones", "Practicas")))
+                  .Pageable()
+                  .Sortable(sortable => sortable.AllowUnsort(true)
+                  .SortMode(GridSortMode.MultipleColumn))
+				  .Filterable()
+				  .Scrollable()                 
+                  .Resizable(resize => resize.Columns(true))
+			      .Reorderable(reorder => reorder.Columns(true)))
+				  
+		</div>
+	</div>
+</div>
+<script>
+
+
+	function onShow(e) {
+	}
+	function onHide(e) {
+
+	}
+	
+
+</script>
+

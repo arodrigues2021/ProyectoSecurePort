@@ -1,0 +1,18 @@
+﻿@{
+    string requerido = ViewBag.disabled == false ? string.Empty : "symbol required";
+}
+<div class="col-md-4">
+    <div class="form-group">
+        <label class="control-label">
+            Tipo <span class='@requerido'></span>
+        </label>
+         @(this.Html.Kendo().ComboBox().Name("Tipo")
+                           .Placeholder("Selecciona Tipo")
+                           .DataTextField("Text").DataValueField("Value")
+                           .Filter(FilterType.Contains)
+                           .BindTo((SelectList)this.ViewData["TipoInstalaciones"])
+                           .HtmlAttributes(new { style = "width:100%;", id = "Tipo01" , name="Tipo01", required = "required", onChange = "ValidacionCombos(this,'errorTipo')" }))
+            <span id="errorTipo" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+
+    </div>
+</div>

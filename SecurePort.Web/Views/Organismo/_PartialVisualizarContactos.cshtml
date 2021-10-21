@@ -1,0 +1,100 @@
+﻿@using SecurePort.Entities.Models
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<i class="clip-checkbox"></i>
+				<strong>Contactos Organismo</strong>
+			</div>
+			<div class="panel-body" style="height: 300px">
+				<div id="ContactoOrganismo">
+					<div class="panel-body">
+						<div class="row">
+							  <div class="col-md-12">
+								  <p></p>
+							  </div>
+							  <div class="row">
+								  <div class="col-md-10">
+										@(this.Html.Kendo().Grid<ContactosViewModel>().Name("GridContactos_Organismo_ver").Columns(columns =>
+										{
+											columns.Bound(o => o.Id).Hidden(true);
+											columns.Bound(o => o.Nombre).Title("Contacto")
+												.HtmlAttributes(new { style = "text-align: left;" }).Width(120);
+											columns.Bound(o => o.Es_Responsable)
+												.ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= Es_Responsable==true ? checked='checked': '' # disabled='true' />")
+												.Title("Es_Responsable")
+												.HtmlAttributes(new { style = "text-align: left;" }).Width(140);
+											columns.Bound(o => o.Telefono).Title("Teléfono")
+												.HtmlAttributes(new { style = "text-align: left;" });
+											columns.Bound(o => o.Fax).Title("Fax")
+												.HtmlAttributes(new { style = "text-align: left;" });
+											columns.Bound(o => o.Email).Title("Correo")
+												.HtmlAttributes(new { style = "text-align: left;" });
+                                            columns.Bound(o => o.activado).Width(80)
+							                    .ClientTemplate("<input type='checkbox' class='icheck box_minimal-grey' #= activado=='Si' ? checked='checked': '' # disabled='true' />")
+							                    .Title("Activo")
+							                    .HtmlAttributes(new { style = "text-align: left;" });
+											@*columns.Bound(o => o.Observaciones).Title("Observaciones")
+												.HtmlAttributes(new { style = "text-align: left;" });*@
+										}).Events(events => events.Change("onChangeContacto"))
+												.HtmlAttributes(new { style = "height: 200px" })
+												.Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+												.DataSource(dataSource => dataSource.Ajax().PageSize(10)
+												.Model(model => model.Id(p => p.Id))
+												.Read(read => read.Action("BuscadorContacto","Organismo")))
+												.Pageable()
+												.Sortable(sortable => sortable.AllowUnsort(true)
+												.SortMode(GridSortMode.MultipleColumn))
+												.Filterable()
+												.Scrollable()
+												.Groupable()
+												.Resizable(resize => resize.Columns(true))
+											    .Reorderable(reorder => reorder.Columns(true)))
+								  </div>
+							  </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+    jQuery(document).ready(function () {
+        var grid = $("#GridContactos_Organismo_ver").data("kendoGrid");
+        grid.dataSource.filter({ field: "activado", operator: "eq", value: 'Si' });
+    });
+
+	function onShow(e) {
+	}
+
+	function onHide(e) {
+	}
+
+	$(document).ready(function() {
+		$("#toggle51").kendoTooltip({
+			content: "Alta Contacto",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle52").kendoTooltip({
+			content: "Editar Contacto",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle53").kendoTooltip({
+			content: "Borrar Contacto",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle54").kendoTooltip({
+		    content: "Visualizar Contacto",
+		    show: onShow,
+		    hide: onHide,
+		    position: "top"
+		});
+	});
+</script>

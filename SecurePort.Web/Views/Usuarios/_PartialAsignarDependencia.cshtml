@@ -1,0 +1,207 @@
+﻿@using DocumentFormat.OpenXml.Drawing
+@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model Usuarios
+@{
+	this.Layout = null;
+}
+<div id="ListPuertos">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- start: FORM VALIDATION 1 PANEL -->
+			<div class="panel-body">
+				<hr>
+				<div class="row">
+					
+					@switch (Model.categoria)
+					{
+						case (int)EnumCategoria.Administrador:
+							@Html.Action("Visualizar","Usuarios", new { id = @Model.id });
+							break;
+							
+						case (int)EnumCategoria.Instalacion: 
+						    @(this.Html.Partial("~/Views/Usuarios/_PartialEncabezado.cshtml"))
+							<div class="col-md-3">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<i class="clip-checkbox"></i>
+									Puertos 
+								</div>
+								<div class="panel-body" style="height: 460px;width: 146%">
+									@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialPuertoDisponible.cshtml"))
+								</div>
+							</div>
+						</div>
+							<div class="row">
+							<div class="col-md-3">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<i class="clip-checkbox"></i>
+										Instalaciones No Asignadas
+									</div>
+									<div class="panel-body" style="height: 460px;width: 146%">
+										<div id="InstaDisponibles">
+											@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialInstalacionDisponible.cshtml"))
+										</div>
+									</div>
+								</div>
+							</div>
+								<div class="col-md-2">
+									@(this.Html.Kendo().Button().Name("Asignar")
+										  .HtmlAttributes(new { type = "button", title = "Asignar Acciones", @class = "clip-chevron-right", style = "font-size: 34px;margin-top: 57%;margin-left: 12%;margin-bottom: 135%;width: 51px;" })
+										  .Events(ev => ev.Click("onClickInstalacion")))
+								</div>
+								<div class="col-md-2">
+								@(this.Html.Kendo().Button().Name("Desasignar")
+									  .HtmlAttributes(new { type = "button", title = "Desasignar Acciones", @class = "clip-chevron-left", style = "font-size: 34px;margin-left: -99%;width: 51px;margin-bottom: -196%;" })
+									  .Events(ev => ev.Click("onClickInstalacionQuitar")))
+							</div>
+							<div class="col-md-3" style="margin-left: -8%;">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<i class="clip-checkbox"></i>
+										Instalaciones Asignadas
+									</div>
+									<div class="panel-body" style="height: 460px;width: 146%">
+										<div id="InstaAsignadas">
+											@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialInstalacionesAsociados.cshtml"))
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+							<div id="Opcion02" class="space12" style="margin-left: 50%; display: block">
+							<div class="btn-group btn-group-sm">
+								 @(this.Html.Kendo().Button().Name("ButtonDeshacerInst").HtmlAttributes(new { type = "button", @class = "btn btn-danger" })
+								   .Content("Deshacer").Events(ev => ev.Click("onClick")))
+		
+								 @(this.Html.Kendo().Button().Name("ButtonGuardarInst").HtmlAttributes(new { type = "button", @class = "btn btn-primary hidden-xs" })
+								   .Content("Guardar").Events(ev => ev.Click("onClick")))
+
+								 @(this.Html.Kendo().Button().Name("ButtonVolver").HtmlAttributes(new { type = "button", @class = "btn btn-default" })
+								   .Content("Volver").Events(ev => ev.Click("onClick")))
+							</div>
+						</div>
+							break;
+						
+						case (int)EnumCategoria.OrganismoGestionPortuaria:
+						    @(this.Html.Partial("~/Views/Usuarios/_PartialEncabezado.cshtml"))
+							<div class="col-md-4">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<i class="clip-checkbox"></i>
+											Organismo Gestión Portuaria Disponibles
+										</div>
+										<div class="panel-body" style="height: 530px; width: 146%">
+											<div id="ListOrganismosRefrescar">
+												@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialOrganismosDisponible.cshtml"))
+											</div>
+										</div>
+									</div>
+								</div>
+							<div class="row">
+									<div class="col-md-2">
+										@(this.Html.Kendo().Button().Name("Desasignar").HtmlAttributes(new { type = "button", title = "Desasignar Acciones", @class = "clip-chevron-left", style = "font-size: 34px;margin-top: 96%;margin-left: 18%;margin-bottom: 20%;" }).Events(ev => ev.Click("onClickOrganismosQuitar")))
+									</div>
+									<div class="col-md-2">
+										@(this.Html.Kendo().Button().Name("Asignar").HtmlAttributes(new { type = "button", title = "Asignar Acciones", @class = "clip-chevron-right", style = "font-size: 34px;margin-left: -93%;margin-bottom: -121%;" }).Events(ev => ev.Click("onClickOrganismo")))
+									</div>
+									<div class="col-md-4">
+										<div class="panel panel-default" style="margin-left: -9%;">
+											<div class="panel-heading">
+												<i class="clip-checkbox"></i>
+												Organismo Gestión Portuaria Asignadas
+											</div>
+											<div class="panel-body" style="height: 530px; width: 146%">
+												<div id="ListOrganismosDisponible">
+													@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialDesasignarOrganismos.cshtml"))
+												</div>
+											</div>
+										</div>
+									</div>
+									<div id="Opcion03" class="space12" style="margin-left: 40%; display: block">
+										<div class="btn-group btn-group-sm">
+											@(this.Html.Kendo().Button().Name("ButtonDeshacerOrg").HtmlAttributes(new { type = "button", @class = "btn btn-danger" }).Content("Deshacer").Events(ev => ev.Click("onClick")))
+		
+											@(this.Html.Kendo().Button().Name("ButtonGuardarOrg").HtmlAttributes(new { type = "button", @class = "btn btn-primary hidden-xs" }).Content("Guardar").Events(ev => ev.Click("onClick")))
+
+											@(this.Html.Kendo().Button().Name("ButtonVolver").HtmlAttributes(new { type = "button", @class = "btn btn-default" }).Content("Volver").Events(ev => ev.Click("onClick")))
+										</div>
+									</div>
+								</div>
+							break;
+
+						case (int)EnumCategoria.Puerto:
+						    @(this.Html.Partial("~/Views/Usuarios/_PartialEncabezado.cshtml"))
+							<div class="col-md-6">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<i class="clip-checkbox"></i>
+										Puertos No Asignados
+									</div>
+									<div class="panel-body" style="height: 545px; width: 147%">
+										<div id="PuertosDisponibles">
+											@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialPuertosDisponible.cshtml"))
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2">
+								@(this.Html.Kendo().Button().Name("Desasignar").HtmlAttributes(new { type = "button", title = "Desasignar Acciones", @class = "clip-chevron-left", style = "font-size: 34px;margin-top: 96%;margin-left: 18%;margin-bottom: 20%;" }).Events(ev => ev.Click("onClickPuertoQuitar")))
+							</div>
+							<div class="col-md-2">
+								@(this.Html.Kendo().Button().Name("Asignar").HtmlAttributes(new { type = "button", title = "Asignar Acciones", @class = "clip-chevron-right", style = "font-size: 34px;margin-left: -93%;margin-bottom: -121%;" }).Events(ev => ev.Click("onClickPuerto")))
+							</div>
+							<div class="col-md-4">
+								<div class="panel panel-default" style="margin-left: -9%;">
+									<div class="panel-heading">
+										<i class="clip-checkbox"></i>
+										Puertos Asignados
+									</div>
+									<div class="panel-body" style="height: 530px; width: 146%">
+										<div id="PuertosAsignados">
+											@(this.Html.Partial("~/Views/Usuarios/Documentos/_PartialDesasignarPuertos.cshtml"))
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="Opcion04" class="space12" style="margin-left: 40%; display: block">
+								<div class="btn-group btn-group-sm">
+						
+									@(this.Html.Kendo().Button().Name("ButtonDeshacerDep").HtmlAttributes(new { type = "button", @class = "btn btn-danger" }).Content("Deshacer").Events(ev => ev.Click("onClick")))
+		
+									@(this.Html.Kendo().Button().Name("ButtonGuardarDep").HtmlAttributes(new { type = "button", @class = "btn btn-primary hidden-xs" }).Content("Guardar").Events(ev => ev.Click("onClick")))
+
+									@(this.Html.Kendo().Button().Name("ButtonVolver").HtmlAttributes(new { type = "button", @class = "btn btn-default" }).Content("Volver").Events(ev => ev.Click("onClick")))
+								</div>
+							</div>
+							break;
+						
+						default:
+							<div id="Opcion04" class="space12" style="margin-left: 40%; display: block">
+								<div class="btn-group btn-group-sm">
+									@(this.Html.Kendo().Button().Name("ButtonVolver").HtmlAttributes(new { type = "button", @class = "btn btn-default" }).Content("Volver").Events(ev => ev.Click("onClick")))
+								</div>
+							</div>
+							break;
+					}
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="~/Scripts/AppSecureport/appUsuarios.js"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		$('select#Categoria01.form-control').val('@(this.Model.categoria)');
+		$('select#Categoria01.form-control').attr('style', 'position:relative;top:0;left:0;color:black;font-size:14px');
+	});
+</script>
+
+
+
+
+
+
+			

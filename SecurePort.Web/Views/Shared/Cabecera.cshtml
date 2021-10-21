@@ -1,0 +1,32 @@
+﻿@using System.Configuration
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+@{
+    string nombreCompleto = this.Model.Usuario.nombre + " " + this.Model.Usuario.apellidos;
+    this.ViewBag.Title = "Usuarios";
+    UsuarioPassword usuarioPassword = new UsuarioPassword();
+    usuarioPassword.login = this.Model.Usuario.login;
+    string nombreRuta = ConfigurationManager.AppSettings["RutaDOC"];
+    string rutaimagen = nombreRuta + "/images/" + ConfigurationManager.AppSettings["logoPagina"];
+} 
+@if (this.Model.Usuario.nombre != null)
+{
+    @(this.Html.AntiForgeryToken())
+    <div class="nav navbar-nav navbar-left">
+         <img src=@rutaimagen alt="" style="margin-top: 1px;margin-left: 20px;width: 28%;">
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+        <label class="control-label" style="margin-top: 3%"><b>Hola, @nombreCompleto</b><span></span><span></span><span></span></label>
+        <div class="row">
+            <div class="col-xs-4" >
+                <li><a href="javascript:void(0)" data-original-title="Aviso Legal" data-placement="bottom" class="tooltips" data-style="zoom-in" onclick=" AvisoLegal() ">Aviso</a></li>
+            </div>   
+            <div class="col-xs-5" >
+                <li><a href="javascript:void(0)" data-original-title="Cambiar Contraseña" data-placement="bottom" class="tooltips" data-style="zoom-in" onclick=" CambiarPassword() ">Mi Perfil</a></li>
+            </div>
+            <div class="col-xs-3" >
+                <li><a href="javascript:void(0)" data-original-title="Cerrar Sessión" data-placement="bottom" class="tooltips" data-style="zoom-in" onclick=" LogOff() ">Salir</a></li>
+            </div>
+        </div>
+    </ul>
+}

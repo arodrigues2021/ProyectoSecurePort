@@ -1,0 +1,35 @@
+﻿@using SecurePort.Entities.Models
+<div class="panel-heading">
+	<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+	<div id="MostrarMensaje">
+		<strong>			
+			Asignar Bienes/Amenazas		
+		</strong>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel-body" style="height: 100%;" >
+			<div id="ListPadres">
+				@(this.Html.Partial("~/Views/Evaluaciones/_Partial1BienPadreHijo.cshtml"))
+			</div>
+		</div>
+	</div>
+	<div class="col-md-5">
+		<div class="panel-body" style="height: 100%; width: 98%;margin-top: 11%;">
+			<div id="ListAmenazas" style="display: none;">
+				@(this.Html.Partial("~/Views/Evaluaciones/_PartialAmenazas.cshtml"))                   
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="~/Scripts/AppSecureport/appInstalacion.js"></script>
+<div class="space12" style="margin-left: 40%;">
+	<div class="btn-group btn-group-sm">
+		@(this.Html.Kendo().Button().Name("ButtonDeshacerPadreHijo").HtmlAttributes(new { type = "button", @class = "btn btn-danger" }).Content("Deshacer").Events(ev => ev.Click("onClick")))
+		
+		@(this.Html.Kendo().Button().Name("ButtonSaveBienPadreHijo").HtmlAttributes(new { type = "button", @class = "btn btn-primary hidden-xs" }).Content("Guardar").Events(ev => ev.Click("onClick")))
+
+		@(this.Html.Kendo().Button().Name("ButtonVolverBienPadreHijo").HtmlAttributes(new { type = "button", @class = "btn btn-default" }).Content("Volver").Events(ev => ev.Click("onClick")))
+	</div>
+</div>

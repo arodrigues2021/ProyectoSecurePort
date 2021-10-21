@@ -1,0 +1,58 @@
+﻿@model SecurePort.Entities.Models.UsuarioFrontal
+<div class="panel-body">
+
+<input type="text" id="IdHis"   name="IdValor"   style="display: none">
+<input type="text" id="VesionEva"   name="VersionEva"   style="display: none">
+	<div class="row">
+		<div class="col-md-12">
+			
+				@*@(this.Html.Kendo().ToolBar().Name("ToolBarHist").Items(items =>
+				  {
+					  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" }).Hidden(@Model.permisosViewModel.EVAL_CONSULTA_EVAL).Id("toggle9");
+				  }).Events(e => e.Toggle("onToggleEvaluacion"))
+					  )*@
+			
+			
+			 @(this.Html.Kendo().Grid<SecurePort.Entities.Models.Historico_Evaluacion>().Name("GridHistory_Evalua")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.Id).Hidden(true);
+                      columns.Bound(o => o.Id_Version_Eval).Title("Versión").HtmlAttributes(new { style = "text-align: left;" });  
+					  columns.Bound(o => o.Fech_Accion).Title("Fecha").HtmlAttributes(new { style = "text-align: left;" });
+					  columns.Bound(o => o.Accion).Title("Accion").HtmlAttributes(new { style = "text-align: left;" });
+					  columns.Bound(o => o.Observaciones).Title("Observaciones").HtmlAttributes(new { style = "text-align: left;" });
+				  })
+				  .Events(events => events.Change("onChangeHisEvaluacion"))
+				  .HtmlAttributes(new { style = "height: 160px" })
+				  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+				  .DataSource(dataSource => dataSource.Ajax()
+				  .PageSize(10)
+				  .Model(model => model.Id(p => p.Id))
+				  .Read(read => read.Action("BuscadorHistorico", "Evaluaciones")))
+				  .Pageable()
+				  .Filterable()
+				  .Scrollable()
+				  )
+		</div>
+	</div>
+</div>
+<script>
+
+
+	function onShow(e) {
+	}
+	function onHide(e) {
+
+	}
+	$(document).ready(function () {
+		$("#toggle9").kendoTooltip({
+			content: "Visualizar Historico",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		
+	});
+
+</script>
+

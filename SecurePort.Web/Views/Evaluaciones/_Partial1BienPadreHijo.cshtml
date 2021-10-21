@@ -1,0 +1,252 @@
+﻿@using SecurePort.Entities.Models
+<fieldset style="display: block;-webkit-margin-start: 2px;-webkit-margin-end: 2px;-webkit-padding-before: 0.35em;-webkit-padding-start: 0.15em;-webkit-padding-end: 0.15em; -webkit-padding-after: 0.15em;
+									  border-image-source: initial;border-image-slice: initial;border-image-width: initial;border-image-outset: initial;border-image-repeat: initial;min-width: -webkit-min-content;
+									  border-width: 2px;border-style: groove; border-color: threedface;width:187%;height:75px;margin-bottom: 1%; ">
+	<div id="ListEncabezado">
+		@(this.Html.Action("AsignarEncabezado","Evaluaciones"))
+	</div>
+
+</fieldset>
+
+<div id="ListPadres01">
+	@(this.Html.Kendo().Grid<BienesViewModel>().Name("grid_00").Columns(columns =>
+	  {
+		  columns.Bound(e => e.Descripcion).Title("Bien Padre").HtmlAttributes(new { style = "text-align: left;" });
+		  columns.Bound(e => e.sel).Title("Asignar").Width(70).ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= activado=='Si' ? checked='checked': '' #  onclick='ClickPadre(this,#=Id#)' />");
+		  columns.Bound(e => e.activado).Hidden(true);
+		  columns.Bound(e => e.Id).Hidden(true);
+	  })
+	  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single)).Scrollable(scrollable => scrollable.Height("auto"))
+	  .ClientDetailTemplateId("template").HtmlAttributes(new { style = "height:798px;width: 75%;" })
+	  .Events(events => events.Change("onChangeListPadre").DetailExpand("Expand"))
+		  .DataSource(dataSource => dataSource.Ajax()
+		  .ServerOperation(true)
+		  .Read(read => read.Action("HierarchyBinding_BienPadre","Evaluaciones"))))
+
+	<script id="template" type="text/kendo-tmpl">
+	   @(this.Html.Kendo().Grid<BienesHijosViewModel>().Name("grid_#=Id#").Columns(columns =>
+		 {
+			 columns.Bound(o => o.Id).Hidden(true);
+			 columns.Bound(o => o.id_Bien_Padre).Hidden(true);
+			 columns.Bound(o => o.Descripcion).Title("Bien Hijo").Width(40);
+			 columns.Bound(o => o.sel).Title("Asignar").HtmlAttributes(new { style = "text-align: left;" })
+			 .ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' \\#= activado=='Si' ? checked='checked': ''  \\# onclick='ClickHijo(this,\\#= Id\\#,#=Id#)'/>").Width(10);
+			 columns.Bound(o => o.Id).Hidden(true);
+			 columns.Bound(o => o.id_Bien_Padre).Hidden(true);
+		 }).DataSource(dataSource => dataSource.Ajax().ServerOperation(true)
+			 .Read(read => read.Action("HierarchyBinding_BienHijo","Evaluaciones",new { BienPadreId = "#=Id#" })))
+			 .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+			 .Scrollable(scrollable => scrollable.Height("auto"))
+			 .Events(events => events.Change("onChangeListHijo").DataBound("onDataBoundHijo")).ToClientTemplate())
+	</script>
+</div>
+	
+<input type="text" id="SelUid"            name="SelUid"         style="display: none">
+<input type="text" id="SelBienPadre"      name="SelBienPadre"   style="display: none">
+<input type="text" id="SelBienhijo"       name="SelBienhijo"    style="display: none">
+<input type="text" id="BienPadre"         name="BienPadre"      style="display: none">
+<input type="text" id="BienHijo"          name="BienHijo"       style="display: none">
+<input type="text" id="QuitarBienHijo"    name="QuitarBienHijo" style="display: none">
+<input type="text" id="QuitarPadre"       name="QuitarPadre"    style="display: none">
+
+<script type="text/javascript">
+	
+
+	var code = new Object();
+	code.codeHijo  = 0;
+	code.codePadre = 0;
+	code.nombre = '';
+	code.uid = 0;
+	var y = 0;
+	var x = 0;
+	var h = 0;
+	var j = 0;
+	var AgregarPadreHijo = new Array();
+	var QuitarPadreHijo = new Array();
+	var AgregarBienPadre = new Array();
+	var QuitarBienPadre = new Array();
+
+	function ClickPadre(e, idPadre) {
+	    $('#ListAmenazas').attr('style', 'display:block');
+		var BienesPadre = '';
+		if (idPadre>0) {
+			if (e.checked) {
+				AgregarBienPadre[y++] = idPadre;
+				for (var i = QuitarBienPadre.length - 1; i >= 0; i--) {
+					if (QuitarBienPadre[i] === idPadre) {
+						QuitarBienPadre.splice(i, 1);
+					}
+				}
+				//console.log("AgregandodatosBienPadre==>" + AgregarBienPadre);
+				$('input#QuitarPadre').val(QuitarBienPadre);
+				$('input#BienPadre').val(idPadre);
+				$('input#SelBienPadre').val("Si");
+				$('input#SelBienhijo').val("No");
+				BienesPadre = idPadre;
+				//Aqui ingreso las amenazas en la lista.
+				$.ajax({
+					url: '/Amenazas/AgregarPadre',
+					type: "POST",
+					data: { BienesPadre: BienesPadre },
+					success: function (data) {
+						if (data) {
+							//$('#ListAmenazas').html('');
+							//$('#ListAmenazas').html(data);
+							
+							$('#ListPadres01').html('');
+							$('#ListPadres01').html(data);
+						}
+					}
+				});
+				
+			} else {
+				$('input#SelBienPadre').val("No");
+				QuitarBienPadre[h++] = idPadre;
+				for (var z = AgregarBienPadre.length - 1; z >= 0; z--) {
+					if (AgregarBienPadre[z] === idPadre) {
+						AgregarBienPadre.splice(z, 1);
+					}
+				}
+				//console.log("QuitardatosBienPadre==>" + QuitarBienPadre);
+				$('input#QuitarPadre').val(QuitarBienPadre);
+				$('input#BienPadre').val(AgregarBienPadre);
+				BienesPadre = idPadre;
+				$.ajax({
+					url: '/Amenazas/QuitarPadreHijo',
+					type: "POST",
+					data: { BienesPadre: BienesPadre },
+					success: function (data) {
+						if (data) {
+							$('#ListAmenazas').html('');
+							$('#ListAmenazas').html(data);
+
+						}
+					}
+				});
+			}
+		}
+		
+	}
+	
+	function onChangeListHijo(arg) {
+	    $('#ListAmenazas').attr('style', 'display:block');
+		var GridPadre  = $("#grid_00").data("kendoGrid");
+		var padre       = this.dataItem(this.select()).id_Bien_Padre;
+		var posicion    = 0;
+		var dataItem    = 0;
+		for (posicion; posicion < GridPadre.dataSource._data.length; posicion++) {
+			if (GridPadre.dataSource._data[posicion].Id == padre) {
+				dataItem = posicion;
+				break;
+				}
+		}
+		var uid = GridPadre.dataSource.at(dataItem).uid;
+		var row = GridPadre.tbody.find("tr[data-uid='" + uid + "']");
+		row.removeClass("k-state-selected");
+		$('#ListAmenazas').attr('style', 'display:block');
+		code.codeHijo  = this.dataItem(this.select()).Id;
+		code.codePadre = this.dataItem(this.select()).id_Bien_Padre;
+		code.nombre = this.dataItem(this.select()).Descripcion;
+		$('input#SelBienhijo').val(this.dataItem(this.select()).activado);
+		var BienesPadreHijo = code.codePadre + '-' + code.codeHijo;
+		$('input#SelBienPadre').val('No');
+
+		$.ajax({
+			url: '/Amenazas/ListHijo',
+			type: "POST",
+			data: { BienesPadreHijo: BienesPadreHijo, Nombre: code.nombre },
+			success: function (data) {
+				if (data) {
+					$('#ListAmenazas').html('');
+					$('#ListAmenazas').html(data);
+
+				}
+			}
+		});
+		
+		$.ajax({
+		    url: '/Evaluaciones/AsignarEncabezado',
+			type: "POST",
+			data: { Nombre: code.nombre },
+			success: function (data) {
+				if (data) {
+					$('#ListEncabezado').html('');
+					$('#ListEncabezado').html(data);
+
+				}
+			}
+		});
+	}
+
+	function ClickHijo(e, idHijo, idPadre) {
+	    $('#ListAmenazas').attr('style', 'display:block');
+		code.codeHijo = idHijo;
+		var BienesPadreHijo = '';
+		var PadreHijo = idPadre + '-' + code.codeHijo;
+
+		if (e.checked) {
+			if (code.codeHijo > 0) {
+				AgregarPadreHijo[j++] = PadreHijo;
+				for (var i = QuitarPadreHijo.length - 1; i >= 0; i--) {
+					if (QuitarPadreHijo[i] === PadreHijo) {
+						QuitarPadreHijo.splice(i, 1);
+					}
+				}
+				//console.log("AgregarPadreHijo==>" + AgregarPadreHijo);
+				$('input#QuitarBienHijo').val(QuitarPadreHijo);
+				$('input#BienHijo').val(AgregarPadreHijo);
+				BienesPadreHijo = idPadre + '-' + code.codeHijo;
+				code.codeHijo = 0;
+				//Aqui ingreso las amenazas en la lista.
+				$.ajax({
+					url: '/Amenazas/AgregarPadreHijo',
+					type: "POST",
+					data: { BienesPadreHijo: BienesPadreHijo},
+					success: function (data) {
+						if (data) {
+							//$('#ListAmenazas').html('');
+							//$('#ListAmenazas').html(data);
+							
+							$('#ListPadres01').html('');
+							$('#ListPadres01').html(data);
+							
+
+						}
+					}
+				});
+			} else {
+				e.checked = false;
+			}
+		} else {
+			if (code.codeHijo > 0) {
+				QuitarPadreHijo[x++] = PadreHijo;
+				for (var z = AgregarPadreHijo.length - 1; z >= 0; z--) {
+					if (AgregarPadreHijo[z] === PadreHijo) {
+						AgregarPadreHijo.splice(z, 1);
+					}
+				}
+				//console.log("QuitarPadreHijo==>" + QuitarPadreHijo);
+				$('input#QuitarBienHijo').val(QuitarPadreHijo);
+				$('input#BienHijo').val(AgregarPadreHijo);
+				var BienesPadre = idPadre + '-' + code.codeHijo;
+				code.codeHijo = 0;
+				$('input#SelBienhijo').val("No");
+				//Aqui Eliminar las amenazas en la lista.
+				$.ajax({
+					url: '/Amenazas/QuitarHijo',
+					type: "POST",
+					data: { BienesPadre: BienesPadre },
+					success: function(data) {
+						if (data) {
+							$('#ListAmenazas').html('');
+							$('#ListAmenazas').html(data);
+
+						}
+					}
+				});
+			} else {
+				e.checked = true;
+			}
+		}
+	}
+</script>

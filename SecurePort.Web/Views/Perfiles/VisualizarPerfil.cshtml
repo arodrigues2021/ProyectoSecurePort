@@ -1,0 +1,81 @@
+﻿@using SecurePort.Entities.Models
+@model UsuarioFrontal
+@{
+	string valor = Model.activo==true? "1": "2";
+   
+}
+<div class="row">
+	<div class="panel-body">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class="control-label">
+					Perfil
+				</label>
+				@(this.Html.Kendo().TextBoxFor(model => this.Model.nombre)
+				.HtmlAttributes(new { id = "Descripcion001", name = "Descripcion001", @class = "form-control", disabled = "disabled" }))
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class="control-label">
+					Descripción 
+				</label>
+				@(this.Html.Kendo().TextBoxFor(model => this.Model.descripcion)
+				.HtmlAttributes(new { id = "Descripcion001", name = "Descripcion001", @class = "form-control", disabled = "disabled" }))      
+			</div>
+		</div>
+		<div class="col-sm-1">
+			<div class="form-group">     
+				<label cfor="Activo" class="required">
+					Activo
+				</label>
+				@(this.Html.Kendo().ComboBox().Name("Activo").DataTextField("Text").DataValueField("Value").Filter(FilterType.Contains).BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "Si", Value = "1" }, 
+						 new SelectListItem() { Text = "No", Value = "2" } }).Value(valor).Suggest(true)
+						 .HtmlAttributes(new { style = "width:60%;", @class = "form-control", disabled = "disabled", id = "Activo01", name = "Activo01" }))
+			</div>
+		</div>   
+	</div>
+</div>
+<div id="DetallePerfil">
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-md-8">
+				@(this.Html.Kendo().Grid<AltaAcciones>().Name("GridVisualizarPerfil")
+					  .ToolBar(tools => tools.Excel()
+					  .Text("Exportar")
+					  .HtmlAttributes(new { @class="btn btn-black btn-xs",target="_self",hidefocus="true",style = "margin-left: 90%;outline: none;color: #44C51A;" }))
+					  .Excel(excel => excel.AllPages(true)
+					  .FileName("ListadoAccionesPerfil.xlsx")
+					  .Filterable(true)
+					  .ProxyURL(Url.Action("Excel_Export_Save","Usuarios")))
+					  .Columns(columns =>
+					  {
+						  columns.Bound(o => o.Id).Width(1).Groupable(false).Sortable(false).Filterable(false).Hidden(true);
+						  columns.Bound(o => o.NombreAccion).Title("Módulo").HtmlAttributes(new { style = "text-align: left;" }).Width(20);
+						  columns.Bound(o => o.Nombre).Title("Acción Asignada").HtmlAttributes(new { style = "text-align: left;" }).Width(90);
+					  })
+					  .HtmlAttributes(new { style = "height: 700px" })
+					  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+					  .DataSource(dataSource => dataSource.Ajax()
+						  .PageSize(50)
+						  .Model(model => model.Id(p => p.Id))
+						  .Read(read => read.Action("BuscadorDetalle", "Perfiles")))
+					  .Pageable()
+					  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+					  .Filterable()
+					  .Scrollable()
+					  .Groupable()
+					  )
+			</div>
+		</div>
+	</div>
+</div>
+<div class="space12" style="margin-left: 50%;">
+	<div class="btn-group btn-group-sm">
+		@(this.Html.Kendo().Button().Name("ButtonVolverPerfil")
+				   .HtmlAttributes(new { type = "button", @class = "btn btn-default" })
+					.Content("Volver")
+					 .Events(ev => ev.Click("onClick")))
+	</div>
+</div>

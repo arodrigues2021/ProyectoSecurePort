@@ -1,0 +1,74 @@
+﻿@using SecurePort.Entities.Models
+@using SecurePort.Entities.Enums
+@model UsuarioFrontal
+@{
+     string publico = this.Model.Id_publico == 1 ? TipoPublico.PUB.ToDescription() : (this.Model.Id_publico == 2 ? TipoPublico.PRI.ToDescription(): TipoPublico.ORG.ToDescription() );
+     string activo = this.Model.activo==true ? "Si": "No";
+}
+
+<div class="row">
+	<div class="panel-body">
+		<div class="col-sm-4">
+		<div class="form-group">
+			<label class="control-label">
+				Grupo
+			</label>
+		    @(this.Html.Kendo().TextBoxFor(model => Model.nombre).HtmlAttributes(new { id = "Descripcion001", name = "Descripcion001", @class = "form-control" , disabled = "disabled"}))
+		</div>
+	</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class="control-label">
+					Descripción 
+				</label>
+				@(this.Html.Kendo().TextBoxFor(model => Model.descripcion).HtmlAttributes(new { id = "Descripcion001", name = "Descripcion001", @class = "form-control", disabled = "disabled" }))      
+			</div>
+		</div>
+	    <div class="col-sm-2">
+	        <div class="form-group">     
+	            <label cfor="Publico" class="required">Es Público </label>
+	            @(this.Html.Kendo().TextBox().Name("Publico").HtmlAttributes(new { id = "Publico01", name = "Publico01", @class = "form-control", disabled = "disabled", value=@publico  }))      
+	        </div>
+	    </div>
+        <div class="col-sm-1">
+        <div class="form-group">     
+	        <label cfor="Activo" class="required">Activo </label>
+              @(this.Html.Kendo().TextBox().Name("Activo").HtmlAttributes(new { id = "Activo01", name = "Activo01", @class = "form-control", disabled = "disabled", value=@activo  }))      
+            </div>
+	    </div>
+</div>
+ 
+<div id="DetalleGrupo">
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-lg-12">
+				@(this.Html.Kendo().Grid<AltaPerfiles>().Name("GridVisualizaPerfiles")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.Id).Width(1).Groupable(false).Sortable(false).Filterable(false).Hidden(true);
+					  columns.Bound(o => o.Nombre).Title("Perfil").HtmlAttributes(new { style = "text-align: left;" }).Width(90);
+					  columns.Bound(o => o.Description).Title("Descripción").HtmlAttributes(new { style = "text-align: left;" }).Width(90);
+				  })
+				  .HtmlAttributes(new { style = "height: 450px" })
+				  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single).Enabled(false))
+				  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(20)
+					  .Model(model => model.Id(p => p.Id))
+					  .Read(read => read.Action("BuscadorDetalle", "Grupos")))
+				  .Pageable()
+				  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+				  .Filterable()
+				  .Scrollable()
+				  )
+			</div>
+		</div>
+	</div>
+</div>
+<div class="space12" style="margin-left: 50%;">
+	<div class="btn-group btn-group-sm">
+		 @(this.Html.Kendo().Button().Name("ButtonVolverGrupo")
+				  .HtmlAttributes(new { type = "button", @class = "btn btn-default" }).Content("Volver")
+					.Events(ev => ev.Click("onClick")))
+	</div>
+</div>

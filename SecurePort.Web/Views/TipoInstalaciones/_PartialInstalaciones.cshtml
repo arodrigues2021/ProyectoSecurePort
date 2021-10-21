@@ -1,0 +1,117 @@
+﻿@using DocumentFormat.OpenXml.Vml.Spreadsheet
+@using DocumentFormat.OpenXml.Wordprocessing
+@using System.Configuration
+@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model Tipos_Instalacion
+@{
+	string color = ViewBag.disabled == false ? " #eeeeee;color: black" : "#FFFFFF";
+	string valor = Model.es_activo == true? "1": "2";
+	string valorClasifica = Model.Clasificacion.ToString();
+}
+
+<div class="row">
+	<div class="col-lg-18">
+		<div class="panel panel-default" style="margin-top: -4%;">
+			<div class="panel-heading" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>Modificar Tipo Instalación</strong>
+			</div>
+			<div class="k-content">
+                <input type="text" id="ValidarAllCombos" name="ValidarAllCombos" style="display: none">
+				<div id="Instalacion">
+					<form id="InstalacionForm">
+						<ul id="fieldlist">
+							<li>
+								&nbsp;
+								  @(Html.Kendo().TextBoxFor(model =>  model.Id).Name("ID")
+										.HtmlAttributes(new { id="ID01", style = "width:220px;margin-left: 4%;display:none"}))
+
+							</li>
+							<li>
+								<label for="Nombre" style = "margin-left: 4%;" class="required">Descripción</label>
+								@(Html.Kendo().TextBoxFor(model =>  model.Descripcion).Name("Descripcion")
+									  .HtmlAttributes(new { id="Descripcion01",placeholder = "Insertar Descripción", required = "required", type = "text",validationmessage = "Este campo es requerido", style = "width:220px;margin-left: 4%;", MaxLength="1000" }))
+							</li>
+							<div class="col-md-4" >
+								<div class="form-group" >
+									<label class="control-label">
+										Activo
+									</label>
+									@(this.Html.Kendo().ComboBox().Name("Activo")
+										  .DataTextField("Text").DataValueField("Value")
+										  .Filter(FilterType.Contains)
+										  .BindTo(new List<SelectListItem>() {
+											  new SelectListItem() {
+												Text = "Si", Value = "1"   
+											  }, 
+											  new SelectListItem() {
+												Text = "No", Value = "2"   
+											  }
+										  })
+										  .Value(valor)
+										  .Suggest(true).Enable(this.ViewBag.disabled)
+										  .HtmlAttributes(new { style = "width:100%;background-color:" + color, required = "required", validationmessage = "Este campo es requerido", id = "Activo01", name = "Activo01", onChange = "ValidacionCombos(this,'errorActivo')"  }))
+                                            <span id="errorActivo" style="display: none; color: #b94a48;">Este campo es inválido.</span>   
+								</div>
+							</div>
+							<div class="col-md-6" >
+								<div class="form-group" >
+									<label class="control-label">
+										Clasificación
+									</label>
+									@(this.Html.Kendo().ComboBox().Name("clasificacion")
+										  .Placeholder("Selecciona Clasificacion")
+										  .DataTextField("Text")
+										  .DataValueField("Value")
+										  .Filter(FilterType.Contains)
+										  .BindTo(new List<SelectListItem>() { 
+													new SelectListItem() { Text = "725", Value = "1" }, 
+													new SelectListItem() { Text = "SEVESO", Value = "2" }, 
+													new SelectListItem() { Text = "Alto Riesgo", Value = "3" }, 
+													new SelectListItem() { Text = "Bajo Riesgo", Value = "4" }, 
+													new SelectListItem() { Text = "Zonas Adyacentes", Value = "5" }, 
+													new SelectListItem() { Text = "Tráficos Esporádicos", Value = "6" } }).Value(valorClasifica)
+										  .Suggest(true)
+										  .HtmlAttributes(new { style = "width:100%;",  id = "clasificacion01", name = "clasificacion01", onChange = "ValidacionCombos(this,'errorClasifica')" }))
+                                            <span id="errorClasifica" style="display: none; color: #b94a48;">Este campo es inválido.</span>   
+								</div>
+							</div>
+							<li id="Opcion02" class="space12" style="margin-left: 40%; display: block">
+								<div class="btn-group btn-group-sm">
+									<button class="btn btn-primary hidden-xs" type="submit">
+										Guardar
+									</button>
+									<a class="btn btn-default " href="javascript:VolverInstalacion()">
+										Volver
+									</a>
+								</div>
+							</li>
+							<li class="status">
+							</li>
+						</ul>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(function () {
+		var validator = $("#InstalacionForm").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$("form").submit(function (event) {
+		    event.preventDefault();
+		    if (ValidarAllCombos("1"))
+		        $('input#ValidarAllCombos').val("1");
+		    else
+		        $('input#ValidarAllCombos').val("");
+			if (validator.validate()) {
+				status.removeClass("invalid").addClass("valid");
+				EditarInstalacion();
+			} else {
+				status.removeClass("valid").addClass("invalid");
+			}
+		});
+	});
+</script>

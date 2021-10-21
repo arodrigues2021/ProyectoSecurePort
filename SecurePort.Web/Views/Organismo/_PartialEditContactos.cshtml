@@ -1,0 +1,185 @@
+﻿@using SecurePort.Entities.Models
+@model Contactos_Organismo
+@{
+    string valor = Model.Es_Responsable == true? "1": "0";
+    string requeridoOperador   = ViewBag.Operadordisabled == false ? string.Empty:"symbol required";
+    string valorActivo = Model.es_activo? "1": "0";	
+    string ActivoOperador = Model.es_activo? "Si" : "No";
+    string Estado = ViewBag.Operadordisabled == false ? "disabled = 'disabled'": "";
+    string color = ViewBag.Operadordisabled == false ? " #eeeeee;color: #000000" : "#FFFFFF";
+}
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default" style="margin-top: -2%; margin-left: -2%; margin-right: -2%;" >
+			<div class="panel-heading" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>@ViewBag.Mensaje </strong>
+			</div>
+			<div class="col-md-12">
+                <input type="text" id="ValidarAllCombosOP" name="ValidarAllCombosOP" style="display: none">   
+				<div class="panel-body">
+                    <hr>
+					<form id="_ContactoForm">
+					   <div class="row">
+						
+							       @(Html.Kendo().TextBoxFor(model => model.Id).HtmlAttributes(new { id="Id01", style = "width:220px;margin-left: 4%;display:none" }))
+							<div id="ComboUsuario">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+								        <label for="Nombre" style = "margin-left: 4%;" class="requeridoOperador">
+                                            Nombre <span class="@requeridoOperador"></span>
+								        </label>
+								        @(Html.Kendo().TextBoxFor(model => model.Nombre).Name("Nombre").Enable(ViewBag.Operadordisabled) 
+										    .HtmlAttributes(new { id="Nombre01",placeholder = "Insertar Nombre Contacto", required = "required", type = "text", validationmessage = "Este campo es requerido", style = "width:220px;margin-left: 4%;background-color:" + color, Maxlength ="100" }))
+							         </div>
+							    </div>
+						    </div>
+
+							<div id="ComboSuplente">
+							    <div class="col-sm-3">
+								    <div class="form-group">
+								        <label for="Es-Responsable" style = "margin-left: 4%;" class="required">
+                                            Es-Responsable <span class="@requeridoOperador"></span>
+								        </label>
+                                        <div style="@ViewBag.Combo">
+							            @(Html.Kendo().ComboBox()
+									              .Name("Es-Responsable")
+									              .Placeholder("Es-Responsable")
+									              .BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "Si", Value = "1" }, new SelectListItem() { Text = "No", Value = "0" } })
+									              .SelectedIndex(0)
+									              .Suggest(true)
+									              .Value(valor)
+									              .HtmlAttributes(new { id="es-responsable01", required = "required", validationmessage = "Este campo es requerido", onChange = "ValidacionCombos(this,'errorResponsableOP')", style = "margin-left: 4%;background-color:" + color }))
+                                                  <span id="errorResponsableOP" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+                                        </div>
+                                    <div style="@ViewBag.Texto">
+                                          @(Html.Kendo().TextBox().Name("responsableTexto").Enable(ViewBag.Operadordisabled) 
+										.HtmlAttributes(new { id="ActivoOperadorText", name="ActivoOperadorText" ,style = "background-color:" + color, @class="form-control",type="text", value = @ActivoOperador }))
+
+								    </div>
+							        </div>
+								</div>
+							</div>
+
+                            <div class="col-md-3" style= @ViewBag.display  >
+								<div class="form-group" >
+									<label class="control-label">
+										Activo <span class="@requeridoOperador"></span>
+									</label>
+                                     <div style="@ViewBag.Combo">
+									    @(this.Html.Kendo().ComboBox().Name("ActivoOperador")
+										      .DataTextField("Text").DataValueField("Value")
+										      .Filter(FilterType.Contains)
+										      .BindTo(new List<SelectListItem>() {
+											      new SelectListItem() {
+												    Text = "Si", Value = "1"   
+											      }, 
+											      new SelectListItem() {
+												    Text = "No", Value = "0"   
+											      }
+										      })
+										      .Value(valorActivo)
+										      .Suggest(true).Enable(this.ViewBag.Operadordisabled)
+										      .HtmlAttributes(new { style = "width:100%;background-color:" + color, id = "ActivoOperador01", name = "ActivoOperador01", onChange = "ValidacionCombos(this,'errorActivoOP')"  }))
+                                            <span id="errorActivoOP" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+                                    </div>
+                                    <div style="@ViewBag.Texto">
+                                          @(Html.Kendo().TextBox().Name("activadoTexto").Enable(ViewBag.Operadordisabled) 
+										.HtmlAttributes(new { id="ActivoOperadorText", name="ActivoOperadorText" ,style = "background-color:" + color, @class="form-control",type="text", value = @ActivoOperador }))
+
+								    </div>
+								</div>
+							</div>
+                       </div>
+                       <div class="row"> 
+							<div class="col-sm-4">
+    							<div class="form-group">
+								<label style = "margin-left: 4%;" for="tel">Teléfono</label>
+								@(Html.Kendo().TextBoxFor(model => model.Telefono).Name("tel").Enable(ViewBag.Operadordisabled) 
+                                    .HtmlAttributes(new { id="tel01", placeholder = "Insertar Teléfono", pattern = "\\d{9}", type = "tel", validationmessage = "Longitud mínima 9 enteros", style = "width:220px;margin-left: 4%;background-color:" + color }))
+                                </div>
+						    </div>
+
+							<div class="col-md-3">
+    							<div class="form-group">							
+								<label style = "margin-left: 4%;" for="fax">Fax</label>
+								@(Html.Kendo().TextBoxFor(model => model.Fax).Name("fax").Enable(ViewBag.Operadordisabled) 
+                                    .HtmlAttributes(new { id="fax01", placeholder = "Insertar Fax", pattern = "\\d{9}", type = "tel", validationmessage = "Longitud mínima 9 enteros", style = "margin-left: 4%;background-color:" + color}))
+								<span class="k-invalid-msg" data-for="for"></span>
+                                </div>
+						    </div>
+
+                            <div class="col-md-4">
+    							<div class="form-group"> 
+								<label style = "margin-left: 4%;" for="Cargo">Cargo</label>
+								@(Html.Kendo().TextBoxFor(model => model.Cargo).Name("Cargo").Enable(ViewBag.Operadordisabled) 
+                                    .HtmlAttributes(new { id="cargo01", placeholder = "Insertar Cargo", type = "text",style = "margin-left: 4%;background-color:" + color, Maxlength="50"   }))
+							    </div>
+						    </div>
+                       </div> 
+                       <div class="row">
+							<div class="col-sm-4">
+							    <div class="form-group">							
+								<label style = "margin-left: 4%;" for="email">Email</label>
+								@(Html.Kendo().TextBoxFor(model => model.Email).Name("email").Enable(ViewBag.Operadordisabled) 
+                                    .HtmlAttributes(new { id="email01", placeholder = "Insertar Email", type = "email", data_email_msg = "Formato del Email Incorrecto", style = "width:220px;margin-left: 4%;background-color:" + color, Maxlength= "100" }))
+							</div>
+						  </div>
+						</div>	
+							
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label style = "margin-left: 1%;" class="control-label">
+									Observaciones <span></span>
+								</label>
+                                <textarea name="Observaciones022" id="Observaciones022" cols="30" rows="10" style="margin: 0px; height: 140px; width: 710px;white-space: normal; text-align: justify;text-align-last: left;-moz-text-align-last: left; background-color:@color"  @Estado>@ViewBag.Observaciones</textarea>  
+										@*@(this.Html.Kendo().Editor()
+												.Name("editor02")
+												.HtmlAttributes(new { id = "Observaciones022", style = "height:150px", name = "Observaciones022" })
+												.Tools(tools => tools.Clear())
+												.Value((string)this.ViewBag.Observaciones)
+												.Resizable(true))*@
+									</div>
+								</div>
+							</div> 
+					
+                    <div class="row">
+							<div class="space12" style="margin-top: 2%; margin-left: 42%; display: block">
+								<div class="btn-group btn-group-sm">
+									<button class="btn btn-primary hidden-xs" type="submit">
+										Guardar
+									</button>
+									<a class="btn btn-default " href="javascript:VisualizarOrganismo()">
+										Volver
+									</a>
+								</div>
+							</div>
+                          </div>
+							<div class="status"></div>
+						
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(function () {
+		var validator = $("#_ContactoForm").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$("form").submit(function (event) {
+		    event.preventDefault();
+		    if (ValidarAllCombosOP("1"))
+		        $('input#ValidarAllCombosOP').val("1");
+		    else
+		        $('input#ValidarAllCombosOP').val("");
+			if (validator.validate()) {
+				status.removeClass("invalid").addClass("valid");
+				GuardarEditContacto();
+			} else {
+				status.removeClass("valid").addClass("invalid");
+			}
+		});
+	});
+</script>

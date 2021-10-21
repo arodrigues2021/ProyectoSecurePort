@@ -1,0 +1,308 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F1B133A4-2C59-4D13-AD7D-EBFAD3CBA88F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SecurePort.Entities</RootNamespace>
+    <AssemblyName>SecurePort.Entities</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\..\VIPS\CRM Grupo Vips\FrameworkGrupo-Refactoring\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20505.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Westwind.RazorHosting">
+      <HintPath>..\packages\Westwind.RazorHosting.1.01\lib\net40\Westwind.RazorHosting.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataContextConfigs\BienesTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\CiudadesTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Contactos_OrganismoTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Comunidades_AutonomasTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\CapitaniaTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\CentrosTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\AmenazasTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\ComitesTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\AuditoriasTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Comunica_CentroTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\ComunicacionesTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Detalle_EvaluacionTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Historico_EvaluacionTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Versiones_EvaluacionTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\EvaluacionesTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\MOV_Detalle_InstalacionTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\ProcedimientosTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\VinculosTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\GisisTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Det_PracticaTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Det_IncidenteTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Declara_MaritimaTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Det_NivelTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Mov_MantenimientosTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\NivelesTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\IncidentesTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\PracticasTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\OperadoresPuertoTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\FormacionesTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\OperadoresTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\IslasTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\MotivosTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\PaisesTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\ProvinciasTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\TrazasTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Mov_InstalacionTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\OrganismosTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Tipos_DocumentoTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Tipos_ServicioTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Documentos_UsuarioTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\Dependencia_UsuarioTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\GestionpermisosTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\PermisosTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\PerfilesPermisosTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\PerfilesGruposTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\PerfilesTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\GruposTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\InstalacionTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\PuertosTypeConfig.cs" />
+    <Compile Include="DataContextConfigs\UsuariosTypeConfig.cs" />
+    <Compile Include="Enums\Categoria.cs" />
+    <Compile Include="Enums\Acciones.cs" />
+    <Compile Include="Enums\GrupoAccion.cs" />
+    <Compile Include="Enums\Literales.cs" />
+    <Compile Include="Enums\Tipos_Servicio.cs" />
+    <Compile Include="Exceptions\InvalidOperationException.cs" />
+    <Compile Include="Exceptions\SecureportException.cs" />
+    <Compile Include="Exceptions\SecurePortExceptionDbEntity.cs" />
+    <Compile Include="Models\Amenazas\Amenazas.cs" />
+    <Compile Include="Models\Amenazas\BienPadreHijo.cs" />
+    <Compile Include="Models\Amenazas\AmenazasViewModel.cs" />
+    <Compile Include="Models\Auditorias\Auditorias.cs" />
+    <Compile Include="Models\Auditorias\AuditoriasViewModel.cs" />
+    <Compile Include="Models\Autonoma\Comunidades_Autonomas.cs" />
+    <Compile Include="Models\Autonoma\ListadoComunidadesAutonomas.cs" />
+    <Compile Include="Models\Bienes\BienesViewModel.cs" />
+    <Compile Include="Models\Bienes\BienesHijosViewModel.cs" />
+    <Compile Include="Models\Capitania\Capitanias.cs" />
+    <Compile Include="Models\Capitania\ListCapitanias.cs" />
+    <Compile Include="Models\Categoria\ListCategorias.cs" />
+    <Compile Include="Models\Centros\Centros.cs" />
+    <Compile Include="Models\Centros\CentrosViewModel.cs" />
+    <Compile Include="Models\Centros\Comunica_Centro.cs" />
+    <Compile Include="Models\Ciudades\CiudadesViewModel.cs" />
+    <Compile Include="Models\Ciudades\Islas.cs" />
+    <Compile Include="Models\Ciudades\ListadoCiudades.cs" />
+    <Compile Include="Models\Comites\Comites.cs" />
+    <Compile Include="Models\Comites\ComitesViewModel.cs" />
+    <Compile Include="Models\Comunicaciones\Comunicaciones.cs" />
+    <Compile Include="Models\Comunicaciones\ComunicacionesViewModel.cs" />
+    <Compile Include="Models\Contactos\ContactosViewModel.cs" />
+    <Compile Include="Models\DeclaraMaritima\DeclaraMaritimaViewModel.cs" />
+    <Compile Include="Models\DeclaraMaritima\DeclaraMaritima.cs" />
+    <Compile Include="Models\Documentos\Doc_Asoc.cs" />
+    <Compile Include="Models\Evaluaciones\Detalle_EvaluacionViewModel.cs" />
+    <Compile Include="Models\Evaluaciones\Detalle_Evaluacion.cs" />
+    <Compile Include="Models\Evaluaciones\Historico_Evaluacion.cs" />
+    <Compile Include="Models\Evaluaciones\Versiones_Evaluacion.cs" />
+    <Compile Include="Models\Evaluaciones\Evaluaciones.cs" />
+    <Compile Include="Models\Evaluaciones\EvaluacionesViewModel.cs" />
+    <Compile Include="Models\Formaciones\FormacionesViewModel.cs" />
+    <Compile Include="Models\Formaciones\Formaciones.cs" />
+    <Compile Include="Models\Gisis\GisisViewModel.cs" />
+    <Compile Include="Models\Gisis\Gisis.cs" />
+    <Compile Include="Models\Grupos\GruposViewModel.cs" />
+    <Compile Include="Models\Grupos\ListGrupos.cs" />
+    <Compile Include="Models\Incidentes\Det_Incidente.cs" />
+    <Compile Include="Models\Incidentes\Det_IncidenteViewModel.cs" />
+    <Compile Include="Models\Incidentes\IncidentesViewModel.cs" />
+    <Compile Include="Models\Incidentes\Incidentes.cs" />
+    <Compile Include="Models\Instalacion\ListAmenazasPadreHijos.cs" />
+    <Compile Include="Models\Instalacion\MOV_Detalle_InstalacionViewModel.cs" />
+    <Compile Include="Models\Instalacion\MOV_Detalle_Instalacion.cs" />
+    <Compile Include="Models\Instalacion\Det_NivelViewModel.cs" />
+    <Compile Include="Models\Instalacion\Det_Nivel.cs" />
+    <Compile Include="Models\Instalacion\OperadoresViewModel.cs" />
+    <Compile Include="Models\Instalacion\InstalacionViewModel.cs" />
+    <Compile Include="Models\Instalacion\ListClasificacion.cs" />
+    <Compile Include="Models\Instalacion\Operadores.cs" />
+    <Compile Include="Models\Instalacion\ListadoTipoInstalaciones.cs" />
+    <Compile Include="Models\Json\ComunicacionesJson.cs" />
+    <Compile Include="Models\Json\ContactoJson.cs" />
+    <Compile Include="Models\Json\ComunidadJson.cs" />
+    <Compile Include="Models\Json\CapitaniaJson.cs" />
+    <Compile Include="Models\Json\CentrosJson.cs" />
+    <Compile Include="Models\Json\AmenazasJson.cs" />
+    <Compile Include="Models\Json\ComitesJson.cs" />
+    <Compile Include="Models\Json\AuditoriasJson.cs" />
+    <Compile Include="Models\Json\EvaluacionesJson.cs" />
+    <Compile Include="Models\Json\CorreoDatosJson.cs" />
+    <Compile Include="Models\Json\ProcedimientosJson.cs" />
+    <Compile Include="Models\Json\GisisJson.cs" />
+    <Compile Include="Models\Json\DeclaraMaritimaJson.cs" />
+    <Compile Include="Models\Json\MantenimientoJson.cs" />
+    <Compile Include="Models\Json\Comunica_CentroJson.cs" />
+    <Compile Include="Models\Json\NivelesJson.cs" />
+    <Compile Include="Models\Json\IncidentesJson.cs" />
+    <Compile Include="Models\Json\OperadoresPuertoJson.cs" />
+    <Compile Include="Models\Json\FormacionesJson.cs" />
+    <Compile Include="Models\Json\OperadoresJson.cs" />
+    <Compile Include="Models\Json\InstalacionJson.cs" />
+    <Compile Include="Models\Json\PracticasJson.cs" />
+    <Compile Include="Models\Json\PuertosJson.cs" />
+    <Compile Include="Models\Json\MotivosJson.cs" />
+    <Compile Include="Models\Json\ProvinciasJson.cs" />
+    <Compile Include="Models\Json\PaisJson.cs" />
+    <Compile Include="Models\Json\TipoInstalacionJson.cs" />
+    <Compile Include="Models\Mantenimientos\MantenimientoViewModel.cs" />
+    <Compile Include="Models\Mantenimientos\Mov_Mantenimientos.cs" />
+    <Compile Include="Models\Organismos\OrganismoViewModel.cs" />
+    <Compile Include="Models\Paises\ListPaises.cs" />
+    <Compile Include="Models\Paises\ListadoPaises.cs" />
+    <Compile Include="Models\Paises\Paises.cs" />
+    <Compile Include="Models\Motivos\Motivos.cs" />
+    <Compile Include="Models\Motivos\MotivosViewModel.cs" />
+    <Compile Include="Models\Perfiles\PerfilesViewModel.cs" />
+    <Compile Include="Models\Practicas\Det_Practica.cs" />
+    <Compile Include="Models\Practicas\Det_PracticaViewModel.cs" />
+    <Compile Include="Models\Practicas\PracticasViewModel.cs" />
+    <Compile Include="Models\Practicas\Practicas.cs" />
+    <Compile Include="Models\Niveles\Niveles.cs" />
+    <Compile Include="Models\Niveles\NivelesViewModel.cs" />
+    <Compile Include="Models\Procedimientos\Procedimientos.cs" />
+    <Compile Include="Models\Procedimientos\ProcedimientosViewModel.cs" />
+    <Compile Include="Models\Provincias\ListadoProvincias.cs" />
+    <Compile Include="Models\Puertos\OperadorePuerto.cs" />
+    <Compile Include="Models\Puertos\OperadoresPuertoViewModel.cs" />
+    <Compile Include="Models\Usuarios\DependenciasUsuario.cs" />
+    <Compile Include="Models\Usuarios\OrganismosAsociadosViewModel.cs" />
+    <Compile Include="Models\Usuarios\OrganismosViewModel.cs" />
+    <Compile Include="Models\Usuarios\InstalacionesAsociadosViewModel.cs" />
+    <Compile Include="Models\Usuarios\InstalacionesViewModel.cs" />
+    <Compile Include="Models\Perfiles\AltaPerfilesViewModel.cs" />
+    <Compile Include="Models\Perfiles\PermisosOpcionViewModel.cs" />
+    <Compile Include="Models\Perfiles\GestionpermisosViewModel.cs" />
+    <Compile Include="Models\Usuarios\PuertosViewModel.cs" />
+    <Compile Include="Models\Bienes\Bienes.cs" />
+    <Compile Include="Models\Categoria\Categoria.cs" />
+    <Compile Include="Models\Ciudades\CiudadesProvincias.cs" />
+    <Compile Include="Models\Ciudades\Ciudades.cs" />
+    <Compile Include="Models\Contactos\Contactos.cs" />
+    <Compile Include="Models\Contactos\ListadoContactos.cs" />
+    <Compile Include="Models\Usuarios\PuertosAsociadosViewModel.cs" />
+    <Compile Include="Models\Usuarios\AccionesViewModel.cs" />
+    <Compile Include="Models\Usuarios\PermisosViewModel.cs" />
+    <Compile Include="Models\Instalacion\Mov_Instalacion.cs" />
+    <Compile Include="Models\Instalacion\Tipos_Instalacion.cs" />
+    <Compile Include="Models\Json\CambiarLoginJson.cs" />
+    <Compile Include="Models\Json\CorreoJson.cs" />
+    <Compile Include="Models\Json\DocumentoJson.cs" />
+    <Compile Include="Models\Json\OrganismoJson.cs" />
+    <Compile Include="Models\Json\UploadJson.cs" />
+    <Compile Include="Models\Json\UsuariosEditJson.cs" />
+    <Compile Include="Models\Organismos\ListadoOrganismo.cs" />
+    <Compile Include="Models\Organismos\Organismos.cs" />
+    <Compile Include="Models\Provincias\Provincias.cs" />
+    <Compile Include="Models\Organismos\TipoOrganismo.cs" />
+    <Compile Include="Models\Perfiles\AltaAcciones.cs" />
+    <Compile Include="Models\Perfiles\AltaPerfiles.cs" />
+    <Compile Include="Models\Perfiles\PerfilesBuscador.cs" />
+    <Compile Include="Models\Perfiles\Gestionpermisos.cs" />
+    <Compile Include="Models\Perfiles\ListPermisos.cs" />
+    <Compile Include="Models\Perfiles\ListGruposPerfilesPermisos.cs" />
+    <Compile Include="Models\Tipos\Tipos_Documento.cs" />
+    <Compile Include="Models\Tipos\Tipos_Servicio.cs" />
+    <Compile Include="Models\Trazas\Trazas.cs" />
+    <Compile Include="Models\Usuarios\UsuarioCorreo.cs" />
+    <Compile Include="Models\Usuarios\Documentos_Usuario.cs" />
+    <Compile Include="Models\Usuarios\Dependencia_Usuario.cs" />
+    <Compile Include="Models\Usuarios\Doc_Usuario_Asoc.cs" />
+    <Compile Include="Models\Usuarios\Documento.cs" />
+    <Compile Include="Models\Usuarios\UsuarioPassword.cs" />
+    <Compile Include="Models\Usuarios\UsuariosCategoriasGrupos.cs" />
+    <Compile Include="Models\Usuarios\UsuarioFrontal.cs" />
+    <Compile Include="Models\Json\PerfilesJson.cs" />
+    <Compile Include="Models\Perfiles\Permisos.cs" />
+    <Compile Include="Models\Perfiles\PerfilesPermisos.cs" />
+    <Compile Include="Models\Perfiles\PerfilesGrupos.cs" />
+    <Compile Include="Models\Perfiles\Perfiles.cs" />
+    <Compile Include="Models\Grupos\GruposPerfiles.cs" />
+    <Compile Include="Models\Grupos\Grupos.cs" />
+    <Compile Include="Models\Json\BienesJson.cs" />
+    <Compile Include="Models\ErrorUpload.cs" />
+    <Compile Include="Models\Json\GruposJson.cs" />
+    <Compile Include="Models\Json\LoginJson.cs" />
+    <Compile Include="Models\Json\UsuariosJson.cs" />
+    <Compile Include="Models\Puertos\Puertos.cs" />
+    <Compile Include="Models\Usuarios\UsuarioLogeado.cs" />
+    <Compile Include="Models\Usuarios\Usuarios.cs" />
+    <Compile Include="Models\Validacion\ValidateDatabaseInitializer.cs" />
+    <Compile Include="Models\Validacion\MaxNumeroAtributo.cs" />
+    <Compile Include="Models\Vinculos\Vinculos.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecurePortContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="readme_exporter.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Habilite la restauración del paquete NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

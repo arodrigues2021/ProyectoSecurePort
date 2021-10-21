@@ -1,0 +1,176 @@
+﻿@using DocumentFormat.OpenXml.Wordprocessing
+@using SecurePort.Entities.Models
+@{
+	string valor = string.Empty;
+	string color = " #eeeeee;color: black";
+}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width" />
+	</head>
+	<body>
+		<div class="row">
+			<div class="col-md-10">
+				<!-- start: FORM VALIDATION 1 PANEL -->
+                <input type="text" id="ValidarAllCombos" name="ValidarAllCombos" style="display: none">
+				<div class="panel-body">
+					<hr>
+					<form action="#" role="form" id="form">
+						<div class="row">
+							<div class="col-md-12">
+								<div id="Error02" class="errorHandler alert alert-danger no-display ">
+									<i class="icon-remove-sign"></i> Usted tiene algunos errores. Por favor, consulte más abajo.
+								</div>
+								<div id="Error01" class="successHandler alert alert-success no-display">
+									<i class="icon-ok"></i> Su validación es exitosa!
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div id="email01" class="form-group">
+									<label class="control-label">
+										Organismo<span class="symbol required"></span>
+									</label>
+									@(this.Html.Kendo().TextBox().Name("Nombre")
+										  .HtmlAttributes(new { id="NombreOrganismo01", name="NombreOrganismo01", placeholder = "Inserte Nombre del Organismo", required = "required", @class="form-control",type="text",MaxLength="75" }))
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									<label class="control-label">
+										Tipo <span class="symbol required"></span>
+									</label>
+									@(this.Html.Kendo().ComboBox().Name("Tipo")
+										.Placeholder("Selecciona Tipo")
+										.DataTextField("Text")
+										.DataValueField("Value")
+										.Filter(FilterType.Contains)
+										.BindTo((SelectList)this.ViewData["Tipo"])
+										.Value(valor)
+										.Suggest(true)
+										.HtmlAttributes(new { style = "width:100%;", required = "required",id = "Tipo01" ,name="Tipo01", onChange = "ValidacionCombos(this,'errorTipo')"}))
+                                        <span id="errorTipo" style="display: none; color: #b94a48;">Este campo es inválido.</span>   
+								</div>
+							</div>
+						</div>
+					<div class="row">     
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">
+									Dirección <span class="symbol required"></span>
+								</label>
+								@(this.Html.Kendo().TextBox().Name("Direccion")
+									  .HtmlAttributes(new { id="DireccionOrganismo01", name="DireccionOrganismo01", placeholder = "Inserte Nombre del Organismo", required = "required", @class="form-control",type="text",MaxLength="100" }))
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group">
+								<label class="control-label">
+									Provincia <span class="symbol required"></span>
+								</label>
+								@(this.Html.Kendo()
+									  .ComboBox().Name("Provincia")
+									  .Placeholder("Selecciona Provincia")
+									  .DataTextField("Text").DataValueField("Value")
+									  .Filter(FilterType.Contains)
+									  .BindTo((SelectList)this.ViewData["Provincias"])
+									  .Value(valor).Suggest(true)
+									  .HtmlAttributes(new { style = "width:100%;", id = "Provincias01", required = "required",onChange = "CambiarProvincia()" }))
+                                      <span id="errorProvincia" style="display: none; color: #b94a48;">Este campo es inválido.</span>   
+							</div>
+						</div>
+						<div id="ComboCiudad">
+							<div class="col-sm-2">
+								<div class="form-group">
+									<label class="control-label">
+										Municipio <span class="symbol required"></span>
+									</label>
+									@(this.Html.Kendo()
+										  .ComboBox().Name("Ciudad")
+										  .Placeholder("Selecciona Municipio")
+										  .DataTextField("Text")
+										  .DataValueField("Value")
+										  .Filter(FilterType.Contains)
+										  .BindTo((SelectList)this.ViewData["Ciudades"])
+										  .Value(valor)
+										  .Suggest(true)
+										  .HtmlAttributes(new { style = "width:100%;", required = "required", id = "Ciudad01", onChange = "ValidacionCombos(this,'errorCiudad')" }))
+                                          <span id="errorCiudad" style="display: none; color: #b94a48;">Este campo es inválido.</span>   
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label class="control-label">
+									Código Postal <span class="symbol required"></span>
+								</label>
+								@(this.Html.Kendo()
+									  .TextBox().Name("Postal")
+									  .HtmlAttributes(new { id="codPostal01", name="codPostal01", required = "required", placeholder = "Inserte Código Postal", @class="form-control",type="text" }))
+
+							</div>
+						</div>
+					</div>
+						<div class="row">
+							<div id="ComboComunidad">
+								<div class="col-md-4">
+									<div class="form-group">
+										<label class="control-label">Comunidad Autónoma</label> 
+											@(this.Html.Kendo().TextBox().Name("comunidad").Enable(false)
+									  .HtmlAttributes(new { id="Comunidad01", name="Comunidad01", style = "background-color:#eeeeee;", @class="form-control", value=@ViewBag.Comunidad}))
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="control-label">
+										Observaciones <span></span>
+									</label>
+									@(this.Html.Kendo()
+										.Editor()
+										.Name("editor")
+										.HtmlAttributes(new { style = "height:150px",id="Observaciones01",name="Observaciones01" })
+										.Tools(tools => tools.Clear())
+										.Resizable(false))
+								</div>
+							</div>
+						</div>    
+						<div class="row">
+							<div class="col-md-12">
+								<p></p>
+							</div>
+							<div class="col-md-12">
+								<div>
+									<span class="symbol required"></span>Campos requeridos
+									<hr>
+								</div>
+							</div>
+						</div>
+						@*Opción de Create*@
+						<div class="row">
+							<div class="col-md-8">
+								<p></p>
+							</div>
+							<div id="Opcion02" class="space12" style="margin-left: 50%; display: block">
+								<div class="btn-group btn-group-sm">
+									<button id="RegisterOrganismo" class="btn btn-primary hidden-xs" type="submit">
+										Guardar</button>
+									<a class="btn btn-default " href="@(this.Url.Action("ListadoOrganismo","Organismo"))">
+										Volver </a>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="~/Scripts/AppSecureport/appOrganismo.js"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		FormValidator.init();
+	});
+</script>

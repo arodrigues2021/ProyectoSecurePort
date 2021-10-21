@@ -1,0 +1,49 @@
+﻿@using SecurePort.Entities.Models
+@model Usuarios
+@{
+	this.Layout = null;
+	string valorCategoria = this.Model.categoria.ToString();
+}
+<form action="#" role="form" id="form">
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				<label class="control-label">
+					Login 
+				</label>
+				@(this.Html.Kendo().TextBoxFor(model => model.login).HtmlAttributes(new { itemid = "login", id = "login01", name = "login01", @class = "form-control", disabled = "disabled" }))
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label class="control-label">
+					Nombre 
+				</label>
+				@(this.Html.Kendo().TextBoxFor(model => model.nombre).HtmlAttributes(new { itemid = "Nombre", id = "firstname01", name = "firstname01", @class = "form-control", disabled = "disabled" }))
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label class="control-label">
+					Apellidos 
+				</label>
+				@(this.Html.Kendo().TextBoxFor(model => model.apellidos).HtmlAttributes(new { itemid = "Apellidos", id = "lastname01", name = "lastname01", @class = "form-control", disabled = "disabled" }))
+			</div>
+		</div>
+	</div> 
+	<div class="row">     
+		<div class="col-md-3">
+			<div class="form-group">
+				<label class="control-label">
+					Categoria 
+				</label>
+				@(this.Html.Kendo().ComboBox().Name("Categoria01").Placeholder("Selecciona Categoria").DataTextField("Text").DataValueField("Value").Filter(FilterType.Contains).BindTo((IEnumerable<ListCategorias>)this.ViewData["Categoria"]).Value(valorCategoria).Suggest(true).HtmlAttributes(new { style = "width:100%;background-color: #eeeeee;color: black", id = "Categoria01", disabled = "disabled" }))
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<p></p>
+		</div>
+	</div>
+</form>

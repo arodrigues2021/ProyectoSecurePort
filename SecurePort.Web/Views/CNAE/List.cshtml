@@ -1,0 +1,53 @@
+﻿<div class="panel-body buttons-widget">
+	<p>
+	    <a href="#">
+	        <button type="button" data-original-title="Exportar Excel" data-placement="top" class="btn tooltips btn-primary" data-style="zoom-in">
+	            <span class="ladda-label"> <i class='icon-file'></i>Excel </span>
+	            <span class="ladda-spinner"></span>
+	            <span class="ladda-progress" style="width: 0px;"></span>
+	            <span class="ladda-spinner"></span> 
+	        </button>
+	    </a>
+	    <a href="javascript:void(0)" onclick="AltaCNAE()">
+			<button type="button" data-original-title="Nueva Alta de CNAE" data-placement="top" class="btn tooltips btn-primary" data-style="zoom-out">
+				<span class="ladda-label"> <i class='icon-plus'></i>Añadir</span>
+				<span class="ladda-spinner"></span>
+				<span class="ladda-progress" style="width: 0px;"></span>
+				<span class="ladda-spinner"></span></button>
+		</a>
+	</p>
+</div>
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="@(this.Url.Content("~/Scripts/FiltrarCNAE.js"))" type="text/javascript"></script>
+	</head>
+	<body>
+		<div id="container">
+			<div id="demo">
+				<div class="row">
+				</div>
+				<div class="row">
+				</div>
+				<div class="row">
+				</div>
+				<td class="panel-body">
+				<table class="table table-hover" id="sample_1" data-url="@(this.Url.Action("Buscador", "Cnae"))">
+					<thead>
+						<tr>
+							<th class="hidden-xs">Código</th>
+							<th class="hidden-xs">Descripción</th>
+							<th></th>
+							<th></th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>
+
+

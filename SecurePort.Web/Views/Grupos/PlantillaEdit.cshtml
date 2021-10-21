@@ -1,0 +1,142 @@
+﻿@using System.Web.Optimization
+@using SecurePort.Entities.Enums
+@model SecurePort.Entities.Models.Grupos
+@{
+	this.Layout = null;
+	string publico = this.Model.Id_publico.ToString() == null ? "2" : this.Model.Id_publico.ToString();
+	string valor = Model.es_activo==true? "1": "2";
+   
+}
+<div class="row">
+    <div class="col-lg-12">
+        <!-- start: FORM VALIDATION 1 PANEL -->
+        <input type="text" id="ValidarAllCombos" name="ValidarAllCombos" style="display: none">
+        <input type="text" id="URL" name="URL" style="display: none">
+        <input type="text" id="URL1" name="URL1" style="display: none">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label">
+                            Grupo <span class="symbol required"></span>
+                        </label>
+                        @(Html.Kendo().TextBoxFor(model => model.Nombre).HtmlAttributes(
+                              new { id = "IdGrupoNombre01", name = "IdGrupoNombre01", @class = "form-control", style = "text-transform: uppercase;", Maxlength ="75" }))
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label">
+                            Descripción 
+                        </label>
+                        @(this.Html.Kendo().TextBoxFor(model => model.descripcion).HtmlAttributes(
+                              new { id = "IdGrupoDescription01", name = "IdGrupoDescription01", @class = "form-control", Maxlength ="2000" }))
+                    </div>
+                </div>
+                
+                <div class="col-sm-2">
+                   <div class="form-group">     
+	                    <label cfor="Publico" class="required">
+                            Es Público 
+	                    </label>
+                          @(this.Html.Kendo().ComboBox().Name("GrupoPublico")
+										      .DataTextField("Text").DataValueField("Value")
+										      .Filter(FilterType.Contains)
+                                              .Placeholder("Selecciona ")
+										      .BindTo(new List<SelectListItem>() {
+                                                 new SelectListItem() {
+												    Text = TipoPublico.PRI.ToDescription(), Value = "2"   
+											      },  
+											      new SelectListItem() {                                                    
+												    Text = TipoPublico.PUB.ToDescription(), Value = "1"   
+											      },
+                                                  new SelectListItem() {                                                    
+												    Text = TipoPublico.ORG.ToDescription(), Value = "3"   
+											      }
+										      })
+										      .Value(publico)
+										      .Suggest(true)
+										      .HtmlAttributes(new {style = "width:100%;",  id = "Publico01", name = "Publico01", required = "required", validationmessage = "Este campo es requerido", onChange = "ValidacionCombos(this,'errorGrupo')" }))	
+                                              <span id="errorGrupo" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+                        </div>
+                </div> 
+                <div class="col-sm-1">
+				   <div class="form-group">     
+						<label cfor="Activo" class="required">
+							Activo
+						</label>
+						 @(this.Html.Kendo().ComboBox().Name("Activo")
+										  .DataTextField("Text").DataValueField("Value")
+										  .Filter(FilterType.Contains)
+										  .BindTo(new List<SelectListItem>() {
+																				 new SelectListItem() {
+																										  Text = "Si", Value = "1"   
+																									  }, 
+																				 new SelectListItem() {
+																										  Text = "No", Value = "2"   
+																									  }
+																			 })
+										  .Value(valor)
+										  .Suggest(true)
+										  .HtmlAttributes(new { style = "width:100%;", required = "required", validationmessage = "Este campo es requerido", id = "Activo01", name = "Activo01", onChange = "ValidacionCombos(this,'errorActivo')"  }))
+                                          <span id="errorActivo" style="display: none; color: #b94a48;">Este campo es inválido.</span>  
+					 </div>
+				  </div> 
+				  
+			 </div>
+			<div class="row">
+				<div class="col-md-12">
+					<div>
+						<span class="symbol required"></span>Campos requeridos
+						<hr>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<i class="clip-checkbox"></i>
+							Perfiles No Asignados
+						</div>
+						<div class="panel-body" style="height: 530px;width: 146%">
+							<div id="ListPerfilesRefrescar">
+								@(this.Html.Partial("~/Views/Grupos/Seleccionar.cshtml"))
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2">
+					@(this.Html.Kendo().Button().Name("Asignar")
+						  .HtmlAttributes(new { type = "button",title="Asignar Acciones",@class="clip-chevron-right",style="font-size: 30px;margin-top: 80%;margin-left: 40%;margin-bottom: 15%;"})
+						  .Events(ev => ev.Click("onClickGrupos")))
+					@(this.Html.Kendo().Button().Name("Desasignar")
+						  .HtmlAttributes(new { type = "button",title="Desasignar Acciones",@class="clip-chevron-left",style="font-size: 30px;margin-left: 40%;margin-top: 22px;" })
+						  .Events(ev => ev.Click("onClickGruposQuitar")))
+				</div>
+				<div class="col-md-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<i class="clip-checkbox"></i>
+							Perfiles Asignados
+						</div>
+						<div class="panel-body" style="height: 530px;width: 146%">
+							<div id="ListPerfilesDisponible">
+								@(this.Html.Partial("~/Views/Grupos/ListPerfiles.cshtml"))
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="space12" style="margin-left: 40%;">
+		<div class="btn-group btn-group-sm">
+			@(this.Html.Kendo().Button().Name("ButtonDeshacerGrupo").HtmlAttributes(new { type = "button", @class = "btn btn-danger" }).Content("Deshacer").Events(ev => ev.Click("onClick")))
+		
+			@(this.Html.Kendo().Button().Name("ButtonEditGrupo").HtmlAttributes(new { type = "button", @class = "btn btn-primary hidden-xs" }).Content("Guardar").Events(ev => ev.Click("onClick")))
+
+			@(this.Html.Kendo().Button().Name("ButtonVolverGrupo").HtmlAttributes(new { type = "button", @class = "btn btn-default" }).Content("Volver").Events(ev => ev.Click("onClick")))
+		</div>
+	</div>
+</div>

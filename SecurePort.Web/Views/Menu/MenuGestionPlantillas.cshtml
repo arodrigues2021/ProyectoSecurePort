@@ -1,0 +1,20 @@
+﻿@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+<a href="javascript:void(0)"><i class="icon-list-alt"></i>
+    <span class="title"> Gestión de Plantillas</span><i class="icon-arrow"></i>
+    <span class="selected"></span>
+</a>
+<ul id="IdSubMenuDoc" class="sub-menu">
+     @foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListGruposPerfilesPermisos)
+     {
+         if(Permisos.NombrePermiso == Gestion_Plantilla.LISTA_PLANTILLA.ToDescription())
+          {
+              <li id="Id039">
+                  <a href="@(this.Url.Action("ListadoPlantillas","Vinculos"))">
+                      Plantillas</a>
+              </li>
+          }
+     }
+</ul>
+

@@ -1,0 +1,84 @@
+﻿<div class="panel-body">
+    <input type="text" id="IdOperador" name="IdValor" style="display: none">
+    <input type="text" id="NombreOperador" name="NombreOperador" style="display: none">
+    <div class="row">
+        <div class="col-md-6">
+            <div id="Asignar-Operadores">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="clip-checkbox"></i>
+                                <strong>Contactos Instalación</strong>
+                            </div>
+                            <div class="panel-body" style="height: 200px">
+                                <div id="OperadoresRefrescar">
+                                    @(this.Html.Action("OperadoresEdit","Operadores",new { ToolBar = this.ViewBag.ToolOperador }))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="Asignar-Documentos">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="clip-checkbox"></i>
+                                Documentos asociados
+                            </div>
+                            <div class="panel-body" style="height: 200px">
+                                <div id="DocumentosRefrescar">
+                                    @(this.Html.Action("AsociadosEdit","Operadores",new { ToolBar = this.ViewBag.ToolOperador }))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div Style=@(this.ViewBag.Combo)>
+            <div class="row">
+                <div class="col-md-8">
+                    <p></p>
+                </div>
+                <div id="Opcion02" class="space12" style="margin-left: 50%; display: block">
+                    <div class="btn-group btn-group-sm">
+                        <button id="RegisterInstalacion" class="btn btn-primary hidden-xs" type="submit">
+                            Guardar</button>
+                        <a class="btn btn-default " href="@(this.Url.Action("ListadoInstalaciones","Instalaciones"))">
+                            Volver </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div Style=@(this.ViewBag.Texto)>
+            <div class="col-md-8">
+                <p></p>
+            </div>
+            <div id="Opcion03" class="space12" style="margin-left: 50%; display: block">
+                <div class="btn-group btn-group-sm">
+                    <a class="btn btn-default " href="@(this.Url.Action("ListadoInstalaciones","Instalaciones"))">
+                        Volver </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalUpload" class="modal fade in" data-width="800" tabindex="-1" aria-hidden="false" style="width: 800px; margin-left: -299px; margin-top: -168px; display: none; height: 45%;">
+        <div class="modal-body">
+            <div class="apply_info">
+                <div id="AsignarDocumentos"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    
+</script>
+

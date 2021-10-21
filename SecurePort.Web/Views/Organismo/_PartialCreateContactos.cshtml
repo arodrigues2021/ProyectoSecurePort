@@ -1,0 +1,203 @@
+﻿@{
+    string valor = "1";
+}
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default" style="margin-top: -2%; margin-left: -2%; margin-right: -2%;" >
+			<div class="panel-heading" >
+				<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+				<strong>Alta Contacto</strong>
+			</div>
+			  <div class="col-md-12">
+                 <input type="text" id="ValidarAllCombosOP" name="ValidarAllCombosOP" style="display: none">   
+				 <div class="panel-body">
+                    <hr>
+					<form id="ContactoForm">
+					
+                        <div class="row">
+							<div id="ComboUsuario">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+		        						<label for="Nombre" style = "margin-left: 4%;" class="required">
+                                        Nombre <span class="symbol required"></span>
+                 						</label>
+				        				@(Html.Kendo().TextBox().Name("Nombre")
+						    				.HtmlAttributes(new { id="Nombre01",placeholder = "Insertar Nombre Contacto", required = "required", type = "text",validationmessage = "Campo requerido", style = "width:220px;margin-left: 4%;", Maxlength= "75" }))
+							        </div>
+							    </div>
+						    </div>
+
+							<div id="ComboSuplente">
+							    <div class="col-sm-2">
+								    <div class="form-group">
+							    	    <label for="Es-Responsable" style = "margin-left: 4%;" class="required">
+                                        Es-Responsable <span class="symbol required"></span
+							    	    </label>
+										@(Html.Kendo().ComboBox()
+									      .Name("Es-Responsable")
+									      .Placeholder("Es-Responsable")
+									      .BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "Si", Value = "1" }, new SelectListItem() { Text = "No", Value = "0" } })
+									      .SelectedIndex(0)
+									      .Suggest(true)
+									      .Value(valor)
+									      .HtmlAttributes(new { id="es-responsable01", required = "required", validationmessage = "Campo requerido", style = "margin-left: 4%;", onChange = "ValidacionCombos(this,'errorResponsable')" }))
+                                          <span id="errorResponsable" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+							        </div>
+								</div>
+							</div>
+                       </div>
+                        <div class="row">
+							<div class="col-sm-4">
+    							<div class="form-group">
+								    <label style = "margin-left: 4%;" for="tel" >Teléfono</label>
+								    @(Html.Kendo().TextBox().Name("tel").HtmlAttributes(new { id="tel01", placeholder = "Insertar Teléfono", pattern = "\\d{9}", type = "tel", validationmessage = "Longitud mínima 9 enteros", style = "width:220px;margin-left: 4%;" }))
+	                            </div>
+						    </div>
+
+							<div class="col-md-3">
+    							<div class="form-group">
+								    <label style = "margin-left: 4%;" for="fax">Fax</label>
+								    @(Html.Kendo().TextBox().Name("fax").HtmlAttributes(new { id="fax01", placeholder = "Insertar Fax", pattern = "\\d{9}", type = "tel", validationmessage = "Longitud mínima 9 enteros", style = "margin-left: 4%;" }))
+								    <span class="k-invalid-msg" data-for="for"></span>
+							   </div>
+						    </div>
+
+                            <div class="col-md-4">
+    							<div class="form-group">
+								    <label style = "margin-left: 4%;" for="Cargo" >Cargo</label>
+								    @(Html.Kendo().TextBox().Name("Cargo").HtmlAttributes(new { id="cargo01", placeholder = "Insertar Cargo", type = "text",style = "margin-left: 4%;", Maxlength="50" }))
+							    </div>
+						    </div>
+
+                        </div>
+                        <div class="row">
+							<div class="col-sm-4">
+							    <div class="form-group">
+								    <label class="control-label" style="margin-left: 4%;">
+                                       Email  <span></span>
+    							    </label>
+								    @(Html.Kendo().TextBox().Name("email")
+                                    .HtmlAttributes(new { id="email01", placeholder = "Insertar Email", type = "email", data_email_msg = "Formato del Email Incorrecto", style = "width:220px;margin-left: 4%;", Maxlength= "100" }))
+							   </div>
+						    </div>
+						</div>	
+						<div class="row">
+
+						   <div class="col-md-12">
+						      <div class="form-group">
+						         <label style = "margin-left: 1%;" class="control-label">
+						             Observaciones <span></span>
+						          </label>
+                                  <textarea name="Observaciones011" id="Observaciones011" cols="30" rows="10" style="margin: 0px; height: 140px; width: 710px;white-space: normal; text-align: justify;text-align-last: left;-moz-text-align-last: left;">@ViewBag.Observacion</textarea>  
+
+						        @*  @(this.Html.Kendo().Editor().Name("editor01")
+                                    .HtmlAttributes(new { id = "Observaciones011", style = "height:150px", name = "Observaciones011" })
+                                    .Tools(tools => tools.Clear()).Resizable(true))
+						      </div>*@
+						   </div>
+						</div>
+                        <div class="row">
+					        <div class="col-md-12">
+								<p></p>
+							</div> 
+                        </div> 
+
+                        <div class="row">
+							<div class="space12" style="margin-top: 2%; margin-left: 42%; display: block">
+								<div class="btn-group btn-group-sm">
+									<button class="btn btn-primary hidden-xs" type="submit">
+										Guardar
+									</button>
+									<a class="btn btn-default " href="javascript:VisualizarOrganismo()">
+										Volver
+									</a>
+								</div>
+							</div>
+                          </div>  
+							<div class="status">
+							</div>
+						
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(function () {
+		var validator = $("#ContactoForm").kendoValidator().data("kendoValidator");
+		var status = $(".status");
+		$("form").submit(function (event) {
+		    event.preventDefault();
+		    if (ValidarAllCombosOP("0"))
+		        $('input#ValidarAllCombosOP').val("1");
+		    else
+		        $('input#ValidarAllCombosOP').val("");
+
+			if (validator.validate()) {
+			    status.removeClass("invalid").addClass("valid");
+			    AltaContacto();
+			} else {
+				status.removeClass("valid").addClass("invalid");
+			}
+		});
+	});
+</script>
+<style>
+	
+	/*#fieldlist {
+		margin: 0;
+		padding: 0;
+	}
+
+	#fieldlist li {
+		list-style: none;
+		padding-bottom: .7em;
+		text-align: left;
+	}
+
+	#fieldlist label {
+		display: block;
+		padding-bottom: .3em;
+		font-weight: bold;
+		font-size: 12px;
+		color: #444;
+	}
+
+	#fieldlist li.status {
+		text-align: center;
+	}
+
+	#fieldlist li .k-widget:not(.k-tooltip),
+	#fieldlist li .k-textbox {
+		margin: 0 5px 5px 0;
+	}
+
+	.confirm {
+		padding-top: 1em;
+	}
+
+	.valid {
+		color: green;
+	}
+
+	.invalid {
+		color: red;
+	}
+
+	span.k-widget.k-tooltip-validation {
+		display: inline-block;
+		width: 160px;
+		text-align: left;
+		border: 0;
+		padding: 0;
+		margin: 0;
+		background: none;
+		color: red;
+	}
+
+	.k-tooltip-validation .k-warning {
+		display: none;
+	}*/
+
+</style>

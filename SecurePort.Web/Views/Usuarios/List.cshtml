@@ -1,0 +1,212 @@
+﻿@using SecurePort.Entities.Models
+@model UsuarioFrontal
+
+<div class="panel-body buttons-widget" >
+
+	@(this.Html.Kendo().ToolBar().Name("ToolBar").HtmlAttributes(new { style = "width: 65%;border: 0;background: rgba(0, 0, 255, 0);" }).Items(items =>
+	  {
+		  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" })
+			  .Hidden(this.Model.permisosViewModel.CON_ALTA_USU).Id("toggle1");
+		  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" })
+			  .Hidden(this.Model.permisosViewModel.CON_MODIF_USU).Id("toggle2");
+		  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" })
+			  .Hidden(this.Model.permisosViewModel.CON_BORRA_USU).Id("toggle4");
+		  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" })
+			  .Hidden(this.Model.permisosViewModel.CON_CONSULTA_USU).Id("toggle3");
+	  }).Events(e => e.Toggle("onToggle")).Resizable(false)
+	 )
+	
+</div>
+<div class="col-md-12">
+	<div>
+		<span></span>
+		<hr style="margin-top: 0%;">
+	</div>
+	<div class="form-group">
+		<label class="control-label">
+			Acciones:
+		</label>
+		@(this.Html.Kendo().DropDownList().Name("acciones").DataTextField("Name")
+				.DataValueField("Id")
+				.AutoBind(false)
+				.Events(e => e.Change("accionesChange"))
+				.HtmlAttributes(new { style = "width: 200px;text-align: center;" })
+				.DataSource(ds =>
+				{
+				   ds.Read("Acciones","Usuarios");
+				})
+		) 
+	</div>
+</div>
+<script>
+	function onShow(e) {
+		}
+
+	function onHide(e) {
+		}
+
+	$(document).ready(function() {
+		$("#toggle1").kendoTooltip({
+			content: "Alta Usuario",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle2").kendoTooltip({
+			content: "Editar Usuario",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle3").kendoTooltip({
+			content: "Visualizar Usuario",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle4").kendoTooltip({
+			content: "Borrar Usuario",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		
+	});
+
+	function onToggle(e) {
+		if (e.id == "toggle1") {
+			//ALTA USUARIO
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Usuarios/create',
+				success: function(data) {
+					if (data) {
+						hideLoading();
+						$('#MostrarMensaje').html('Alta de Usuarios');
+						$('#ListUsers').html(data);
+						$('#Edit-page').html('');
+
+					}
+				}
+			});
+			;
+		} else if (e.id == "toggle2") {
+			//EDITAR USUARIO
+			if ($('input#IdUsuario').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				showLoading();
+				$.ajax({
+					type: "POST",
+					url: '/Usuarios/Edit',
+					data: { id: $('input#IdUsuario').val() },
+					success: function(data) {
+						if (data) {
+							hideLoading();
+							$('#MostrarMensaje').html('Modificar Usuarios');
+							$('#ListUsers').html(data);
+							$('#Edit-page').html('');
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle3") {
+			//VISUALIZAR USUARIO
+			if ($('input#IdUsuario').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				showLoading();
+				$.ajax({
+					type: "POST",
+					url: '/Usuarios/Visualizar',
+					data: { id: $('input#IdUsuario').val() },
+					success: function(data) {
+						if (data) {
+							hideLoading();
+							$('#MostrarMensaje').html('Visualizar Usuario');
+							$('#myModalUpload').modal('hide');
+							$('#ListUsers').html(data);
+							$('#Edit-page').html('');
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle4") {
+			//BORRAR USUARIO
+			showLoading();
+			if ($('input#IdUsuario').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				alert("¿Esta Seguro de Borrar el Usuario: " + "\n" + $('input#IdNombre').val() + "?", 'Confirm', $('input#IdUsuario').val(), 1);
+			}
+		} else if (e.id == "toggle5") {
+			//ALTA DOCUMENTO
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Usuarios/AsignarDocumentos',
+				success: function (data) {
+					if (data) {
+						hideLoading();
+						$('#AsignarDocumentos').html(data);
+						$('#myModalUpload').modal('show');
+					}
+				}
+			});
+		} else if (e.id == "toggle6") {
+			//EDITAR DOCUMENTO
+			showLoading();
+			if ($('input#IdValor').val() == '') {
+				alert('Debe Seleccionar un documento', 'Mensaje');
+			} else {
+				showLoading();
+				$.ajax({
+					url: '/Usuarios/EditarDocumento',
+					type: "POST",
+					data: { id: $('input#IdValor').val() },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#AsignarDocumentos').html(data);
+							$('#myModalUpload').modal('show');
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle7") {
+			//BORRAR DOCUMENTO
+			showLoading();
+			if ($('input#NombreDocumento').val() == '') {
+				alert('Debe Seleccionar un documento', 'Mensaje');
+			} else {
+				AvisoOK("¿Esta Seguro de Borrar el Documento: " + $('input#NombreDocumento').val() + "?", $('input#IdValor').val());
+			}
+			
+		} else if (e.id == "toggle8") {
+			//VISUALIZAR DOCUMENTO
+			showLoading();
+			if ($('input#IdValor').val() == '') {
+				alert('Debe Seleccionar un documento', 'Mensajer');
+			} else {
+				$.ajax({
+					url: '/Usuarios/visualizarDocumento',
+					type: "POST",
+					data: { id: $('input#IdValor').val() },
+					success: function (data) {
+					    if (data) {
+					        $("#AvisoLegal").html(data);
+					        hideLoading();
+					        $("#AvisoLegal").html('');
+					    }
+					}
+				});
+			}
+		}
+	}
+</script>
+
+	  
+
+
+

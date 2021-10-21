@@ -1,0 +1,29 @@
+﻿<input type="text" id="IdPuerto"  name="IdPuerto"  style="display: none">
+<div class="panel-body">
+	<div class="row">
+		<div class="col-md-10">
+			@(this.Html.Kendo().Grid<SecurePort.Entities.Models.PuertosViewModel>().Name("GridPuertos")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.Id).Hidden(true);
+					  columns.Bound(o => o.Nombre).Title("Nombre").HtmlAttributes(new { style = "text-align: left;" }).Width(20);
+					  columns.Bound(o => o.Organismo).Title("Organismo").HtmlAttributes(new { style = "text-align: left;" }).Width(30);
+					  columns.Bound(o => o.Isla).Title("Isla").HtmlAttributes(new { style = "text-align: left;" }).Width(30);
+					  columns.Bound(o => o.Provincia).Title("Provincia").HtmlAttributes(new { style = "text-align: left;" }).Width(20);
+					  columns.Bound(o => o.Capitania).Title("Capitania").HtmlAttributes(new { style = "text-align: left;" }).Width(20);
+				  })
+				  .HtmlAttributes(new { style = "height: 500px;width:80%"  })
+				  .Selectable(selectable => selectable.Mode(GridSelectionMode.Multiple))
+				  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(25)
+					  .Model(model => model.Id(p => p.Id))
+					  .Read(read => read.Action("PuertosDisponibles", "Usuarios")))
+				  .Pageable()
+				  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+				  .Filterable()
+				  .Scrollable()
+				  )
+		</div>
+	</div>
+</div>

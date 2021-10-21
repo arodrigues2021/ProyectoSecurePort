@@ -1,0 +1,416 @@
+﻿@using SecurePort.Entities.Models
+@model UsuarioFrontal 
+<div class="panel-body buttons-widget">
+   @(this.Html.Kendo().ToolBar().Name("ToolBar").HtmlAttributes(new {  style = "width: 65%;border: 0;background: rgba(0, 0, 255, 0);"  }).Items(items =>
+			{
+			   items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_ALTA_IIPP).Id("toggle1");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_MODIF_IIPP).Id("toggle2");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_BORRA_IIPP).Id("toggle3");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_CONSULTA_IIPP).Id("toggle4");
+			}).Events(e => e.Toggle("onToggleProvincias")).Resizable(false))
+
+
+
+</div>
+<input type="text" id="IdNombre" name="IdNombre" style="display: none">
+<input type="text" id="IdValor"  name="IdValor"  style="display: none">
+<input type="text" id="URL"      name="URL"      style="display: none">
+<div class="col-md-12">
+	<div>
+		<span></span>
+		<hr style="margin-top: 0%;">
+	</div>
+</div>
+<td class="panel-body">
+	<div id="container">
+		<div class="btn-group" style="margin-top: 0%; margin-left: 1%;">
+		</div>
+	</div>
+</td>
+<div class="panel-body">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="table-responsive">
+				@(this.Html.Kendo().Grid<InstalacionViewModel>()
+					  .Name("GridInstalaciones")
+					  .DataSource(dataSource => dataSource.Ajax()
+					  .ServerOperation(true))
+					  .ToolBar(tools => tools.Excel().Text("Exportar")
+					  .HtmlAttributes(new { @class="btn btn-black btn-xs",target="_self",hidefocus="true",style = "margin-left: 90%;outline: none;color: #44C51A;" }))
+					  .Excel(excel => excel.AllPages(true)
+					  .FileName("ListadoInstalaciones.xlsx")
+					  .Filterable(true)
+					  .ProxyURL(this.Url.Action("Excel_Export_Save","Usuarios")))
+					  .Columns(columns =>
+					  {
+						  columns.Bound(o => o.Id).Hidden(true);
+						  columns.Bound(o => o.Nombre).Title("Instalación").Width(160).HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.NombrePuerto).Title("Puerto").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Empresa).Title("Empresa").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.NombreClasificacion).Title("Clasificación").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.NombreProvincia).Title("Provincia").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Telefono).Title("Teléfono").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Fax).Title("Fax").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.OMI).Title("OMI").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Declara_Cumpli).Title("Declaración").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Fech_Declara_Cumpli).Title("Fecha").ClientTemplate("#= (Fech_Declara_Cumpli == null)? ' ' :  kendo.toString(Fech_Declara_Cumpli, \"dd/MM/yyyy\") #").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.es_concesionada).Title("Concesionada").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.activado).ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= activado=='Si' ? checked='checked': '' # disabled='true' />")
+						  .Title("Activo")
+						  .HtmlAttributes(new { style = "text-align: left;" });
+					  })
+					  .HtmlAttributes(new { style = "height: 600px" })
+					  .Events(events => events.Change("onChange"))
+					  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+					  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(20)
+					  .Model(model => model.Id(p => p.Id))
+					  .Read(read => read.Action("BuscadorInstalaciones","Instalaciones")))
+					  .Pageable()
+					  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+					  .Filterable()
+					  .Scrollable()
+					  .Groupable()
+					  .Resizable(resize => resize.Columns(true))
+					  .Reorderable(reorder => reorder.Columns(true)))
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	jQuery(document).ready(function () {
+		var grid = $("#GridInstalaciones").data("kendoGrid");
+
+		grid.dataSource.filter({ field: "activado", operator: "eq", value: 'Si' });
+
+		$('#confirm').attr('style', 'display:none');
+
+		$('#IdGestionUsuarios').attr('style', 'display:none');
+
+		$('#IdSubMenuMaestros').attr('style', 'display:none');
+
+		$('#IdSubMenuMovimientos').attr('style', 'display:block');
+
+		$('#IdSubMenuMovimientos').addClass('open');
+		
+		$('#Id026').addClass('active open');
+
+		$('#IdSubMenuMaestros').removeClass('open');
+
+		if (history.forward(1)) {
+			location.replace(history.forward(1));
+		}
+
+		$('a.clip-chevron-right').attr('style', 'display:none');
+
+		$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+
+		$('a.clip-chevron-right').click(function () {
+			$('body').addClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:none');
+			$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+		});
+
+		$('i.clip-chevron-left').click(function () {
+			$('body').removeClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:block;font-size: 25px;');
+			$('i.clip-chevron-left').attr('style', 'display:none');
+		});
+	});
+	function Ayuda() {
+		if (window.ventana) {
+			ventana.close();
+			OpenWin();
+		} else {
+			OpenWin();
+		}
+	}
+
+	function OpenWin() {
+		ventana = window.open("@(this.Model.Path1)" + "Ayuda.html#tercero", "_blank", "toolbar=no, scrollbars=yes, resizable=no, top=300, left=500, width=800, height=800");
+	}
+
+	function closeWin() {
+		if (window.ventana) {
+			ventana.close();
+		}
+	}
+	
+	function onChange() {
+		//Seleccionamos el registro
+		var nombre = this.dataItem(this.select()).Nombre;
+		var id =  this.dataItem(this.select()).Id;
+		$('input#IdNombre').val(nombre);
+		$('input#IdValor').val(id);
+	}
+	
+	function onShow(e) {
+	}
+
+	function onHide(e) {
+	}
+
+	$(document).ready(function() {
+		$("#toggle1").kendoTooltip({
+			content: "Alta Instalación",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle2").kendoTooltip({
+			content: "Editar Instalación",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle3").kendoTooltip({
+			content: "Borrar Instalación",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle4").kendoTooltip({
+			content: "Visualizar Instalación",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		
+	});
+
+	function onToggleProvincias(e) {
+		//Aqui controlamos los eventos de la toolbar.
+		if (e.id == "toggle1") {
+			//ALTA INSTALACIONES
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Usuarios/ValidarCategoriaInstalacion',
+				success: function (data) {
+					if (data.result) {
+						$.ajax({
+							type: "POST",
+							url: '/Instalaciones/create',
+							success: function (data) {
+								if (data) {
+									hideLoading();
+									$('#MostrarMensaje').html('Alta Instalación');
+									$('#Edit-Instalacion').html(data);
+								}
+							}
+						});
+					} else {
+						alert(data.Message);
+					}
+				}
+			});
+	  } else if (e.id == "toggle2") {
+	      //EDITAR INSTALACIONES
+	      showLoading();
+	      $.ajax({
+	          type: "POST",
+	          url: '/Usuarios/ValidarCategoriaInstalacion',
+	          success: function (data) {
+	              if (data.result) {
+	                  if ($('input#IdValor').val() == "") {
+	                      alert('Debe Seleccionar un registro');
+	                  } else {
+	                      showLoading();
+	                      $.ajax({
+	                          type: "POST",
+	                          url: '/Instalaciones/EditarInstalacion',
+	                          data: { id: $('input#IdValor').val() },
+	                          success: function (data) {
+	                              if (data) {
+	                                  hideLoading();
+	                                  $('#MostrarMensaje').html('Editar Instalación');
+	                                  $('#Edit-Instalacion').html(data);
+	                              }
+	                          }
+	                      });
+	                  }
+	              } else {
+	                  alert(data.Message);
+	              }
+	          }
+	      });
+		}  else if (e.id == "toggle3") {
+			//BORRAR INSTALACIONES
+			$.ajax({
+				type: "POST",
+				url: '/Usuarios/ValidarCategoriaInstalacion',
+				success: function (data) {
+					if (data.result) {
+						showLoading();
+						if ($('input#IdValor').val() == "") {
+							alert('Debe Seleccionar un registro');
+						} else {
+							$('input#URL').val('@(this.ViewBag.UrlDelete)');
+							 alert("¿Esta Seguro de Borrar la Instalación: " + "\n" + $('input#IdNombre').val() + "?", 'Confirm', $('input#IdValor').val(), 49);
+						}   
+					} else {
+						alert(data.Message);
+					}
+				}
+			});
+	   } else if (e.id == "toggle4") {
+			//VISUALIZAR INSTALACIONES
+			$('#MostrarMensaje').html("Visualizar Instalación");
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				showLoading();
+				$.ajax({
+					type: "POST",
+					url: '/Instalaciones/VisualizarInstalacion',
+					data: { id: $('input#IdValor').val() },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#MostrarMensaje').html('Visualizar Instalación');
+							$('#Edit-Instalacion').html('');
+							$('#Edit-Instalacion').html(data);
+						}
+					}
+				});
+			}
+		} 
+		else if (e.id == "toggle5") {
+			//ALTA OPERADOR
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Operadores/AsignarOperador',
+				success: function (data) {
+					if (data) {
+						hideLoading();
+						$('#AsignarOperadores').html('');
+						$('#myModalOperadores').modal('show');
+						$('#AsignarOperadores').html(data);
+					 }
+				}
+			});
+		} else if (e.id == "toggle6") {
+			//EDITAR OPERADOR
+			showLoading();
+			if ($('input#IdOperador').val() == '') {
+				alert('Debe Seleccionar un operador', 'Mensaje');
+			} else {
+				showLoading();
+				$.ajax({
+					url: '/Operadores/visualizarOperador',
+					type: "POST",
+					data: { id: $('input#IdOperador').val(), Accion: "Edit" },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#AsignarOperadores').html('');
+							$('#myModalOperadores').modal('show');
+							$('#AsignarOperadores').html(data);
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle7") {
+			//BORRAR OPERADOR
+			showLoading();
+			if ($('input#IdOperador').val() == '') {
+				alert('Debe Seleccionar un operador', 'Mensaje');
+			} else {
+			    AvisoOKOperador("¿Esta Seguro de Borrar el Contacto: " + $('input#NombreOperador').val() + "?", $('input#IdOperador').val());
+			}
+
+		} else if (e.id == "toggle8") {
+			//VISUALIZAR OPERADOR
+			showLoading();
+			if ($('input#IdOperador').val() == '') {
+				alert('Debe Seleccionar un operador', 'Mensaje');
+			} else {
+				$.ajax({
+					url: '/Operadores/visualizarOperador',
+					type: "POST",
+					data: { id: $('input#IdOperador').val(), Accion: "Ver" },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#AsignarOperadores').html('');
+							$('#myModalOperadores').modal('show');
+							$('#AsignarOperadores').html(data);
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle9") {
+			//ALTA DOCUMENTO
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Operadores/AsignarDocumentos',
+				success: function (data) {
+					if (data) {
+						hideLoading();
+						$('#AsignarOperadores').html('');
+						$('#AsignarDocumentos').html(data);
+						$('#myModalUpload').modal('show');
+					}
+				}
+			});
+		} else if (e.id == "toggle10") {
+			//EDITAR DOCUMENTO
+			showLoading();
+			if ($('input#IdDoc').val() == '') {
+				alert('Debe Seleccionar un documento', 'Mensaje');
+			} else {
+				showLoading();
+				$.ajax({
+					url: '/Operadores/EditarDocumento',
+					type: "POST",
+					data: { id: $('input#IdDoc').val() },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#AsignarOperadores').html('');
+							$('#AsignarDocumentos').html(data);
+							$('#myModalUpload').modal('show');
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle11") {
+			//BORRAR DOCUMENTO
+			showLoading();
+			if ($('input#NombreDocumento').val() == '') {
+				alert('Debe Seleccionar un documento', 'Mensaje');
+			} else {
+				AvisoOKDocOperador("¿Esta Seguro de Borrar el Documento: " + $('input#NombreDocumento').val() + "?", $('input#IdDoc').val());
+			}
+
+		} else if (e.id == "toggle12") {
+			//ViSUALIZAR DOCUMENTO
+			showLoading();
+			if ($('input#IdDoc').val() == '') {
+				alert('Debe Seleccionar un documento', 'Mensaje');
+			} else {
+				showLoading();
+				$.ajax({
+					url: '/Operadores/visualizarDocumento',
+					type: "POST",
+					data: { id: $('input#IdDoc').val() },
+					success: function (data) {
+						if (data) {
+							$("#AvisoLegal").html(data);
+							hideLoading();
+							$("#AvisoLegal").html('');;
+						}
+					}
+				});
+			}
+		}
+	}
+</script>

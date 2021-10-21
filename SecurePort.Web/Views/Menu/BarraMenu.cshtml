@@ -1,0 +1,133 @@
+﻿@using System.Configuration
+@using System.Web.Caching
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+@{
+	this.Layout = "~/Views/Shared/LayoutSite.cshtml";
+	string nombreCompleto = this.Model.Usuario.nombre + " " + this.Model.Usuario.apellidos;
+	this.ViewBag.Title = "Menu";
+	UsuarioPassword usuarioPassword = new UsuarioPassword();
+	usuarioPassword.login = Model.Usuario.login;
+	string nombreRuta = ConfigurationManager.AppSettings["RutaSecureDoc"] + ConfigurationManager.AppSettings["AvisoLegal"];
+}
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<!-- start: TOP NAVIGATION CONTAINER -->
+		@(this.Html.Partial("~/Views/Shared/Cabecera.cshtml",this.Model))
+		<div class="container">
+			<div class="navbar-header">
+				<!-- start: RESPONSIVE MENU TOGGLER -->
+				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+					<span class="clip-list-2"></span>
+				</button>
+				<!-- end: RESPONSIVE MENU TOGGLER -->
+				<!-- start: LOGO -->
+				<!-- end: LOGO -->
+			</div>
+			<div class="navbar-tools">
+				<!-- start: TOP NAVIGATION MENU -->
+				<ul class="nav navbar-right">
+					<li class="dropdown">
+					</li>
+					<!-- end: TO-DO DROPDOWN-->
+					<!-- start: NOTIFICATION DROPDOWN -->
+					<li class="dropdown">
+					</li>
+					<!-- end: NOTIFICATION DROPDOWN -->
+					<!-- start: MESSAGE DROPDOWN -->
+					<li class="dropdown">
+					</li>
+					<!-- end: MESSAGE DROPDOWN -->
+					<!-- start: USER DROPDOWN -->
+					<!-- start: USER DROPDOWN -->
+					<li class="dropdown current-user">
+					</li>
+					<!-- end: USER DROPDOWN -->
+				</ul>
+				<!-- end: TOP NAVIGATION MENU -->
+			</div>
+		</div>
+		<!-- end: TOP NAVIGATION CONTAINER -->
+	</div>
+	<!-- end: HEADER -->
+	<!-- start: MAIN CONTAINER -->
+	<div class="main-container">
+		<div class="navbar-content" id="topbar">
+			<!-- start: SIDEBAR -->
+			<div class="main-navigation navbar-collapse collapse">
+				<div class="navigation-toggler">
+					<i class="clip-chevron-left"></i>
+					<a class="clip-chevron-right"></a>
+				</div>
+				<ul class="main-navigation-menu">
+					<li class="active open">
+						<a href="#">
+							<i class="clip-home-3"></i>
+							<span class="title"> Menú Principal </span><span class="selected"></span>
+						</a>
+					</li>
+					<li>
+						@(this.Html.Partial("Submenu"))
+					</li>
+				</ul>
+				<!-- end: MAIN NAVIGATION MENU -->
+			</div>
+			<!-- end: SIDEBAR -->
+		</div>
+		<!-- start: PAGE -->
+		<div class="main-content">
+			 <div id="AvisoLegal"></div>
+			<!-- start: PANEL CONFIGURATION MODAL FORM -->
+			<div id="IdContainer" class="container">
+			</div>
+		</div>
+	</div>
+	<label class="control-label" style="margin-left: 1%;">
+		Versión SecurePort: @(this.Model.version)
+	</label>
+	<!-- end: MAIN CONTAINER -->
+	<!-- start: FOOTER -->
+</body>
+<div id="myModalCambiarPassword" class="modal fade in" data-width="500" tabindex="-1" aria-hidden="false">
+	<div class="modal-body">
+		<div class="apply_info">
+			@(this.Html.Partial("~/Views/Usuarios/CambioPassword.cshtml",usuarioPassword))
+		</div>
+	</div>
+</div>
+<div id="myModalValidarPassword" class="modal fade in" data-width="500" tabindex="-1" aria-hidden="false" style="width: 500px; margin-left: -249px; margin-top: -186px; display: none; height: 50%;">
+	<div class="modal-body">
+		<div class="apply_info">
+			@(this.Html.Partial("~/Views/Usuarios/ValidarPassword.cshtml",usuarioPassword))
+		</div>
+	</div>
+</div>
+<div id="myModalValidarCorreoPassword" class="modal fade in" data-width="500" tabindex="-1" aria-hidden="false" style="width: 500px; margin-left: -249px; margin-top: -186px; display: none; height: 50%;">
+		<div class="modal-body">
+			<div class="apply_info">
+				@(this.Html.Partial("~/Views/Usuarios/ValidarCorreoPassword.cshtml",usuarioPassword))
+			</div>
+		</div>
+	</div>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+
+		if (history.forward(1)) {
+			location.replace(history.forward(1));
+		}
+		$('a.clip-chevron-right').click(function () {
+			$('body').addClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:none');
+			$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+		});
+		$('i.clip-chevron-left').click(function () {
+			$('body').removeClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:block;font-size: 25px;');
+			$('i.clip-chevron-left').attr('style', 'display:none');
+		});
+	    
+		$("div.k-overlay").removeAttr("style");
+	});
+</script>
+
+

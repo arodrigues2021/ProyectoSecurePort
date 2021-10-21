@@ -1,0 +1,118 @@
+﻿@using SecurePort.Entities.Models
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<i class="clip-checkbox"></i>
+				<strong>Contactos Organismos</strong>
+			</div>
+			<div class="panel-body" style="height: 300px">
+				<div id="ContactoOrganismo">
+					<div class="panel-body">
+						<div class="row">
+							  <div class="col-md-12">
+								  <p></p>
+							  </div>
+							  <div class="row">
+								  <div class="col-md-10">
+										  @(this.Html.Kendo().ToolBar().Name("ToolBar")
+											   .Items(items =>
+												{
+													items.Add().Type(CommandType.Button).Togglable(true)
+														.HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" })
+														.Hidden(this.ViewBag.ALTA_CONT_OGP).Id("toggle51");
+													items.Add().Type(CommandType.Button).Togglable(true)
+														.HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" })
+														.Hidden(this.ViewBag.MODIF_CONT_OGP).Id("toggle52");
+													items.Add().Type(CommandType.Button).Togglable(true)
+														.HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" })
+														.Hidden(this.ViewBag.BORRA_CONT_OGP).Id("toggle53");
+                                                    items.Add().Type(CommandType.Button).Togglable(true)
+														.HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-folder-open-alt", style = "margin-bottom:1px" })
+														.Hidden(this.ViewBag.CONSULTA_ORGANISMO).Id("toggle54");
+                                                    
+												}).Events(e => e.Toggle("onToggleContacto"))
+											)
+										@(this.Html.Kendo().Grid<ContactosViewModel>().Name("GridContactos_Organismo").Columns(columns =>
+										{
+											columns.Bound(o => o.Id).Hidden(true);
+											columns.Bound(o => o.Nombre).Title("Contacto")
+												.HtmlAttributes(new { style = "text-align: left;" }).Width(200);
+											columns.Bound(o => o.Es_Responsable)
+												.ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= Es_Responsable==true ? checked='checked': '' # disabled='true' />").Width(100)
+												.Title("Es_Responsable")
+												.HtmlAttributes(new { style = "text-align: left;" }).Width(140);
+											columns.Bound(o => o.Telefono).Title("Teléfono")
+												.HtmlAttributes(new { style = "text-align: left;" });
+											columns.Bound(o => o.Fax).Title("Fax")
+												.HtmlAttributes(new { style = "text-align: left;" });
+											columns.Bound(o => o.Email).Title("Correo")
+												.HtmlAttributes(new { style = "text-align: left;" });
+                                            columns.Bound(o => o.activado).Width(80)
+							                    .ClientTemplate("<input type='checkbox' class='icheck box_minimal-grey' #= activado=='Si' ? checked='checked': '' # disabled='true' />")
+							                    .Title("Activo")
+							                    .HtmlAttributes(new { style = "text-align: left;" });
+											@*columns.Bound(o => o.Observaciones).Title("Observaciones")
+												.HtmlAttributes(new { style = "text-align: left;" });*@
+										}).Events(events => events.Change("onChangeContacto"))
+												.HtmlAttributes(new { style = "height: 200px" })
+												.Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+												.DataSource(dataSource => dataSource.Ajax().PageSize(10)
+												.Model(model => model.Id(p => p.Id))
+												.Read(read => read.Action("BuscadorContacto","Organismo")))
+												.Pageable()
+												.Sortable(sortable => sortable.AllowUnsort(true)
+												.SortMode(GridSortMode.MultipleColumn))
+												.Filterable()
+												.Scrollable()
+												.Groupable()
+												.Resizable(resize => resize.Columns(true))
+											    .Reorderable(reorder => reorder.Columns(true)))
+								  </div>
+							  </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+    jQuery(document).ready(function () {
+        var grid = $("#GridContactos_Organismo").data("kendoGrid");
+        grid.dataSource.filter({ field: "activado", operator: "eq", value: 'Si' });
+    });
+	function onShow(e) {
+	}
+
+	function onHide(e) {
+	}
+
+	$(document).ready(function() {
+		$("#toggle51").kendoTooltip({
+			content: "Alta Contacto",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle52").kendoTooltip({
+			content: "Editar Contacto",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle53").kendoTooltip({
+			content: "Borrar Contacto",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle54").kendoTooltip({
+		    content: "Visualizar Contacto",
+		    show: onShow,
+		    hide: onHide,
+		    position: "top"
+		});
+		
+	});
+</script>

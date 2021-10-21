@@ -1,0 +1,83 @@
+﻿@{
+	string NombreGrupo = string.Empty;
+	if (TempData["Grupo"] != null)
+	{
+		NombreGrupo = TempData["Grupo"].ToString();    
+	}
+}
+@if (NombreGrupo != string.Empty)
+{
+<label class="control-label"><b>Módulo: @NombreGrupo </b></label>   
+}
+<input type="text" id="IdConjunto"  name="IdConjunto"  style="display: none">
+<div class="panel-body">
+	<div class="row">
+		<div class="col-sm-10">
+			@(this.Html.Kendo().Grid<SecurePort.Entities.Models.AltaAcciones>().Name("GridRefrescarAcciones")
+				  .Columns(columns =>
+				  {
+					  columns.Bound(o => o.Id).Hidden(true).Groupable(false).Sortable(false).Filterable(false).Hidden(true);
+					  columns.Bound(o => o.idConjunto).Width(1).Groupable(false).Sortable(false).Filterable(false).Hidden(true);
+					  columns.Bound(o => o.Nombre).Title("Nombre").HtmlAttributes(new { style = "text-align: left;" }).Width(90);
+					  columns.Bound(o => o.asignar).ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= asignar=='true' ? checked='checked': '' # onclick= 'javascript:AsignarAcciones(this)'/>").Title("Asignar").Width(50);
+				  })
+				  .Events(events => events.Change("onChangePermisos"))
+				  .HtmlAttributes(new { style = "height: 450px" })
+				  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+				  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(20)
+					  .Model(model => model.Id(p => p.Id))
+					  .Read(read => read.Action("AccionesRefrescar", "Perfiles")))
+				  .Pageable()
+				  .Filterable()
+				  .Scrollable()
+				  )
+		</div>
+	</div>
+</div>
+<script>
+	function AsignarAcciones() {
+		var id = $('input#IdAcciones').val();
+		var idconjunto = $('input#IdConjunto').val();
+		if ($('input#IdAcciones').val() == "" && $('input#IdConjunto').val()=="") {
+			alert('Debe Seleccionar el Permiso');
+		} else {
+			$.ajax({
+				type: "POST",
+				url: '/Perfiles/AgregarAccion',
+				data: { id: id, idconjunto: idconjunto },
+				success: function(data) {
+					if (data) {
+						$.ajax({
+							type: "POST",
+							url: '/Perfiles/RefrescarAccionAlta',
+							data: { id: id },
+							success: function(data) {
+								if (data) {
+									$('#ListAccion').html(data);
+									$.ajax({
+										type: "POST",
+										url: '/Perfiles/RefrescarAccion',
+										success: function(data) {
+											if (data) {
+												$('#ListAccionDisponible').html(data);
+											} else {
+												setTimeout(function() {
+													alert(data.Message);
+												}, 1000);
+											}
+										}
+									});
+								}
+							}
+						});
+					} else {
+						setTimeout(function() {
+							alert(data.Message);
+						}, 1000);
+					}
+				}
+			});
+		}
+	}
+</script>

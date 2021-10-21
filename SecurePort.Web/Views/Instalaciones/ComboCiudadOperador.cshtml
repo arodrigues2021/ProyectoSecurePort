@@ -1,0 +1,14 @@
+﻿<div class="col-sm-3">
+    <div class="form-group">
+        <label class="control-label">
+            Municipio
+        </label>
+        @(this.Html.Kendo().ComboBox().Name("CiudadOperador")
+                           .Placeholder("Selecciona Municipio")
+                           .DataTextField("Text").DataValueField("Value")
+                           .Filter(FilterType.Contains)
+                           .BindTo((SelectList)this.ViewData["Ciudades"])
+                           .HtmlAttributes(new { style = "width:100%;", id = "CiudadOperador01", onChange = "ValidacionCombosOP(this,'errorCiudadOP')" }))
+            <span id="errorCiudadOP" style="display: none; color: #b94a48;">Este campo es inválido.</span>
+    </div>
+</div>

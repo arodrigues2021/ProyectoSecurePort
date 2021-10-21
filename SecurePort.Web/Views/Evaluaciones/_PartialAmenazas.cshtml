@@ -1,0 +1,61 @@
+﻿@using SecurePort.Entities.Models
+@(this.Html.Kendo().Grid<ListAmenazasPadreHijos>().Name("GridBienesAmenazas").DataSource(dataSource => dataSource.Ajax().ServerOperation(true)).Columns(columns =>
+   {
+	   columns.Bound(o => o.Id).Hidden(true);
+	   columns.Bound(o => o.Descripcion).Title("Amenazas").HtmlAttributes(new { style = "text-align: left;" }).Width(35);
+	   columns.Bound(o => o.Idpadre).Hidden(true);
+	   columns.Bound(o => o.IdPH).Hidden(true);
+	   columns.Bound(o => o.activado).Hidden(true);
+	   columns.Bound(e => e.sel).Title("Asignar").HtmlAttributes(new { style = "text-align: left;" })
+			  .ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= activado=='Si' ? checked='checked': '' #  onclick='ClickAmenazas(this,#=Id#,#=IdPH#)' />")
+			  .Width(7);
+   })
+	  .HtmlAttributes(new { style = "height: 800px" })
+	  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+	  .DataSource(dataSource => dataSource.Ajax().Model(model => model.Id(p => p.Id))
+	  .Read(read => read.Action("AmenazasBienesPadreHijos","Amenazas")))
+	  .Scrollable()
+	  .Resizable(resize => resize.Columns(true))
+	  .Reorderable(reorder => reorder.Columns(true)))
+<script type="text/javascript">
+
+	function ClickAmenazas(e, idAmenazas, id) {
+
+		var _id = $('input#SelBienhijo').val();
+			  
+		if ($('input#SelBienPadre').val() == "No" && $('input#SelBienhijo').val() == "No") {
+			e.checked = false;
+		} else {
+			if (e.checked) {
+				$.ajax({
+					url: '/Amenazas/AgregarAmenazaPadreHijo',
+					type: "POST",
+					data: { idAmenazas: idAmenazas, idPadreHijo: id },
+					success: function(data) {
+						if (data) {
+							$('#ListAmenazas').html('');
+							$('#ListAmenazas').html(data);
+
+						}
+					}
+				});
+			} else {
+				$.ajax({
+						url: '/Amenazas/QuitarAmenazaPadreHijo',
+						type: "POST",
+						data: { idAmenazas: idAmenazas, idPadreHijo: id },
+						success: function(data) {
+							if (data) {
+								$('#ListAmenazas').html('');
+								$('#ListAmenazas').html(data);
+
+							}
+						}
+					});
+				}
+				
+			}
+	}
+	
+</script>
+

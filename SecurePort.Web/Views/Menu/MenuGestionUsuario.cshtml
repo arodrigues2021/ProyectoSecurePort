@@ -1,0 +1,46 @@
+﻿@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+<a href="javascript:void(0)"><i class="clip-user-2"></i>
+	<span class="title">Configuración</span><i class="icon-arrow"></i>
+	<span class="selected"></span>
+</a>
+<ul id="IdGestionUsuarios" class="sub-menu">
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+
+		if (Permisos.NombrePermiso == Perfil.LISTAR_OPCION_PERFIL.ToDescription())
+		{
+			<li id="IdPerfiles">
+				<a href="@(this.Url.Action("ListadoPerfiles","Perfiles"))">
+					<span class="title">Perfiles y Permisos</span>
+				</a>
+			</li>
+		}
+
+	}
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+
+		if (Permisos.NombrePermiso == Grupo.LISTAR_OPCION_GRUPO.ToDescription())
+		{
+			<li id="IdGrupos">
+				<a href="@(this.Url.Action("ListadoGrupos","Grupos"))">
+					Grupos de Usuarios</a>
+			</li>
+		}
+
+	}
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+
+		if (Permisos.NombrePermiso == Usuario.LISTAR_OPCION_USUARIO.ToDescription())
+		{
+			<li id="IdUsuario">
+				<a href="@(this.Url.Action("ListadoUsuarios","Usuarios"))">
+					Usuarios </a>
+			</li>
+		}
+
+	}
+</ul>

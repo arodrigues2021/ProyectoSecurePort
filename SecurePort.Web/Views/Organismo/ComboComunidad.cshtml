@@ -1,0 +1,19 @@
+﻿@{
+    string ID_ComAut = this.ViewBag.ID_ComAut.ToString();
+}
+<div class="col-md-4">
+    <div class="form-group">
+        <label class="control-label">
+            Comunidad Autónoma
+        </label>
+          @(this.Html.Kendo().TextBox().Name("comunidad").Enable(false)
+									  .HtmlAttributes(new { id="Comunidad01", name="Comunidad01", style = "background-color:#eeeeee;", @class="form-control", value=@ViewBag.Comunidad}))
+   
+        @*@(this.Html.Kendo().ComboBox().Name("comunidad").DataTextField("Text")
+             .DataValueField("Value").Filter(FilterType.Contains)
+             .BindTo((SelectList)this.ViewData["Comunidades"])
+             .Value(ID_ComAut)
+             .Enable(ViewBag.disabled)
+             .Suggest(true).HtmlAttributes(new { style = "width:100%;background-color:#eeeeee;color: black", required = "required", id = "comunidad01" }))*@
+    </div>
+</div>

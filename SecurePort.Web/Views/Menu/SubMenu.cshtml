@@ -1,0 +1,74 @@
+﻿@using SecurePort.Entities.Models
+@model UsuarioFrontal
+@if (!this.Model.permisosViewModel.CON_LISTA_USU
+     || !this.Model.permisosViewModel.CON_LISTA_PERFIL
+     || !this.Model.permisosViewModel.CON_LISTA_GRUPO)
+{
+    <li>
+        @(this.Html.Partial("~/Views/Menu/MenuGestionUsuario.cshtml"))
+    </li>
+}
+@if (!this.Model.permisosViewModel.CON_LISTA_AMENAZA
+     || !this.Model.permisosViewModel.CON_LISTA_BIEN
+     || !this.Model.permisosViewModel.CON_LISTA_CAPITANIA
+     || !this.Model.permisosViewModel.CON_LISTA_CIUDAD
+     || !this.Model.permisosViewModel.CON_LISTA_COMAUT
+     || !this.Model.permisosViewModel.CON_LISTA_MOTIVO
+     || !this.Model.permisosViewModel.CON_LISTA_PAIS
+     || !this.Model.permisosViewModel.CON_LISTA_Provincia
+     || !this.Model.permisosViewModel.CON_LISTA_IIPP)
+{
+    <li>
+        @(this.Html.Partial("~/Views/Menu/MenuGestionMaestros.cshtml"))
+    </li>
+}     
+@if (!this.Model.permisosViewModel.CON_LISTA_ORGANISMO
+     || !this.Model.permisosViewModel.CON_LISTA_CENTRO
+     || !this.Model.permisosViewModel.CON_LISTA_IIPP
+     || !this.Model.permisosViewModel.CON_LISTA_PUERTO
+     || !this.Model.permisosViewModel.CON_LISTA_COMITE)
+{
+    <li>
+        @(this.Html.Partial("~/Views/Menu/MenuGestionMovimientos.cshtml"))
+    </li>
+}
+@if (!this.Model.permisosViewModel.EVAL_LISTA_IIPP)
+{
+    <li>
+        @(this.Html.Partial("~/Views/Menu/MenuGestionEvaluaciones.cshtml"))
+    </li>
+}
+<li>
+    @(this.Html.Partial("~/Views/Menu/MenuGestionPlanes.cshtml"))
+</li>
+@if (!this.Model.permisosViewModel.CON_LISTA_FORMACION
+     || !this.Model.permisosViewModel.CON_LISTA_PRACTICA
+     || !this.Model.permisosViewModel.CON_LISTA_INCIDENTE
+     || !this.Model.permisosViewModel.CON_LISTA_AUDITORIA
+     || !this.Model.permisosViewModel.CON_LISTA_NIVEL
+     || !this.Model.permisosViewModel.CON_LISTA_MANTEN)
+{
+    <li>
+        @(this.Html.Partial("~/Views/Menu/MenuGestionArchivos.cshtml"))
+    </li>
+}
+
+@if (!this.Model.permisosViewModel.CON_LISTA_DOCUMENTO)
+{
+     <li>
+         @(this.Html.Partial("~/Views/Menu/MenuGestionDocumentacion.cshtml"))
+     </li>
+}
+
+@if (!this.Model.permisosViewModel.CON_LISTA_PLANTILLA)
+{
+    <li>
+        @(this.Html.Partial("~/Views/Menu/MenuGestionPlantillas.cshtml"))
+    </li>
+}
+@if (!this.Model.permisosViewModel.CON_LISTA_PROCEDIM_AP)
+{
+    <li>
+        @(this.Html.Partial("~/Views/Menu/MenuGestionProcedimientos.cshtml"))
+    </li>
+}

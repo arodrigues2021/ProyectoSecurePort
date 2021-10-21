@@ -1,0 +1,210 @@
+﻿@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+
+<div class="panel-body buttons-widget">
+	
+	@(this.Html.Kendo().ToolBar().Name("ToolBar").HtmlAttributes(new { style = "width: 65%;border: 0;background: rgba(0, 0, 255, 0);"  }).Items(items =>
+	  {
+		  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" })
+			  .Hidden(this.Model.permisosViewModel.CON_ALTA_PERFIL).Id("toggle1");
+		  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" })
+			  .Hidden(this.Model.permisosViewModel.CON_MODIF_PERFIL).Id("toggle2");
+		  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" })
+			  .Hidden(this.Model.permisosViewModel.CON_BORRA_PERFIL).Id("toggle4");
+		  items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" })
+			  .Hidden(this.Model.permisosViewModel.CON_CONSULTA_PERFIL).Id("toggle3");
+	  }).Events(e => e.Toggle("onToggle")).Resizable(false))
+	
+</div>
+<input type="text" id="IdNombre" name="IdNombre" style="display: none">
+<input type="text" id="IdValor" name="IdValor" style="display: none">
+<input type="text" id="URL" name="URL" style="display: none">
+<div class="col-md-12">
+	<div>
+		<span></span>
+		<hr style="margin-top: 0%;">
+	</div>
+</div>
+<td class="panel-body">
+	<div id="container">
+		<div class="btn-group" style="margin-top: 0%; margin-left: 1%;">
+		</div>
+	</div>
+</td>
+<div class="panel-body">
+	<div class="row">
+		<div class="col-md-10">
+			<div class="table-responsive">
+				@(this.Html.Kendo().Grid<PerfilesViewModel>().Name("GridPerfil")
+					.DataSource(dataSource => dataSource.Ajax()
+                    .Filter(ft => ft.Add(m => m.es_activo).Contains("Si"))
+                    .ServerOperation(true))
+					.ToolBar(tools => tools.Excel().Text("Exportar").HtmlAttributes(new { @class="btn btn-black btn-xs",target="_self",hidefocus="true",style = "margin-left: 90%;outline: none;color: #44C51A;" }))
+					.Excel(excel => excel.AllPages(true)
+					.FileName("ListadoPerfil.xlsx")
+					.Filterable(true)
+					.ProxyURL(this.Url.Action("Excel_Export_Save","Usuarios")))
+					.Columns(columns =>
+					  {
+						  columns.Bound(o => o.Id).Width(1).Groupable(false).Sortable(false).Filterable(false);
+						  columns.Bound(o => o.Nombre).Title("Perfil").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.descripcion).Title("Descripción").HtmlAttributes(new { style = "text-align: left;" });
+                          columns.Bound(p => p.es_activo).ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= es_activo=='Si' ? checked='checked': '' # disabled='true' />")
+                          .Title("Activo").Width(90);
+					  })
+					  .HtmlAttributes(new { style = "height: 600px" })
+					  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+					  .Events(events => events.Change("onChange"))
+					  .DataSource(dataSource => dataSource.Ajax()
+						  .PageSize(20).Model(model => model.Id(p => p.Id))
+						  .Read(read => read.Action("BuscadorPerfil","Perfiles")))
+						  .Pageable()
+						  .Sortable(sortable => sortable.AllowUnsort(true)
+							  .SortMode(GridSortMode.MultipleColumn))
+							  .Filterable()
+							  .Scrollable()
+							  .Groupable())
+			</div>
+		</div>
+	</div>
+</div>
+@if (this.Model.fichero != string.Empty)
+{
+	<script>
+		@*jQuery(document).ready(function () {
+			Windows();
+		});
+
+		function Windows() {
+			if (window.ventanaexcel) {
+				ventanaexcel.close();
+				OpenWinExcel();
+			} else {
+				OpenWinExcel();
+			}
+		}
+
+		function OpenWinExcel() {
+			ventanaexcel = window.open("@(this.Model.Path)@(this.Model.fichero)", "_blank", "toolbar=no, scrollbars=no, resizable=no, top=100, left=200, width=500, height=200");
+		}*@
+
+	</script>
+}
+<script>
+	function Ayuda() {
+		if (window.ventana) {
+			ventana.close();
+			OpenWin();
+		} else {
+			OpenWin();
+		}
+	}
+
+	function OpenWin() {
+		ventana = window.open("@(this.Model.Path1)" + "Ayuda.html#tercero", "_blank", "toolbar=no, scrollbars=yes, resizable=no, top=300, left=500, width=800, height=800");
+	}
+
+	function closeWin() {
+		if (window.ventana) {
+			ventana.close();
+		}
+	}
+	
+	function onChange() {
+		//Seleccionamos el registro
+		var code = this.dataItem(this.select()).Id;
+		var nombre = this.dataItem(this.select()).Nombre;
+		$('input#IdValor').val(code);
+		$('input#IdNombre').val(nombre);
+	}
+	
+	function onShow(e) {
+	}
+
+	function onHide(e) {
+	}
+
+	$(document).ready(function() {
+		$("#toggle1").kendoTooltip({
+			content: "Alta Perfil",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle2").kendoTooltip({
+			content: "Editar Perfil",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle3").kendoTooltip({
+			content: "Visualizar Perfil",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle4").kendoTooltip({
+			content: "Borrar Perfil",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		
+	});
+
+	function onToggle(e) {
+		//Aqui controlamos los eventos de la toolbar.
+		if (e.id == "toggle1") {
+			//ALTA PERFIL
+			showLoading();
+			$('#myModalAgregar').modal('show');
+		} else if (e.id == "toggle2") {
+			//EDITAR PERFIL
+			$('#MostrarMensaje').html("Modificar Perfil");
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				$.ajax({
+					type: "POST",
+					url: '/Perfiles/Edit',
+					data: { id: $('input#IdValor').val() },
+					success: function (data) {
+						if (data) {
+							$('#ListPerfil').html(data);
+							hideLoading();
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle3") {
+			//VISUALIZAR PERFIL
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				$.ajax({
+					type: "POST",
+					url: '/Perfiles/VisualizarPerfil',
+					data: { id: $('input#IdValor').val() },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#ListPerfil').html(data);
+							$('#MostrarMensaje').html("Visualizar Perfil");
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle4") {
+			//BORRAR PERFIL
+			showLoading();
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+			    $('input#URL').val("/Perfiles/EliminarPerfil");
+				alert("¿Esta Seguro de Borrar el Perfil: " + "\n" + $('input#IdNombre').val() + "?", 'Confirm', $('input#IdValor').val(), 49); //5
+			}
+		}  
+	}
+	
+</script>

@@ -1,0 +1,507 @@
+﻿
+@using SecurePort.Entities.Models
+@model UsuarioFrontal 
+<div class="panel-heading">
+			<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick="Ayuda()"></a>
+								<strong>
+									<strong>@ViewBag.Mensaje</strong>
+								</strong>
+							</div>
+
+
+<div class="panel-body buttons-widget">
+   @(this.Html.Kendo().ToolBar().Name("ToolBar").HtmlAttributes(new {  style = "width: 65%;border: 0;background: rgba(0, 0, 255, 0);"  }).Items(items =>
+			{
+			   items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_ALTA_CENTRO).Id("toggle1");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_MODIF_CENTRO).Id("toggle2");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_BORRA_CENTRO).Id("toggle3");
+                items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" })
+			        .Hidden(this.Model.permisosViewModel.CON_CONSULTA_CENTRO).Id("toggle4");
+               @* items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" })
+			        .Hidden(this.Model.permisosViewModel.CON_CONSULTA_CENTRO).Id("toggle17");*@
+			}).Events(e => e.Toggle("onToggleCentro")).Resizable(false))
+
+
+
+</div>
+<input type="text" id="IdNombre" name="IdNombre" style="display: none">
+<input type="text" id="IdValor" name="IdValor" style="display: none">
+<div class="col-md-12">
+	<div>
+		<span></span>
+		<hr style="margin-top: 0%;">
+	</div>
+</div>
+<td class="panel-body">
+	<div id="container">
+		<div class="btn-group" style="margin-top: 0%; margin-left: 1%;">
+		</div>
+	</div>
+</td>
+<div class="panel-body">
+  <div class="row">     
+      <label class="control-label" style="margin-left: 1%;">Acciones</label>
+	  <div class="btn-group" style="margin-left: 1%;">
+			    <div class="form-group">
+                    @(this.Html.Kendo().DropDownList()
+					    .Name("acciones")
+					    .DataTextField("Text")
+					    .DataValueField("Value")
+					    .Events(e => e.Change("GenerarAccionesChange"))
+					    .HtmlAttributes(new { style = "width: 200px;text-align: center;" } )
+					    .BindTo(new List<SelectListItem>() {
+                              new SelectListItem() {
+                                    Text = "Seleccionar Opción",
+                                    Value = "1"
+                                },
+                              new SelectListItem() {
+                                    Text = "Listado Centros24h",
+                                    Value = "2"
+                                },    
+                        })                       
+				    )
+			    </div>
+		    </div>
+    </div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="table-responsive">
+				@(this.Html.Kendo().Grid<CentrosViewModel>().Name("GridCentro")
+					  .DataSource(dataSource => dataSource.Ajax()
+						  .ServerOperation(true))
+					  .ToolBar(tools => tools.Excel().Text("Exportar").HtmlAttributes(new { @class="btn btn-black btn-xs",target="_self",hidefocus="true",style = "margin-left: 90%;outline: none;color: #44C51A;" }))
+					  .Excel(excel => excel.AllPages(true)
+						  .FileName("ListadoCentros.xlsx")
+						  .Filterable(true)
+						  .ProxyURL(this.Url.Action("Excel_Export_Save","Usuarios")))
+					  .Columns(columns =>
+					  {
+						  columns.Bound(o => o.id).Hidden(true);
+						  columns.Bound(o => o.Organismo).Title("Organismo").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Puerto).Title("Puerto").HtmlAttributes(new { style = "text-align: left;" });
+						  columns.Bound(o => o.Centro_24H).Title("Centro 24H").HtmlAttributes(new { style = "text-align: left;" });
+                          columns.Bound(o => o.Operador).Title("Nombre").HtmlAttributes(new { style = "text-align: left;" });
+                          columns.Bound(o => o.Telefono).Title("Telefono").HtmlAttributes(new { style = "text-align: left;" });
+                          columns.Bound(o => o.Correo).Title("Correo").HtmlAttributes(new { style = "text-align: left;" });
+					  })
+					  .HtmlAttributes(new { style = "height: 600px" })
+					  .Events(events => events.Change("onChange"))
+					  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+					  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(20).Model(model => model.Id(p => p.id))
+					  .Read(read => read.Action("BuscadorCentros","Centros")))
+					  .Pageable()
+					  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+					  .Filterable()
+					  .Scrollable()
+					  .Groupable()
+					  .Resizable(resize => resize.Columns(true))
+					  .Reorderable(reorder => reorder.Columns(true)))
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	jQuery(document).ready(function () {
+		
+		$('#confirm').attr('style', 'display:none');
+
+		if (history.forward(1)) {
+			location.replace(history.forward(1));
+		}
+
+		$('#IdGestionUsuarios').attr('style', 'display:none');
+
+		$('#IdSubMenuMaestros').attr('style', 'display:none');
+
+		$('#IdSubMenuMovimientos').attr('style', 'display:block');
+
+		$('#IdSubMenuMaestros').removeClass('open');
+
+		$('#IdSubMenuMovimientos').addClass('open');
+
+		$('#Id017').addClass('active open');
+
+		$('a.clip-chevron-right').attr('style', 'display:none');
+
+		$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+
+		$('a.clip-chevron-right').click(function () {
+			$('body').addClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:none');
+			$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+		});
+
+		$('i.clip-chevron-left').click(function () {
+			$('body').removeClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:block;font-size: 25px;');
+			$('i.clip-chevron-left').attr('style', 'display:none');
+		});
+	});
+	function Ayuda() {
+		if (window.ventana) {
+			ventana.close();
+			OpenWin();
+		} else {
+			OpenWin();
+		}
+	}
+
+	function OpenWin() {
+		ventana = window.open("@(this.Model.Path1)" + "Ayuda.html#tercero", "_blank", "toolbar=no, scrollbars=yes, resizable=no, top=300, left=500, width=800, height=800");
+	}
+
+	function closeWin() {
+		if (window.ventana) {
+			ventana.close();
+		}
+	}
+	
+	function onChange() {
+		//Seleccionamos el registro
+		var nombre = this.dataItem(this.select()).Centro_24H;
+		var id = this.dataItem(this.select()).id;
+		$('input#IdNombre').val(nombre);
+		$('input#IdValor').val(id);
+	}
+	
+	function onShow(e) {
+	}
+
+	function onHide(e) {
+	}
+
+	$(document).ready(function() {
+		$("#toggle1").kendoTooltip({
+			content: "Alta Centro 24h",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle2").kendoTooltip({
+			content: "Editar Centro 24h",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle3").kendoTooltip({
+			content: "Borrar Centro 24h",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle4").kendoTooltip({
+		    content: "Vizualizar Centro",
+		    show: onShow,
+		    hide: onHide,
+		    position: "top"
+		});
+		
+	});
+
+	function onToggleCentro(e) {
+		//Aqui controlamos los eventos de la toolbar.
+		if (e.id == "toggle1") {
+			//ALTA CENTRO   
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Centros/Create',
+				success: function (data) {
+				    if (data) {				        
+						$('#DatosCentros').html(data);
+						hideLoading();
+					}
+				}
+			});
+			$('#myModalCentros').modal('show');
+		} else if (e.id == "toggle2") {
+			//EDITAR CENTROS
+			//$('#MostrarMensaje').html("Modificar Centro 24h");
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+			    showLoading();
+				$.ajax({
+					type: "POST",
+					url: '/Centros/VisualizarCentros',
+					data: { id: $('input#IdValor').val(), Accion: "Edit"  },
+					success: function (data) {
+						if (data) {
+						    $('#ListCentros').html(data);
+						    hideLoading();
+						}
+					}
+				});
+				//$('#myModalCentros').modal('show');
+			}
+		}  else if (e.id == "toggle3") {
+			//BORRAR CENTROS
+			showLoading();
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				alert("¿Esta Seguro de Borrar el Centros 24h " + "\n" + $('input#IdNombre').val() + "?", 'Confirm', $('input#IdValor').val(), 27);
+			}
+		} else if (e.id == "toggle4") {
+		    //VISUALIZAR CENTRO
+		    //$('#MostrarMensaje').html("Visualizar Centros 24h");
+		    if ($('input#IdValor').val() == "") {
+		        alert('Debe Seleccionar un registro');
+		    } else {
+		        showLoading();
+		        $.ajax({
+		            type: "POST",
+		            url: '/Centros/VisualizarCentros',
+		            data: { id: $('input#IdValor').val(), Accion: "Ver" },
+		            success: function (data) {
+		                if (data) {
+		                    hideLoading();
+		                    $('#ListCentros').html('');
+		                    $('#ListCentros').html(data);
+		                }
+		            }
+		        });
+		    }
+		} else if (e.id == "toggle5") {
+		    //ALTA TELEFONO
+		    showLoading();
+		    $.ajax({
+		        type: "POST",
+		        url: '/CENTROS/AsignarTipos',
+		        data: { tipoCanal: "TEL" },
+		        success: function (data) {
+		            if (data) {
+		                hideLoading();
+		                $('#AsignarDatos').html('');
+		                $('#AsignarDatos').html(data);
+		                $('#myModalDatos').modal('show');
+		            }
+		        }
+		    });
+		} else if (e.id == "toggle6") {
+		    //EDITAR TELEFONO
+		    showLoading();
+		    if ($('input#IdTel').val() == '') {
+		        alert('Debe Seleccionar un teléfono', 'Mensaje');
+		    } else {
+		        showLoading();
+		        $.ajax({
+		            url: '/Centros/VisualizarTipos',
+		            type: "POST",
+		            data: { id: $('input#IdTel').val(), tipoCanal: "TEL", accion: "Edit" },
+		            success: function (data) {
+		                if (data) {
+		                    hideLoading();
+		                    $('#AsignarDatos').html('');
+		                    $('#AsignarDatos').html(data);
+		                    $('#myModalDatos').modal('show');
+		                }
+		            }
+		        });
+		    }
+		} else if (e.id == "toggle7") {
+		    //BORRAR Telefono
+		    showLoading();
+		    if ($('input#NombreTel').val() == '') {
+		        alert('Debe Seleccionar un Teléfono', 'Mensaje');
+		    } else {
+		        AvisoOKAdicional("¿Esta Seguro de Borrar el Teléfono: " + $('input#NombreTel').val() + "?", $('input#IdTel').val(), "TEL");
+		    }
+
+		} else if (e.id == "toggle8") {
+		    //VISUALIZAR TELEFONO
+		    showLoading();
+		    if ($('input#IdTel').val() == '') {
+		        alert('Debe Seleccionar un Teléfono', 'Mensaje');
+		    } else {
+		        $.ajax({
+		            url: '/Centros/VisualizarTipos',
+		            type: "POST",
+		            data: { id: $('input#IdTel').val(), tipoCanal: "TEL", Accion: "Ver" },
+		            success: function (data) {
+		                if (data) {
+		                    hideLoading();
+		                    $('#AsignarDatos').html('');
+		                    $('#AsignarDatos').html(data);
+		                    $('#myModalDatos').modal('show');
+		                }
+		            }
+		        });
+		    }
+		}
+
+		else if (e.id == "toggle9") {
+		    //ALTA FAX
+		    showLoading();
+		    $.ajax({
+		        type: "POST",
+		        url: '/CENTROS/AsignarTipos',
+		        data: { tipoCanal: "FAX" },
+		        success: function (data) {
+		            if (data) {
+		                hideLoading();
+		                $('#AsignarDatos').html('');
+		                $('#AsignarDatos').html(data);
+		                $('#myModalDatos').modal('show');
+		            }
+		        }
+		    });
+		} else if (e.id == "toggle10") {
+		    //EDITAR FAX
+		    showLoading();
+		    if ($('input#IdFax').val() == '') {
+		        alert('Debe Seleccionar un fax', 'Mensaje');
+		    } else {
+		        showLoading();
+		        $.ajax({
+		            url: '/Centros/VisualizarTipos',
+		            type: "POST",
+		            data: { id: $('input#IdFax').val(), tipoCanal: "FAX", Accion: "Edit"  },
+		            success: function (data) {
+		                if (data) {
+		                    hideLoading();
+		                    $('#AsignarDatos').html('');
+		                    $('#AsignarDatos').html(data);
+		                    $('#myModalDatos').modal('show');
+		                }
+		            }
+		        });
+		    }
+		} else if (e.id == "toggle11") {
+		    //BORRAR FAX
+		    showLoading();
+		    if ($('input#Nombrefax').val() == '') {
+		        alert('Debe Seleccionar un Fax', 'Mensaje');
+		    } else {
+		        AvisoOKAdicional("¿Esta Seguro de Borrar el Fax: " + $('input#NombreFax').val() + "?", $('input#IdFax').val(), "FAX");
+		    }
+
+		} else if (e.id == "toggle12") {
+		    //VISUALIZAR FAX
+		    showLoading();
+		    if ($('input#IdFax').val() == '') {
+		        alert('Debe Seleccionar un Fax', 'Mensaje');
+		    } else {
+		        $.ajax({
+		            url: '/Centros/VisualizarTipos',
+		            type: "POST",
+		            data: { id: $('input#IdFax').val(), tipoCanal: "FAX", Accion:"Ver" },
+		            success: function (data) {
+		                if (data) {
+		                    hideLoading();
+		                    $('#AsignarDatos').html('');
+		                    $('#AsignarDatos').html(data);
+		                    $('#myModalDatos').modal('show');
+		                }
+		            }
+		        });
+		    }
+		} else if (e.id == "toggle13") {
+		    //ALTA MAIL
+		    showLoading();
+		    $.ajax({
+		        type: "POST",
+		        url: '/CENTROS/AsignarTipos',
+		        data: { tipoCanal: "MAI" },
+		        success: function (data) {
+		            if (data) {
+		                hideLoading();
+		                $('#AsignarDatos').html('');
+		                $('#AsignarDatos').html(data);
+		                $('#myModalDatos').modal('show');
+		            }
+		        }
+		    });
+		} else if (e.id == "toggle14") {
+		    //EDITAR MAIL
+		    showLoading();
+		    if ($('input#IdMail').val() == '') {
+		        alert('Debe Seleccionar un Correo', 'Mensaje');
+		    } else {
+		        showLoading();
+		        $.ajax({
+		            url: '/Centros/VisualizarTipos',
+		            type: "POST",
+		            data: { id: $('input#IdMail').val(), tipoCanal: "MAI", Accion: "Edit" },
+		            success: function (data) {
+		                if (data) {
+		                    hideLoading();
+		                    $('#AsignarDatos').html('');
+		                    $('#AsignarDatos').html(data);
+		                    $('#myModalDatos').modal('show');
+		                }
+		            }
+		        });
+		    }
+		} else if (e.id == "toggle15") {
+		    //BORRAR MAIL
+		    showLoading();
+		    if ($('input#NombreMail').val() == '') {
+		        alert('Debe Seleccionar un correo', 'Mensaje');
+		    } else {
+		        AvisoOKAdicional("¿Esta Seguro de Borrar el Correo: " + $('input#NombreMail').val() + "?", $('input#IdMail').val(), "MAI");
+		    }
+
+		} else if (e.id == "toggle16") {
+		    //VISUALIZAR MAIL
+		    showLoading();
+		    if ($('input#IdMail').val() == '') {
+		        alert('Debe Seleccionar un correo', 'Mensaje');
+		    } else {
+		        $.ajax({
+		            url: '/Centros/VisualizarTipos',
+		            type: "POST",
+		            data: { id: $('input#IdMail').val(), tipoCanal: "MAI", Accion: "Ver" },
+		            success: function (data) {
+		                if (data) {
+		                    hideLoading();
+		                    $('#AsignarDatos').html('');
+		                    $('#AsignarDatos').html(data);
+		                    $('#myModalDatos').modal('show');
+		                }
+		            }
+		        });
+		    }
+		} 
+        //else if (e.id == "toggle17") {
+		//    //REPORTE CENTRO
+		//    // showLoading();
+		//    $.ajax({
+		//        type: "POST",
+		//        url: '/Centros/Index',
+		//        success: function (data) {
+		//            if (data) {
+		//                hideLoading();
+		//                $('#ListCentros').html('');
+		//                $('#ListCentros').html(data);
+		//            }
+		//        }
+		//    });
+
+		//}
+
+
+
+	}
+
+</script>
+<style>
+    #WindowLoad
+    {
+        position:fixed;
+        top:0px;
+        left:0px;
+        z-index:3200;
+        filter:alpha(opacity=55);
+       -moz-opacity:65;
+        opacity:0.60;
+        background:#F8F8FA;
+    }
+</style>
+

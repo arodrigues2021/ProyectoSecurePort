@@ -1,0 +1,337 @@
+﻿
+@using SecurePort.Entities.Models
+@model UsuarioFrontal 
+<div class="panel-heading">
+	<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick="Ayuda()"></a>
+		<strong>
+			<div id="MostrarMensaje">
+				@ViewBag.Mensaje
+			</div>
+		</strong>
+</div>
+<div class="panel-body buttons-widget">
+   @(this.Html.Kendo().ToolBar().Name("ToolBar").HtmlAttributes(new {  style = "width: 65%;border: 0;background: rgba(0, 0, 255, 0);"  }).Items(items =>
+			{
+			   items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_ALTA_AUDITORIA).Id("toggle1");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_MODIF_AUDITORIA).Id("toggle2");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_BORRA_AUDITORIA).Id("toggle3");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_CONSULTA_AUDITORIA).Id("toggle4");
+			}).Events(e => e.Toggle("onToggleAuditoria")).Resizable(false))
+</div>
+<input type="text" id="IdNombre" name="IdNombre" style="display: none">
+<input type="text" id="IdValor" name="IdValor" style="display: none">
+<input type="text" id="URL" name="URL" style="display: none">
+<div class="col-md-12">
+	<div>
+		<span></span>
+		<hr style="margin-top: 0%;">
+	</div>
+</div>
+<td class="panel-body">
+	<div id="container">
+		<div class="btn-group" style="margin-top: 0%; margin-left: 1%;">
+		</div>
+	</div>
+</td>
+<div class="panel-body">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="table-responsive">
+				@(this.Html.Kendo().Grid<AuditoriasViewModel>().Name("GridAuditorias")
+					  .DataSource(dataSource => dataSource.Ajax()
+					  .ServerOperation(true))
+					  .ToolBar(tools => tools.Excel().Text("Exportar").HtmlAttributes(new { @class="btn btn-black btn-xs",target="_self",hidefocus="true",style = "margin-left: 90%;outline: none;color: #44C51A;" }))
+					  .Excel(excel => excel.AllPages(true)
+					  .FileName("ListadoPracticas.xlsx")
+					  .Filterable(true)
+					  .ProxyURL(this.Url.Action("Excel_Export_Save","Usuarios")))
+					  .Columns(columns =>
+					  {
+						  columns.Bound(o => o.Id).Hidden(true);
+						  columns.Bound(o => o.Puerto).Title("Puerto").HtmlAttributes(new { style = "text-align: left;" }).Width(130);
+						  columns.Bound(o => o.IIPP).Title("Instalación").HtmlAttributes(new { style = "text-align: left;" }).Width(130);
+						  columns.Bound(o => o.Descripcion).Title("Auditoria").HtmlAttributes(new { style = "text-align: left;" }).Width(400);
+						  columns.Bound(o => o.NombreTipo).Title("Tipo").HtmlAttributes(new { style = "text-align: left;" }).Width(150);
+						  columns.Bound(o => o.NombreEstado).Title("Estado").HtmlAttributes(new { style = "text-align: left;" }).Width(140);
+						  columns.Bound(o => o.Ini_Programa).Title("Inicio Programada").ClientTemplate("#= (Ini_Programa==null)? ' ' : kendo.toString(Ini_Programa, \"dd/MM/yyyy\") #").HtmlAttributes(new { style = "text-align: left;" }).Width(140);
+						  columns.Bound(o => o.Fin_Programa).Title("Fin Programada").ClientTemplate("#= (Fin_Programa == null)? ' ' :  kendo.toString(Fin_Programa, \"dd/MM/yyyy\") #").HtmlAttributes(new { style = "text-align: left;" }).Width(140);                           
+					  })
+					  .HtmlAttributes(new { style = "height: 600px" })
+					  .Events(events => events.Change("onChange"))
+					  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+					  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(20).Model(model => model.Id(p => p.Id))
+					  .Read(read => read.Action("BuscadorAuditorias","Auditorias")))
+					  .Pageable()
+					  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+					  .Filterable()
+					  .Scrollable()
+					  .Groupable()
+					  .Resizable(resize => resize.Columns(true))
+					  .Reorderable(reorder => reorder.Columns(true)))
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	jQuery(document).ready(function () {
+		if (history.forward(1)) {
+			location.replace(history.forward(1));
+		}
+
+		$('#IdGestionUsuarios').attr('style', 'display:none');
+
+		$('#IdSubMenuMaestros').attr('style', 'display:none');
+
+		$('#IdSubMenuMovimientos').attr('style', 'display:none');
+
+		$('#IdSubMenuArchivos').attr('style', 'display:block');
+
+		$('#IdSubMenuMaestros').removeClass('open');
+
+		$('#IdSubMenuMovimientos').removeClass('open');
+
+		$('#IdSubMenuArchivos').addClass('open');
+
+		$('#Id033').addClass('active open');
+		
+		$('a.clip-chevron-right').attr('style', 'display:none');
+
+		$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+
+		$('a.clip-chevron-right').click(function () {
+			$('body').addClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:none');
+			$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+		});
+
+		$('i.clip-chevron-left').click(function () {
+			$('body').removeClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:block;font-size: 25px;');
+			$('i.clip-chevron-left').attr('style', 'display:none');
+		});
+
+	});
+	
+	function Ayuda() {
+		if (window.ventana) {
+			ventana.close();
+			OpenWin();
+		} else {
+			OpenWin();
+		}
+	}
+
+	function OpenWin() {
+		ventana = window.open("@(this.Model.Path1)" + "Ayuda.html#tercero", "_blank", "toolbar=no, scrollbars=yes, resizable=no, top=300, left=500, width=800, height=800");
+	}
+
+	function closeWin() {
+		if (window.ventana) {
+			ventana.close();
+		}
+	}
+	
+	function onChange() {
+		//Seleccionamos el registro
+		var nombre = this.dataItem(this.select()).Descripcion;
+		var id = this.dataItem(this.select()).id;
+		$('input#IdNombre').val(nombre);
+		$('input#IdValor').val(id);
+	}
+	
+	function onShow(e) {
+	}
+
+	function onHide(e) {
+	}
+
+	$(document).ready(function() {
+		$("#toggle1").kendoTooltip({
+			content: "Alta Auditoria",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle2").kendoTooltip({
+			content: "Editar Auditoria",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle3").kendoTooltip({
+			content: "Borrar Auditoria",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		
+		$("#toggle4").kendoTooltip({
+			content: "Visualizar Auditoria",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+	});
+
+	function onToggleAuditoria(e) {
+		//Aqui controlamos los eventos de la toolbar.
+		if (e.id == "toggle1") {
+			//ALTA Auditoria
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Auditorias/Create',
+				success: function (data) {
+					if (data) {
+						$('#ListAuditorias').html(data);
+						hideLoading();
+					}
+				}
+			});
+			$('#myModalAuditorias').modal('show');
+		} else if (e.id == "toggle2") {
+			//EDITAR Auditoria
+			$('#MostrarMensaje').html("Modificar Auditoria");
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				showLoading();
+				$.ajax({			        
+					type: "POST",
+					url: '/Auditorias/VisualizarAuditorias',
+					data: { id: $('input#IdValor').val(), Accion: "Edit" },
+					success: function (data) {
+						if (data) {
+							if (data.result == false) {
+								alert(data.Message, 'Eliminar');
+							} else {
+								hideLoading();
+								$('#ListAuditorias').html(data);
+							}
+						}
+					}
+				});
+				$('#myModalAuditorias').modal('show');
+			}
+		}  else if (e.id == "toggle3") {
+			//BORRAR Auditoria
+			showLoading();
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+			    //Validar Categoria
+			    $.ajax({
+			        type: "POST",
+			        url: '/Auditorias/ValidarAuditorias',
+			        data: { id: $('input#IdValor').val() },
+			        success: function (data) {
+			            if (data) {
+			                if (data.result == true) {
+			                    $('input#URL').val('@(this.ViewBag.UrlDelete)');
+			                    alert("¿Esta Seguro de Borrar la Auditoria " + "\n" + $('input#IdNombre').val() + "?", 'Confirm', $('input#IdValor').val(), 49);
+			                } else {
+			                    showLoading();;
+			                    alert(data.Message, 'Eliminar');
+			                }
+			            }
+			        }
+			    });
+			}
+		} else if (e.id == "toggle4") {
+			//VIZUALIZAR Auditoria
+			$('#MostrarMensaje').html("Modificar Auditoria");
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				showLoading();
+				$.ajax({
+					type: "POST",
+					url: '/Auditorias/VisualizarAuditorias',
+					data: { id: $('input#IdValor').val(), Accion: "Ver" },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#ListAuditorias').html(data);
+							
+						}
+					}
+				});
+				$('#myModalAuditorias').modal('show');
+			}
+		} else if (e.id == "toggle5") {
+			//ALTA DOCUMENTO
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Auditorias/AsignarDocumentos',
+				success: function (data) {
+					if (data) {
+						hideLoading();
+						$('#AsignarDocumentos').html('');
+						$('#AsignarDocumentos').html(data);
+						$('#myModalUpload').modal('show');
+					}
+				}
+			});
+		} else if (e.id == "toggle6") {
+			//EDITAR DOCUMENTO
+			showLoading();
+			if ($('input#IdDoc').val() == '') {
+				alert('Debe Seleccionar un documento', 'Mensaje');
+			} else {
+				showLoading();
+				$.ajax({
+					url: '/Auditorias/EditarDocumento',
+					type: "POST",
+					data: { id: $('input#IdDoc').val() },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#AsignarDocumentos').html('');
+							$('#AsignarDocumentos').html(data);
+							$('#myModalUpload').modal('show');
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle7") {
+			//BORRAR DOCUMENTO
+			showLoading();
+			if ($('input#NombreDocumento').val() == '') {
+				alert('Debe Seleccionar un documento', 'Mensaje');
+			} else {
+				AvisoOKDocAuditorias("¿Esta Seguro de Borrar el Documento: " + $('input#NombreDocumento').val() + "?", $('input#IdDoc').val());
+			}
+
+		} else if (e.id == "toggle8") {
+			//VISUALIZAR DOCUMENTO
+			showLoading();
+			if ($('input#IdDoc').val() == '') {
+				alert('Debe Seleccionar un documento', 'Mensaje');
+			} else {
+				showLoading();
+				$.ajax({
+					url: '/Auditorias/visualizarDocumento',
+					type: "POST",
+					data: { id: $('input#IdDoc').val() },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$("#AvisoLegal").html(data);
+							hideLoading();
+							$("#AvisoLegal").html('');;
+						}
+					}
+				});
+			}
+		}
+
+	}
+</script>

@@ -1,0 +1,349 @@
+﻿
+@using SecurePort.Entities.Models
+@model UsuarioFrontal 
+ <div class="panel-heading">
+	<a data-original-title="Ayuda" data-placement="bottom" data-style="top" class="clip-user-2 tooltips" onclick=" Ayuda() "></a>
+		<strong>
+			<div id="MostrarMensaje">
+				@ViewBag.Mensaje
+			</div>
+		</strong>
+	</div>
+<div class="panel-body buttons-widget">
+   @(this.Html.Kendo().ToolBar().Name("ToolBar").HtmlAttributes(new {  style = "width: 65%;border: 0;background: rgba(0, 0, 255, 0);" }).Items(items =>
+			{
+			   items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-primary icon-plus", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_ALTA_PUERTO).Id("toggle1");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-blue icon-edit", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_MODIF_PUERTO).Id("toggle2");
+				items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-danger icon-remove", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_BORRA_PUERTO).Id("toggle3");
+			   items.Add().Type(CommandType.Button).Togglable(true).HtmlAttributes(new { type = "button", @class = "btn btn-orange icon-folder-open-alt", style = "margin-bottom:1px" })
+					.Hidden(this.Model.permisosViewModel.CON_CONSULTA_PUERTO).Id("toggle4");
+			}).Events(e => e.Toggle("onTogglePuerto ")).Resizable(false))
+
+
+
+</div>
+<input type="text" id="IdNombre" name="IdNombre" style="display: none">
+<input type="text" id="IdValor" name="IdValor" style="display: none">
+<input type="text" id="URL" name="URL" style="display: none">   
+<div class="col-md-12">
+	<div>
+		<span></span>
+		<hr style="margin-top: 0%;">
+	</div>
+</div>
+<td class="panel-body">
+    <div id="container">
+        <div class="btn-group" style="margin-top: 0%; margin-left: 1%;">
+        </div>
+    </div>
+</td>
+@*Puerto, LOCODE, Organsimo, Tipo Organismo, Isla, Comunidad Autónoma, Capitanía Marítima y el campo Activo*@
+<div class="panel-body">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="table-responsive">
+				@(this.Html.Kendo().Grid<PuertosViewModel>().Name("GridPuertos")
+					  .DataSource(dataSource => dataSource.Ajax()
+						  .ServerOperation(true))
+					  .ToolBar(tools => tools.Excel().Text("Exportar").HtmlAttributes(new { @class="btn btn-black btn-xs",target="_self",hidefocus="true",style = "margin-left: 90%;outline: none;color: #44C51A;" }))
+					  .Excel(excel => excel.AllPages(true)
+						  .FileName("ListadoPuertos.xlsx")
+						  .Filterable(true)
+						  .ProxyURL(this.Url.Action("Excel_Export_Save","Usuarios")))
+					  .Columns(columns =>
+					  {
+						  columns.Bound(o => o.Id).Hidden(true);
+                          columns.Bound(o => o.Nombre).Title("Puerto").HtmlAttributes(new { style = "text-align: left;" }).Width(80);
+                          columns.Bound(o => o.Locode).Title("Locode").HtmlAttributes(new { style = "text-align: left;" }).Width(40);
+                          columns.Bound(o => o.Organismo).Title("Organismo").HtmlAttributes(new { style = "text-align: left;" }).Width(100);
+                          columns.Bound(o => o.tipo).Title("Tipo Organismo").HtmlAttributes(new { style = "text-align: left;" }).Width(80);
+						  columns.Bound(o => o.Isla).Title("Isla").HtmlAttributes(new { style = "text-align: left;" }).Width(50);
+                          columns.Bound(o => o.comunidad).Title("Comunidad Autónoma").HtmlAttributes(new { style = "text-align: left;" }).Width(80);
+                          columns.Bound(o => o.Capitania).Title("Capitanía Marítima").HtmlAttributes(new { style = "text-align: left;" }).Width(100);  
+						  columns.Bound(o => o.activado).ClientTemplate("<input type='checkbox' class='icheckbox_minimal-grey' #= activado=='Si' ? checked='checked': '' # disabled='true' />").Title("Activo").Width(90); 
+					  })
+					  .HtmlAttributes(new { style = "height: 600px" })
+					  .Events(events => events.Change("onChange"))
+					  .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+					  .DataSource(dataSource => dataSource.Ajax()
+					  .PageSize(20).Model(model => model.Id(p => p.Id))
+					  .Read(read => read.Action("BuscadorPuertos","Puertos")))
+					  .Pageable()
+					  .Sortable(sortable => sortable.AllowUnsort(true)
+					  .SortMode(GridSortMode.MultipleColumn))
+					  .Filterable()
+					  .Scrollable()
+					  .Groupable()
+					  .Resizable(resize => resize.Columns(true))
+					  .Reorderable(reorder => reorder.Columns(true)))
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	jQuery(document).ready(function () {
+		var grid = $("#GridPuertos").data("kendoGrid");
+		grid.dataSource.filter({ field: "activado", operator: "eq", value: 'Si' });
+
+		if (history.forward(1)) {
+			location.replace(history.forward(1));
+		}
+
+		$('#IdGestionUsuarios').attr('style', 'display:none');
+
+		$('#IdSubMenuMaestros').attr('style', 'display:none');
+
+		$('#IdSubMenuMovimientos').attr('style', 'display:block');
+
+		$('#IdSubMenuMaestros').removeClass('open');
+
+		$('#IdSubMenuMovimientos').addClass('open');
+
+		$('#Id014').addClass('active open');
+
+		$('a.clip-chevron-right').attr('style', 'display:none');
+
+		$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+
+		$('a.clip-chevron-right').click(function () {
+			$('body').addClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:none');
+			$('i.clip-chevron-left').attr('style', 'display:block;font-size: 25px;');
+		});
+
+		$('i.clip-chevron-left').click(function () {
+			$('body').removeClass('navigation-small');
+			$('a.clip-chevron-right').attr('style', 'display:block;font-size: 25px;');
+			$('i.clip-chevron-left').attr('style', 'display:none');
+		});
+
+	});
+	function Ayuda() {
+		if (window.ventana) {
+			ventana.close();
+			OpenWin();
+		} else {
+			OpenWin();
+		}
+	}
+
+	function OpenWin() {
+		ventana = window.open("@(this.Model.Path1)" + "Ayuda.html#tercero", "_blank", "toolbar=no, scrollbars=yes, resizable=no, top=300, left=500, width=800, height=800");
+	}
+
+	function closeWin() {
+		if (window.ventana) {
+			ventana.close();
+		}
+	}
+	
+	function onChange() {
+		//Seleccionamos el registro
+		var nombre = this.dataItem(this.select()).Nombre;
+		var id =  this.dataItem(this.select()).Id;
+		$('input#IdNombre').val(nombre);
+		$('input#IdValor').val(id);
+	}
+	
+	function onShow(e) {
+	}
+
+	function onHide(e) {
+	}
+
+	$(document).ready(function() {
+		$("#toggle1").kendoTooltip({
+			content: "Alta Puerto",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle2").kendoTooltip({
+			content: "Editar Puerto",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle3").kendoTooltip({
+			content: "Borrar Puerto",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+		$("#toggle4").kendoTooltip({
+			content: "Visualizar Puerto",
+			show: onShow,
+			hide: onHide,
+			position: "top"
+		});
+	});
+
+	function onTogglePuerto(e) {
+		//Aqui controlamos los eventos de la toolbar.
+		if (e.id == "toggle1") {
+			//ALTA PUERTO
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Usuarios/ValidarCategoriaPuertos',
+				success: function (data) {
+					if (data.result) {
+						$.ajax({
+							type: "POST",
+							url: '/Puertos/Create',
+							success: function (data) {
+								if (data) {
+									hideLoading();
+									$('#ListPuerto').html('');
+									$('#ListPuerto').html(data);
+								}
+							}
+						});
+					} else {
+						alert(data.Message);
+					}
+				}
+			});
+		} else if (e.id == "toggle2") {
+			//EDITAR PUERTO
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Usuarios/ValidarCategoriaPuertos',
+				success: function (data) {
+					if (data.result) {
+						$('#MostrarMensaje').html("Modificar Puerto");
+						if ($('input#IdValor').val() == "") {
+							alert('Debe Seleccionar un registro');
+						} else {
+							showLoading();
+							$.ajax({
+								type: "POST",
+								url: '/Puertos/VisualizarPuertos',
+								data: { id: $('input#IdValor').val(), accion: "Edit" },
+								success: function (data) {
+									if (data) {
+										hideLoading();
+										$('#ListPuerto').html('');
+										$('#ListPuerto').html(data);
+									}
+								}
+							});
+						}
+					} else {
+						alert(data.Message);
+					}
+				}
+			});
+			
+		} else if (e.id == "toggle3") {
+			//BORRAR PUERTO
+			$.ajax({
+				type: "POST",
+				url: '/Usuarios/ValidarCategoriaPuertos',
+				success: function (data) {
+					if (data.result) {
+						showLoading();
+						if ($('input#IdValor').val() == "") {
+							alert('Debe Seleccionar un registro');
+						} else {
+						    $('input#URL').val("/Puertos/EliminarPuerto");
+						    alert("¿Esta Seguro de Borrar el Puerto " + "\n" + $('input#IdNombre').val() + "?", 'Confirm', $('input#IdValor').val(), 49); //45
+						}
+					} else {
+						alert(data.Message);
+					}
+				}
+			});
+		} else if (e.id == "toggle4") {
+			//VISUALIZAR PUERTO
+			$('#MostrarMensaje').html("Ver Puerto");
+			if ($('input#IdValor').val() == "") {
+				alert('Debe Seleccionar un registro');
+			} else {
+				showLoading();
+				$.ajax({
+					type: "POST",
+					url: '/Puertos/VisualizarPuertos',
+					data: { id: $('input#IdValor').val(), accion: "Ver" },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#ListPuerto').html('');
+							$('#ListPuerto').html(data);
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle5") {
+			//ALTA OPERADOR
+			showLoading();
+			$.ajax({
+				type: "POST",
+				url: '/Puertos/AsignarOperador',
+				success: function (data) {
+					if (data) {
+						hideLoading();
+						$('#AsignarOperadores').html('');
+						$('#myModalOperadores').modal('show');
+						$('#AsignarOperadores').html(data);
+					}
+				}
+			});
+		} else if (e.id == "toggle6") {
+			//EDITAR OPERADOR
+			showLoading();
+			if ($('input#IdOperador').val() == '') {
+				alert('Debe Seleccionar un operador', 'Mensaje');
+			} else {
+				showLoading();
+				$.ajax({
+					url: '/Puertos/visualizarOperador',
+					type: "POST",
+					data: { id: $('input#IdOperador').val(), Accion: "Edit" },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#AsignarOperadores').html('');
+							$('#myModalOperadores').modal('show');
+							$('#AsignarOperadores').html(data);
+						}
+					}
+				});
+			}
+		} else if (e.id == "toggle7") {
+			//BORRAR OPERADOR
+			showLoading();
+			if ($('input#NombreOperador').val() == '') {
+				alert('Debe Seleccionar un operador', 'Mensaje');
+			} else {
+				AvisoOKOperadorPuerto("¿Esta Seguro de Borrar el Operador: " + $('input#NombreOperador').val() + "?", $('input#IdOperador').val());
+			}
+
+		} else if (e.id == "toggle8") {
+			//VISUALIZAR OPERADOR
+			showLoading();
+			if ($('input#IdOperador').val() == '') {
+				alert('Debe Seleccionar un operador', 'Mensajer');
+			} else {
+				$.ajax({
+					url: '/Puertos/visualizarOperador',
+					type: "POST",
+					data: { id: $('input#IdOperador').val(), Accion: "Ver" },
+					success: function (data) {
+						if (data) {
+							hideLoading();
+							$('#AsignarOperadores').html('');
+							$('#myModalOperadores').modal('show');
+							$('#AsignarOperadores').html(data);
+						}
+					}
+				});
+			}
+		}
+	}
+</script>

@@ -1,0 +1,104 @@
+﻿@using SecurePort.Entities.Enums
+@using SecurePort.Entities.Models
+@model UsuarioFrontal
+<a href="javascript:void(0)"><i class="clip-grid-6"></i>
+	<span class="title"> Gestión Maestros </span><i class="icon-arrow"></i>
+	<span class="selected"></span>
+</a>
+<ul id="IdSubMenuMaestros" class="sub-menu">
+	
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+
+		if (Permisos.NombrePermiso == Pais.LISTA_PAIS.ToDescription())
+		{
+			<li id="Id011">
+				<a href="@(this.Url.Action("ListadoPaises","Paises"))">
+					Países </a>
+			</li>
+		}
+
+	}
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+		if (Permisos.NombrePermiso == Comunidad.LISTA_COMAUT.ToDescription())
+		{
+			<li id="Id012">
+				<a href="@(this.Url.Action("ListadoComunidades","Comunidades"))">
+					Comunidades Autonómas </a>
+			</li>
+		}
+
+	}
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+		 if (Permisos.NombrePermiso == Provincia.LISTA_PROVINCIA.ToDescription())
+		{
+			<li id="Id015">
+				<a href="@(this.Url.Action("ListadoProvincias","Provincias"))">
+					Provincias </a>
+			</li>
+		}
+	}
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+		if (Permisos.NombrePermiso ==  Ciudad.LISTA_CIUDAD.ToDescription())
+		{
+			<li id="Id019">
+				<a href="@(this.Url.Action("ListadoCiudades","Paises"))">
+					Municipios</a>
+			</li>
+		}
+	}
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+		if (Permisos.NombrePermiso ==  Capitania.LISTA_CAPITANIA.ToDescription())
+		{
+			<li id="Id022">
+				<a href="@(this.Url.Action("ListadoCapitanias","Capitanias"))">
+					Capitanías Marítimas </a>
+			</li>
+		}
+	}
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+		if (Permisos.NombrePermiso == Bien.LISTA_BIEN.ToDescription())
+		{
+			<li id="Id023">
+				<a href="@(this.Url.Action("ListadoBienes","Bienes"))">
+					Tipos de Bienes </a>
+			</li>
+		}
+	}
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+		if (Permisos.NombrePermiso == Amenaza.LISTAR_OPCION_AMENAZA.ToDescription())
+		{
+			<li id="Id024">
+				<a href="@(this.Url.Action("ListadoAmenazas","Amenazas"))">
+					Amenazas </a>
+			</li>
+		}
+	}
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+		if (Permisos.NombrePermiso == Motivo.LISTAR_OPCION_MOTIVO_DECLARA.ToDescription())
+		{
+			<li id="Id025">
+				<a href="@(this.Url.Action("ListadoMotivos","Motivos"))">
+					Motivos de Declaración Marítima </a>
+			</li>
+		}
+	}
+	@foreach (ListGruposPerfilesPermisos Permisos in this.Model.ListMaestros.ToList())
+	{
+		if (Permisos.NombrePermiso == TipoInstalacion.LISTA_TIPO_IIPP.ToDescription())
+		{
+			<li id="Id026">
+				<a href="@(this.Url.Action("ListadoInstalaciones", "TipoInstalaciones"))">
+					Tipos de Instalaciones </a>
+			</li>
+		}
+	}
+
+</ul>
